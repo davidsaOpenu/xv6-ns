@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09184923_7ab3bb59",
+        "filename": ".gitreview",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-05-22T16:06:29Z",
+      "side": 1,
+      "message": "1. note \n2. note",
+      "revId": "229fd713681e5249d37a8685d668305face1a1d5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f6def33_274007c7",
+        "filename": ".gitreview",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-05-22T16:06:29Z",
+      "side": 1,
+      "message": "note",
+      "range": {
+        "startLine": 3,
+        "startChar": 6,
+        "endLine": 4,
+        "endChar": 27
+      },
+      "revId": "229fd713681e5249d37a8685d668305face1a1d5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
