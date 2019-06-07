@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6bfd547_178cd6a9",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "nit: extra spaces",
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0a139ae_0c4c8257",
+        "filename": "proc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "nit\n/s/tabs/spaces",
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33fd1e4b_42d28a14",
+        "filename": "trap.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "is it ok to save 0 status in current-\u003estatus if the process was killed?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 12
+      },
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "169a2da6_bb1b69a5",
+        "filename": "usertests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "shoudn\u0027t it be exit(0)?",
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "517dceb0_4fc7f76f",
+        "filename": "usertests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3dfae1f_cd75952c",
+        "filename": "usertests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T13:07:11Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "df79ac062e707a51ed73353ac22d412561ebd691",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
