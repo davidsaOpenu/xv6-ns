@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cfebdf4_23c7a35a",
+        "filename": "wstatus.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-06-07T08:08:19Z",
+      "side": 1,
+      "message": "Are all of these necessary in xv6?\n\n\nnit: \n/s/tabs/spcaes",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 49
+      },
+      "revId": "6bb66a7bd9ec6920b30caf38410edf69200a12fd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
