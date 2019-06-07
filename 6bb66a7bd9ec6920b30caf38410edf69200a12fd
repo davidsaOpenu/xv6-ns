@@ -22,6 +22,30 @@
       "revId": "6bb66a7bd9ec6920b30caf38410edf69200a12fd",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "166669e7_cb6477cd",
+        "filename": "wstatus.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1016610
+      },
+      "writtenOn": "2019-06-07T09:29:43Z",
+      "side": 1,
+      "message": "This is copied as is from linux kernel.\nWhen other wait status will be required, it will be usefull.\nDo you want me to leave only the ones who are in active use?",
+      "parentUuid": "0cfebdf4_23c7a35a",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 49
+      },
+      "revId": "6bb66a7bd9ec6920b30caf38410edf69200a12fd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
