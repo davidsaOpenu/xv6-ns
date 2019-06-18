@@ -1,0 +1,11 @@
+set disassembly-flavor intel
+
+define zstartw
+  source /mnt/c/Projects/git/xv6-osw-2019/windows-debugging/load-symbols
+	directory /mnt/c/Projects/git/xv6-osw-2019/windows-debugging
+	set substitute-path /mnt/c C:
+	set substitute-path /mnt/d D:
+	set substitute-path /mnt/e E:
+	load-symbols $eip "/mnt/c/Projects/git/xv6-osw-2019/kernel"
+	set *(char *)&gdb_attached = 1
+end
