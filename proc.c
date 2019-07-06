@@ -10,6 +10,7 @@
 #include "pid_ns.h"
 #include "namespace.h"
 #include "steady_clock.h"
+#include "cgroup.h"
 
 struct {
   struct spinlock lock;
@@ -130,6 +131,9 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+  // Set cgroup to none.
+  p->cgroup = 0;
+
   // Set cpu information.
   p->cpu_account_frame = 0;
   p->cpu_time = 0;
@@ -146,6 +150,9 @@ userinit(void)
 {
   struct proc *p;
   extern char _binary_initcode_start[], _binary_initcode_size[];
+
+  // Initialize the root cgroup.
+  cgroup_initialize(cgroup_root());
 
   p = allocproc();
   
@@ -178,6 +185,11 @@ userinit(void)
   // because the assignment might not be atomic.
   acquire(&ptable.lock);
 
+  // Associate with the root cgroup, can discard return value because
+  // this fails only if there is no room.
+  cgroup_insert(cgroup_root(), p);
+
+  // Set state to runnable.
   p->state = RUNNABLE;
 
   release(&ptable.lock);
@@ -273,6 +285,12 @@ fork(void)
 
   acquire(&ptable.lock);
 
+  // Associate the new process with the current process cgroup.
+  // can discard return value because this fails only if there is no room
+  // which is checked earlier by allocproc.
+  cgroup_insert(curproc->cgroup, np);
+
+  // Set new process to runnable.
   np->state = RUNNABLE;
 
   release(&ptable.lock);
@@ -327,6 +345,9 @@ exit(int status)
         wakeup1(initproc);
     }
   }
+
+  // Remove the process cgroup.
+  cgroup_erase(curproc->cgroup, curproc);
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
@@ -424,6 +445,12 @@ scheduler(void)
       // The process cpu time.
       unsigned int process_cpu_time = 0;
 
+      // The current cgroup.
+      struct cgroup * cgroup = 0;
+
+      // The cgroup cpu account frame.
+      unsigned int cgroup_cpu_account_frame = 0;
+
       // If cpu accounting frame has passed, update CPU accounting.
       if (cpu_account_frame > p->cpu_account_frame) {
         unsigned int current_cpu_time =
@@ -437,6 +464,28 @@ scheduler(void)
 
       // If process not runnable, continue.
       if (p->state != RUNNABLE) {
+        continue;
+      }
+
+      // Set the current cgroup.
+      cgroup = p->cgroup;
+
+      // The cgroup cpu account frame.
+      cgroup_cpu_account_frame = now / cgroup->cpu_account_period;
+
+      // If cgroup cpu accounting frame is over, start a new one.
+      if (cgroup_cpu_account_frame > cgroup->cpu_account_frame) {
+        unsigned int current_cpu_time =
+            cgroup->cpu_time > cpu_account_period ?
+            cpu_account_period :
+            cgroup->cpu_time;
+        cgroup->cpu_percent = current_cpu_time * 100 / cpu_account_period;
+        cgroup->cpu_account_frame = cpu_account_frame;
+        cgroup->cpu_time -= current_cpu_time;
+      }
+
+      // If cpu time is larger than cpu time limit, skip this process.
+      if (cgroup->cpu_time > cgroup->cpu_time_limit) {
         continue;
       }
 
@@ -472,6 +521,7 @@ scheduler(void)
       // Set cpu time.
       p->cpu_time += process_cpu_time;
       p->cpu_period_time += process_cpu_time;
+      cgroup->cpu_time += process_cpu_time;
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
