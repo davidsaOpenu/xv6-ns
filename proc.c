@@ -9,6 +9,7 @@
 #include "wstatus.h"
 #include "pid_ns.h"
 #include "namespace.h"
+#include "steady_clock.h"
 
 struct {
   struct spinlock lock;
@@ -128,6 +129,11 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+
+  // Set cpu information.
+  p->cpu_account_frame = 0;
+  p->cpu_time = 0;
+  p->cpu_percent = 0;
 
   return p;
 }
@@ -386,13 +392,16 @@ wait(int *wstatus)
 void
 scheduler(void)
 {
-  struct proc *p;
+  struct proc *p = 0;
   struct cpu *c = mycpu();
   c->proc = 0;
-  
+
   for(;;){
     // The amount of processes that have been scheduled in this run.
     unsigned int scheduled = 0;
+
+    // The time now.
+    unsigned long long now = 0;
 
     // Enable interrupts on this processor.
     sti();
@@ -400,11 +409,35 @@ scheduler(void)
     // Take the ptable lock.
     acquire(&ptable.lock);
 
+    // Update the time.
+    now = steady_clock_now();
+
     // Loop over process table looking for process to run.
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      // The cpu accounting period.
+      static const unsigned int cpu_account_period = 1 * 100 * 1000; // 100ms
+
+      // The cpu account frame.
+      unsigned int cpu_account_frame = now / cpu_account_period;
+
+      // The process cpu time.
+      unsigned int process_cpu_time = 0;
+
+      // If cpu accounting frame has passed, update CPU accounting.
+      if (cpu_account_frame > p->cpu_account_frame) {
+        unsigned int current_cpu_time =
+            p->cpu_time > cpu_account_period ?
+            cpu_account_period :
+            p->cpu_time;
+        p->cpu_percent = current_cpu_time * 100 / cpu_account_period;
+        p->cpu_account_frame = cpu_account_frame;
+        p->cpu_time -= current_cpu_time;
+      }
+
       // If process not runnable, continue.
-      if(p->state != RUNNABLE)
+      if (p->state != RUNNABLE) {
         continue;
+      }
 
       // Increment scheduled.
       ++scheduled;
@@ -413,15 +446,35 @@ scheduler(void)
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
       c->proc = p;
+
+      // Switch to user page table.
       switchuvm(p);
+
+      // Change process state to running.
       p->state = RUNNING;
 
+      // Keep process start time.
+      process_cpu_time = steady_clock_now();
+
+      // Switch to process.
       swtch(&(c->scheduler), p->context);
+
+      // Update now.
+      now = steady_clock_now();
+
+      // Update process cpu time.
+      process_cpu_time = now - process_cpu_time;
+
+      // Switch to kernel page table.
       switchkvm();
+
+      // Set cpu time.
+      p->cpu_time += process_cpu_time;
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
+
     }
     release(&ptable.lock);
 

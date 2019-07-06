@@ -61,6 +61,9 @@ struct proc {
   struct nsproxy *nsproxy;     // Namespace proxy object
   struct pid_ns *child_pid_ns; // PID namespace for child procs
   int status;		               // Process exit status
+  unsigned int cpu_time;      // Cpu time in microseconds in the last accounting frame.
+  unsigned int cpu_percent;   // Cpu usage percentage in the last accounting frame.
+  unsigned int cpu_account_frame; // The cpu account frame.
 };
 
 // Process memory is laid out contiguously, low addresses first:
