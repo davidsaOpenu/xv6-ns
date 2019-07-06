@@ -7,6 +7,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "steady_clock.h"
+#include "ioctl_request.h"
 
 int
 sys_fork(void)
@@ -104,6 +105,30 @@ sys_usleep(void)
   }
   release(&tickslock);
   return 0;
+}
+
+int
+sys_ioctl(void)
+{
+  int fd = -1;
+  int request = -1;
+
+  if (argint(0, &fd) < 0) {
+    return -1;
+  }
+
+  if (argint(1, &request) < 0) {
+    return -1;
+  }
+
+  switch (request) {
+  case IOCTL_GET_PROCESS_CPU_PERCENT:
+    return myproc()->cpu_percent;
+  case IOCTL_GET_PROCESS_CPU_TIME:
+    return myproc()->cpu_time;
+  default:
+    return -1;
+  }
 }
 
 // return how many clock tick interrupts have occurred
