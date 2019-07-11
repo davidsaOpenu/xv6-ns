@@ -13,6 +13,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+struct cgroup;
 
 // bio.c
 void            binit(void);
@@ -168,6 +169,7 @@ void            userinit(void);
 int             wait(int*);
 void            wakeup(void*);
 void            yield(void);
+int				cgroup_move_proc(struct cgroup * cgroup, int pid);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

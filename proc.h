@@ -76,6 +76,12 @@ struct proc {
   unsigned int cpu_account_frame; // The cpu account frame.
 };
 
+/**
+ * Returns the pid of the given proc, using the current
+ * process namespace.
+ */
+int proc_pid(struct proc * proc);
+
 // Process memory is laid out contiguously, low addresses first:
 //   text
 //   original data and bss

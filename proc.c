@@ -26,6 +26,10 @@ int get_pid_for_ns(struct proc* proc, struct pid_ns* pid_ns) {
   return 0;
 }
 
+int proc_pid(struct proc* proc) {
+    return get_pid_for_ns(proc, myproc()->nsproxy->pid_ns);
+}
+
 static struct proc *initproc;
 
 extern void forkret(void);
@@ -152,7 +156,7 @@ userinit(void)
   extern char _binary_initcode_start[], _binary_initcode_size[];
 
   // Initialize the root cgroup.
-  cgroup_initialize(cgroup_root());
+  cgroup_initialize(cgroup_root(), 0, 0);
 
   p = allocproc();
   
@@ -717,4 +721,36 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+
+/*
+* Move a process from one cgroup to another.
+* Acquires lock, checks if process is alive, calls cgroup_insert, and releases lock.
+*/
+int
+cgroup_move_proc(struct cgroup * cgroup, int pid)
+{
+	struct proc *p;
+
+	acquire(&ptable.lock);
+
+	for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+		if(proc_pid(p) == pid){
+			if(p->state == UNUSED || p->state == EMBRYO || p->state == ZOMBIE){
+				release(&ptable.lock);
+				return -1;
+			}
+			cgroup_insert(cgroup, p);
+			break;
+		}
+
+	/*If we have reached the end of the process table then return failure. */
+	if(p == &ptable.proc[NPROC]){
+		release(&ptable.lock);
+		return -1;
+	}
+
+	release(&ptable.lock);
+	return 0;
 }

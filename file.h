@@ -4,8 +4,10 @@
 #include "fs.h"
 #include "sleeplock.h"
 
+#define MAX_CGROUP_FILE_NAME_LENGTH 64
+
 struct file {
-  enum { FD_NONE, FD_PIPE, FD_INODE } type;
+  enum { FD_NONE, FD_PIPE, FD_INODE, FD_CG } type;
   int ref; // reference count
   char readable;
   char writable;
@@ -13,6 +15,8 @@ struct file {
   struct inode *ip;
   uint off;
   struct mount *mnt;
+  struct cgroup *cgp;
+  char cgfilename[MAX_CGROUP_FILE_NAME_LENGTH];
 };
 
 
