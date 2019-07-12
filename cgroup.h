@@ -11,7 +11,7 @@
 
 #define MAX_CONTROLLER_NAME_LENGTH 16
 
-#define MAX_PATH_LENGTH 64
+#define MAX_PATH_LENGTH 512
 
 /**
  * Control group, contains up to NPROC processes.
@@ -126,5 +126,10 @@ void set_nr_descendants(struct cgroup * cgroup, char* value);
  * Set the nr_dying_descendants field of the given cgroup to value.
  */
 void set_nr_dying_descendants(struct cgroup * cgroup, char* value);
+
+/**
+ * Set buf to the names of all chilren cgroup of cgroup at path.
+ */
+void get_cgroup_names_at_path(char *buf, char *path);
 
 #endif

@@ -93,25 +93,25 @@ void test_reading_cgroup_files(char *path)
 	printf(1, "-----------------------------------------\nReading contents of \"%s\":\n-----------------------------------------\n", path);
 	
 	read(cgroup_procs_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_controllers_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_subtree_control_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_events_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.events:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.events:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_max_descendants_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_max_depth_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_stat_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
 	
 	close(cgroup_procs_fd);
 	close(cgroup_controllers_fd);
@@ -181,25 +181,25 @@ void test_writing_cgroup_files(char *path)
 	printf(1, "-----------------------------------------\nReading contents of \"%s\":\n-----------------------------------------\n", path);
 	empty_string(buf);
 	read(cgroup_procs_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_controllers_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_subtree_control_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_events_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.events:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.events:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_max_descendants_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_max_depth_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
 	empty_string(buf);
 	read(cgroup_stat_fd, buf, sizeof(buf));
-	printf(2, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
+	printf(1, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
 	
 	
 	close(cgroup_procs_fd);

@@ -1,4 +1,3 @@
-// Cgroup filesysytem functions 
 #include "cgfs.h"
 #include "types.h"
 #include "defs.h"
@@ -9,8 +8,9 @@
 #include "file.h"
 #include "fcntl.h"
 
-#define MAX_PID_LENGTH 5
 
+#define MAX_PID_LENGTH 5
+#define MAX_CGROUP_DIR_ENTRIES 64
 
 static int
 strcmp(const char *p, const char *q)
@@ -142,9 +142,9 @@ copyuntilspace(char *s, char *t,int n)
 int opencgfile(char *filename, struct cgroup *cgp, int omode)
 {
 	
-	 struct file *f;
-	 int fd;
-	 char writable;
+	struct file *f;
+	int fd;
+	char writable;
 	 
 	/* Check that the file to be opened is one of the filesystem files and set writeable accordingly.*/
 	if(strcmp(filename, "cgroup.procs") == 0 || strcmp(filename, "cgroup.subtree_control") == 0 || strcmp(filename, "cgroup.max.descendants") == 0 || strcmp(filename, "cgroup.max.depth") == 0)
@@ -169,6 +169,30 @@ int opencgfile(char *filename, struct cgroup *cgp, int omode)
 	f->writable = ((omode & O_WRONLY) || (omode & O_RDWR)) && writable;
 	f->cgp = cgp;
 	strcpyn(f->cgfilename, filename, 0);
+	f->mnt = 0;
+	
+	return fd;
+}
+
+int opencgdirectory(struct cgroup *cgp, int omode)
+{
+	struct file *f;
+	int fd;
+	
+	/* Allocate file structure and file desctiptor.*/
+	if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
+		if(f)
+			fileclose(f);
+		return -1;
+	}
+	
+	f->type = FD_CG;
+	f->ip = 0;
+	f->off = 0;
+	f->readable = !(omode & O_WRONLY);
+	f->writable = 0;
+	f->cgp = cgp;
+	*f->cgfilename = 0;
 	f->mnt = 0;
 	
 	return fd;
@@ -275,6 +299,41 @@ int readcgfile(struct file *f, char *addr, int n)
 	return r;
 }
 
+int readcgdirectory(struct file *f, char *addr, int n)
+{
+	char buf[MAX_CGROUP_FILE_NAME_LENGTH * MAX_CGROUP_DIR_ENTRIES];
+	for(int i = 0; i < sizeof(buf); i++)
+		buf[i] = ' ';
+	
+	char *bufp = buf;
+	
+	strcpyn(bufp, "cgroup.procs", strlen("cgroup.procs"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.controllers", strlen("cgroup.controllers"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.subtree_control", strlen("cgroup.subtree_control"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.events", strlen("cgroup.events"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.max.descendants", strlen("cgroup.max.descendants"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.max.depth", strlen("cgroup.max.depth"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	strcpyn(bufp, "cgroup.stat", strlen("cgroup.stat"));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	
+	get_cgroup_names_at_path(&buf[7 * MAX_CGROUP_FILE_NAME_LENGTH], f->cgp->cgroup_dir_path);
+	
+	int i;
+	for(i = f->off; i < sizeof(buf) && i - f->off < n; i++){
+		*addr++ = buf[i];
+	}
+	
+	i = i - f->off;
+	f->off += i;
+	return i;
+}
+
 int writecgfile(struct file *f, char *addr, int n)
 {
 	int r = 0;
@@ -362,4 +421,66 @@ int get_cg_file_dir_path_and_file_name(char* path, char* dir_path, char* file_na
 	*dir_path = 0;
 	
 	return 0;
+}
+
+int cgstat(struct file *f, struct stat *st)
+{
+	if(*f->cgfilename == 0){
+		st->type = T_CGDIR;
+		st->size = 0 /*TODO: set size of directory*/;
+	} else {
+		st->type = T_CGFILE;
+		st->size = cgfilesize(f);
+	}
+	return 0;
+}
+
+int cgfilesize(struct file *f)
+{
+	int size = 1;
+	
+	if(strcmp(f->cgfilename, "cgroup.procs") == 0){
+		int procoff = 0;
+		while(procoff < (sizeof(f->cgp->proc) / sizeof(*f->cgp->proc))){
+			if(f->cgp->proc[procoff] == 0){
+				procoff++;
+				continue;				
+			}
+			int i = proc_pid(f->cgp->proc[procoff]);
+			while(i != 0){
+				i /= 10;
+				size++;
+			}
+			size++;
+			procoff++;
+		}		
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.controllers") == 0){
+		if(f->cgp->cpu_controller_avalible)
+			size += 3;
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.subtree_control") == 0){
+		if(f->cgp->cpu_controller_enabled)
+			size += 3;
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.events") == 0){
+		size += strlen("populated - 0");
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.max.descendants") == 0){
+		size+= strlen(f->cgp->max_descendants_value);
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.max.depth") == 0){
+		size+= strlen(f->cgp->max_depth_value);
+	}
+	
+	if(strcmp(f->cgfilename, "cgroup.stat") == 0){
+		size += strlen("nr_descendants - ") + strlen(f->cgp->nr_descendants) + strlen("\n") + strlen("nr_dying_descendants - ") + strlen(f->cgp->nr_dying_descendants);
+	}
+	
+	return size;
 }

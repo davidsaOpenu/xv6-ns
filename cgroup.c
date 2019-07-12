@@ -4,6 +4,7 @@
 
 #define MAX_DES_DEF "64"
 #define MAX_DEP_DEF "64"
+#define MAX_CGROUP_FILE_NAME_LENGTH 64
 
 struct cgroup cgroups[NPROC];
 
@@ -173,7 +174,7 @@ void cgroup_initialize(struct cgroup * cgroup, char* path, struct cgroup * paren
 		cgroup->cpu_controller_avalible = 1;
 		cgroup->cpu_controller_enabled = 1;
 		*(cgroup->depth) = '0';	
-		*(cgroup->cgroup_dir_path) = '0';
+		*(cgroup->cgroup_dir_path) = 0;
 	}else{
 		cgroup->parent = parent_cgroup;
 		
@@ -373,3 +374,19 @@ void set_nr_dying_descendants(struct cgroup * cgroup, char* value)
 		for(int i = 0; i < NR_DYING_DESC_MAX_SIZE && (*nr_dying_descendants++ = *value++) != 0; i++)
 			;
 }
+
+void get_cgroup_names_at_path(char *buf, char *path)
+{
+	if(*path == 0)
+		return;	
+	
+	for(int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
+		if(strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0){
+			char *child_name = &(cgroups[i].cgroup_dir_path[strlen(path) + 1]);
+			int child_name_len = strlen(child_name);
+			while(*child_name != 0)
+				*buf++ = *child_name++;
+			buf += MAX_CGROUP_FILE_NAME_LENGTH - child_name_len;
+		}
+}
+

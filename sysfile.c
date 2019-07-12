@@ -7,7 +7,6 @@
 #include "types.h"
 #include "defs.h"
 #include "param.h"
-#include "stat.h"
 #include "mmu.h"
 #include "proc.h"
 #include "fs.h"
@@ -78,8 +77,13 @@ sys_read(void)
   if(argfd(0, 0, &f) < 0 || argint(2, &n) < 0 || argptr(1, &p, n) < 0)
     return -1;
 
-  if(f->type == FD_CG)
-	return readcgfile(f, p, n);
+  if(f->type == FD_CG){
+    if(*f->cgfilename == 0)
+	  return readcgdirectory(f, p, n);
+    else
+	  return readcgfile(f, p, n);
+  }
+	
   else
 	return fileread(f, p, n);
 }
@@ -121,6 +125,10 @@ sys_fstat(void)
 
   if(argfd(0, 0, &f) < 0 || argptr(1, (void*)&st, sizeof(*st)) < 0)
     return -1;
+
+  if(f->type == FD_CG)
+	  return cgstat(f, st);
+  
   return filestat(f, st);
 }
 
@@ -333,54 +341,60 @@ sys_open(void)
 
   begin_op();
   
+  if((cgp = get_cgroup_by_path(path))){
+	fd = opencgdirectory(cgp, omode);  
+	end_op();
+	return fd;
+  }
+  
   char dir_path[MAX_PATH_LENGTH];
   char file_name[MAX_PATH_LENGTH];
-	
+
   get_cg_file_dir_path_and_file_name(path, dir_path, file_name);
   
   if((cgp = get_cgroup_by_path(dir_path))){
-	fd = opencgfile(file_name, cgp, omode);  
-	end_op();
-  }else{
-	
-	if(omode & O_CREATE){
-		ip = createmount(path, T_FILE, 0, 0, &mnt);
-	if(ip == 0){
-		end_op();
-		return -1;
-	}
-	} else {
-		if((ip = nameimount(path, &mnt)) == 0){
-			end_op();
-			return -1;
-		}
-		ilock(ip);
-		if(ip->type == T_DIR && omode != O_RDONLY){
-			iunlockput(ip);
-			mntput(mnt);
-			end_op();
-			return -1;
-		}
-	}
-
-	if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
-		if(f)
-			fileclose(f);
-		iunlockput(ip);
-		mntput(mnt);
-		end_op();
-		return -1;
-	}
-	iunlock(ip);
-	end_op();
-
-	f->type = FD_INODE;
-	f->ip = ip;
-	f->off = 0;
-	f->mnt = mnt;
-	f->readable = !(omode & O_WRONLY);
-	f->writable = (omode & O_WRONLY) || (omode & O_RDWR);
+    fd = opencgfile(file_name, cgp, omode);  
+    end_op();
+    return fd;
   }
+    
+  if(omode & O_CREATE){
+    ip = createmount(path, T_FILE, 0, 0, &mnt);
+    if(ip == 0){
+      end_op();
+      return -1;
+  }
+  } else {
+    if((ip = nameimount(path, &mnt)) == 0){
+      end_op();
+      return -1;
+    }
+    ilock(ip);
+    if(ip->type == T_DIR && omode != O_RDONLY){
+      iunlockput(ip);
+      mntput(mnt);
+      end_op();
+      return -1;
+      }
+  }
+
+  if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
+    if(f)
+      fileclose(f);
+    iunlockput(ip);
+    mntput(mnt);
+    end_op();
+    return -1;
+  }
+  iunlock(ip);
+  end_op();
+
+  f->type = FD_INODE;
+  f->ip = ip;
+  f->off = 0;
+  f->mnt = mnt;
+  f->readable = !(omode & O_WRONLY);
+  f->writable = (omode & O_WRONLY) || (omode & O_RDWR);
   
   return fd;	  
 }
@@ -396,6 +410,12 @@ sys_mkdir(void)
   if(argstr(0, &path) < 0){
 	end_op();
     return -1;
+  }
+
+  if(get_cgroup_by_path(path)){
+	  cprintf("cgroup already exists\n");
+			end_op();
+			return -1;
   }
 
   if(!cgroup_create(path)){

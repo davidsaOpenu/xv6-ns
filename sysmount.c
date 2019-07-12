@@ -53,6 +53,12 @@ sys_mount(void)
 			return -1;
 		}
 		
+		if(*(cgroup_root()->cgroup_dir_path)){
+			cprintf("cgroup filesystem already mounted\n");
+			end_op();
+			return -1;
+		}
+		
 		set_cgroup_dir_path(cgroup_root(), mount_path);
 				
 		end_op();
