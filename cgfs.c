@@ -53,20 +53,26 @@ fdalloc(struct file *f)
 static int 
 itoa(char *buf, int n)
 {
-	char revbuf[sizeof(buf)];
-	int i;
+	
+	int i = n;
 	int length = 0;
+	
+	while(i > 0){
+		length++;
+		i /= 10;
+	}
+	
+	char revbuf[length];
+	
 	if(n == 0){
 	    *buf++ = '0';
-		length++;
 	}
-	for(i = 0; n > 0 && i < sizeof(buf); i++){
+	for(i = 0; n > 0 && i < length; i++){
 		revbuf[i] = (n % 10) + '0';
 		n /= 10;
 	}
     while(--i >= 0){
 		*buf++ = revbuf[i];
-		length++;
 	}
 	*buf = '\0';
 	return length;
@@ -202,80 +208,60 @@ int readcgfile(struct file *f, char *addr, int n)
 			addr++;
 			r++;
 		}
-		*addr = '\0';
-		r++;
+		if(procoff == (sizeof(f->cgp->proc) / sizeof(*f->cgp->proc)) && *(addr-1) == '\n')
+			*(addr-1) = '\0';
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.controllers") == 0){
 		if(f->cgp->cpu_controller_avalible){
 			char controllerslist[] = "cpu";
-			while(r < n && (r + f->off) < sizeof(controllerslist)){
-				*addr++ = controllerslist[r + f->off];
-				r++;
-			}
-			r--;
+			while(r < n && (r + f->off) < strlen(controllerslist) + 1 && (*addr++ = controllerslist[(r++) + f->off]) != 0)
+				;
 		}
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.subtree_control") == 0){
 		if(f->cgp->cpu_controller_enabled){
 			char enabledcontrollerslist[] = "cpu";
-			while(r < n && (r + f->off) < sizeof(enabledcontrollerslist)){
-				*addr++ = enabledcontrollerslist[r + f->off];
-				r++;
-			}
-			r--;
+			while(r < n && (r + f->off) < strlen(enabledcontrollerslist) + 1 && (*addr++ = enabledcontrollerslist[r++ + f->off]) != 0)
+				;
 		}
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.events") == 0){
 		char eventstext[] = "populated - 0";
 		if(f->cgp->populated)
-			eventstext[sizeof(eventstext) - 2] = '1';
+			eventstext[strlen(eventstext) - 1] = '1';
 			
-		while(r < n && (r + f->off) < sizeof(eventstext)){
-				*addr++ = eventstext[r + f->off];
-				r++;
-		}
-		r--;
+		while(r < n && (r + f->off) < strlen(eventstext) + 1 && (*addr++ = eventstext[r++ + f->off]) != 0)
+			;
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.max.descendants") == 0){
-		while(r < n && (r + f->off) < sizeof(f->cgp->max_descendants_value) && f->cgp->max_descendants_value[r + f->off] != 0){
-				*addr++ = f->cgp->max_descendants_value[r + f->off];
-				r++;
-		}
-		*addr = '\0';
+		while(r < n && (r + f->off) < sizeof(f->cgp->max_descendants_value) && (*addr++ = f->cgp->max_descendants_value[r++ + f->off]) != 0)
+			;
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.max.depth") == 0){
-		while(r < n && (r + f->off) < sizeof(f->cgp->max_depth_value) && f->cgp->max_depth_value[r + f->off] != 0){
-				*addr++ = f->cgp->max_depth_value[r + f->off];
-				r++;
-		}
-		*addr = '\0';
+		while(r < n && (r + f->off) < sizeof(f->cgp->max_depth_value) && (*addr++ = f->cgp->max_depth_value[r++ + f->off]) != 0)
+			;
 	}
 	
 	if(strcmp(f->cgfilename, "cgroup.stat") == 0){
-		int  blank_spaces_desc = (*(f->cgp->nr_descendants + 1) ? 1 : 2); /*Get the number of '\0' characters in nr_descendants */
-		int  blank_spaces_dying_desc = (*(f->cgp->nr_dying_descendants + 1) ? 1 : 2); /*Get the number of '\0' characters in nr_dying_descendants */
-		char stattext[(sizeof("nr_descendants - ") - 1) + (sizeof(f->cgp->nr_descendants) - blank_spaces_desc) + (sizeof("\n") - 1) + (sizeof("nr_dying_descendants - ") - 1) + (sizeof(f->cgp->nr_dying_descendants) - blank_spaces_dying_desc) + 1];
+		char stattext[strlen("nr_descendants - ") + strlen(f->cgp->nr_descendants) + strlen("\n") + strlen("nr_dying_descendants - ") + strlen(f->cgp->nr_dying_descendants) + 1];
 		char *stattextp = stattext;
 		strcpyn(stattextp, "nr_descendants - ", 0);
-		stattextp += sizeof("nr_descendants - ") - 1;
+		stattextp += strlen("nr_descendants - ");
 		strcpyn(stattextp, f->cgp->nr_descendants, 0);
-		stattextp += sizeof(f->cgp->nr_descendants) - blank_spaces_desc;
+		stattextp += strlen(f->cgp->nr_descendants);
 		strcpyn(stattextp, "\n", 0);
-		stattextp += sizeof("\n") - 1;
+		stattextp += strlen("\n");
 		strcpyn(stattextp, "nr_dying_descendants - ", 0);
-		stattextp += sizeof("nr_dying_descendants - ") - 1;
+		stattextp += strlen("nr_dying_descendants - ");
 		strcpyn(stattextp, f->cgp->nr_dying_descendants, 0);
 		
-		while(r < n && (r + f->off) < sizeof(stattext) && stattext[r + f->off] != 0){
-				*addr++ = stattext[r + f->off];
-				r++;
-		}
-		*addr = '\0';
+		while(r < n && (r + f->off) < sizeof(stattext) && (*addr++ = stattext[r++ + f->off]) != 0)
+			;
 	}
 	
 	f->off += r;

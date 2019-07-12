@@ -69,6 +69,13 @@ void test_opening_cgroup_files(char *path, int *cgroup_procs_fd, int *cgroup_con
 	*cgroup_stat_fd = open_cgroup_file(path, "cgroup.stat");
 }
 
+void
+empty_string(char* string)
+{
+	for(int i = 0; i < strlen(string); i++)
+		string[i] = 0;
+}
+
 /**
  * Open, read, print, and close all files in cgroup located at path.
  */
@@ -87,16 +94,22 @@ void test_reading_cgroup_files(char *path)
 	
 	read(cgroup_procs_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_controllers_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_subtree_control_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_events_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.events:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_max_descendants_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_max_depth_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_stat_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
 	
@@ -109,23 +122,30 @@ void test_reading_cgroup_files(char *path)
 	close(cgroup_stat_fd);
 }
 
+
 static int 
 itoa(char *buf, int n)
 {
-	char revbuf[sizeof(buf)];
-	int i;
+	
+	int i = n;
 	int length = 0;
+	
+	while(i > 0){
+		length++;
+		i /= 10;
+	}
+	
+	char revbuf[length];
+	
 	if(n == 0){
 	    *buf++ = '0';
-		length++;
 	}
-	for(i = 0; n > 0 && i < sizeof(buf); i++){
+	for(i = 0; n > 0 && i < length; i++){
 		revbuf[i] = (n % 10) + '0';
 		n /= 10;
 	}
     while(--i >= 0){
 		*buf++ = revbuf[i];
-		length++;
 	}
 	*buf = '\0';
 	return length;
@@ -159,18 +179,25 @@ void test_writing_cgroup_files(char *path)
 	
 	
 	printf(1, "-----------------------------------------\nReading contents of \"%s\":\n-----------------------------------------\n", path);
+	empty_string(buf);
 	read(cgroup_procs_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_controllers_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.controllers:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_subtree_control_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.subtree_control:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_events_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.events:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_max_descendants_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.max.descendants:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_max_depth_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.max.depth:\n%s\n", path, buf);
+	empty_string(buf);
 	read(cgroup_stat_fd, buf, sizeof(buf));
 	printf(2, "Contents of %s/cgroup.stat:\n%s\n", path, buf);
 	
@@ -228,7 +255,6 @@ void disable_cpu_controller(char *path)
 	close(cgroup_subtree_control_fd);
 }
 
-
 void test_closing_cgroup_files(char *path, int *cgroup_procs_fd, int *cgroup_controllers_fd, int *cgroup_subtree_control_fd, int *cgroup_events_fd, int *cgroup_max_descendants_fd, int *cgroup_max_depth_fd, int *cgroup_stat_fd)
 {
 	close(*cgroup_procs_fd);
@@ -239,10 +265,6 @@ void test_closing_cgroup_files(char *path, int *cgroup_procs_fd, int *cgroup_con
 	close(*cgroup_max_depth_fd);
 	close(*cgroup_stat_fd);
 }
-
-
-
-
 
 /**
  * Delete the cgroups at the following paths:
