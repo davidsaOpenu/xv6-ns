@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e92b32e3_39f7e48b",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-12T17:49:31Z",
+      "side": 1,
+      "message": "I suggest child_pids !\u003d NULL for cleanless",
+      "revId": "43794a7a795d7c75fb8a1e1df3f8a2b2ebb1ef97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dadbce0c_d7e7859f",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-12T17:49:31Z",
+      "side": 1,
+      "message": "1) I suggest child_pids !\u003d NULL for clean less,\n2) count is unused , maybe it should be returned.",
+      "revId": "43794a7a795d7c75fb8a1e1df3f8a2b2ebb1ef97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "581e8b06_7fa2a4b6",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-12T17:49:31Z",
+      "side": 1,
+      "message": "I agree this is weird, Correct me if i am wrong but is the kernel pid zero? doest this mean somehow the reaper of the child process is becoming 0 in the kernel namespace?\ni had a look at the proc.c exit function but i have not found the source of the bug yet.",
+      "revId": "43794a7a795d7c75fb8a1e1df3f8a2b2ebb1ef97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
