@@ -83,6 +83,25 @@ static void initialize_cgroup_depth(struct cgroup * cgroup)
     increment_num_string(cgroup->depth);
 }
 
+static void format_path(char * buf, char * path)
+{
+	if(*path != '/')
+		*buf++ = '/';
+	
+	char *path_end = path + strlen(path);
+	while(path_end > path && *path_end == '/')
+		path_end--;
+	
+	while(path <= path_end)
+		*buf++ = *path++;
+
+	*buf = 0;
+}
+
+
+
+
+
 struct cgroup * cgroup_root(void)
 {
     return &cgroups[0];
@@ -90,10 +109,12 @@ struct cgroup * cgroup_root(void)
 
 struct cgroup * cgroup_create(char * path)
 {
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
     char parent_path[MAX_PATH_LENGTH];
     char new_dir_name[MAX_PATH_LENGTH];
-
-    get_cg_file_dir_path_and_file_name(path, parent_path, new_dir_name);
+	
+	get_cg_file_dir_path_and_file_name(fpath, parent_path, new_dir_name);
 
     struct cgroup * parent_cgp = get_cgroup_by_path(parent_path);
     /*Cgroup has to be created as a child of another cgroup. (Root cgroup
@@ -130,7 +151,7 @@ struct cgroup * cgroup_create(char * path)
         panic("cgroup_create: no avalible cgroup slots");
 
     /*Initialize the new cgroup.*/
-    cgroup_initialize(new_cgp, path, parent_cgp);
+    cgroup_initialize(new_cgp, fpath, parent_cgp);
 
     /*Update number of descendant cgroups for each ancestor.*/
     while (parent_cgp != 0) {
@@ -339,19 +360,24 @@ int disable_cpu_controller(struct cgroup * cgroup)
 
 void set_cgroup_dir_path(struct cgroup * cgroup, char * path)
 {
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
+	char *fpathp = fpath;
     char * cgroup_dir_path = cgroup->cgroup_dir_path;
-    if (*path != 0)
+    if (*fpathp != 0)
         for (int i = 0; (i < sizeof(cgroup->cgroup_dir_path)) &&
-                        ((*cgroup_dir_path++ = *path++) != 0);
+                        ((*cgroup_dir_path++ = *fpathp++) != 0);
              i++)
             ;
 }
 
 struct cgroup * get_cgroup_by_path(char * path)
 {
-    if (*path != 0)
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
+    if (*fpath != 0)
         for (int i = 0; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-            if (strcmp(cgroups[i].cgroup_dir_path, path) == 0)
+            if (strcmp(cgroups[i].cgroup_dir_path, fpath) == 0)
                 return &cgroups[i];
 
     return 0;
@@ -428,3 +454,4 @@ int cgorup_num_of_immidiate_children(struct cgroup * cgroup)
 
     return num;
 }
+
