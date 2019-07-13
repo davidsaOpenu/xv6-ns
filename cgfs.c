@@ -146,6 +146,12 @@ int opencgfile(char *filename, struct cgroup *cgp, int omode)
 	int fd;
 	char writable;
 	 
+	 if(strcmp(filename, ".") == 0)
+		 return opencgdirectory(cgp, omode);
+	 
+	 if(strcmp(filename, "..") == 0)
+		 return opencgdirectory(cgp->parent, omode);
+	 
 	/* Check that the file to be opened is one of the filesystem files and set writeable accordingly.*/
 	if(strcmp(filename, "cgroup.procs") == 0 || strcmp(filename, "cgroup.subtree_control") == 0 || strcmp(filename, "cgroup.max.descendants") == 0 || strcmp(filename, "cgroup.max.depth") == 0)
 		writable = 1;
@@ -307,14 +313,22 @@ int readcgdirectory(struct file *f, char *addr, int n)
 	
 	char *bufp = buf;
 	
+	strcpyn(bufp, ".", strlen("."));
+	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	if(f->cgp != cgroup_root()){
+		strcpyn(bufp, "..", strlen(".."));
+		bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	}
 	strcpyn(bufp, "cgroup.procs", strlen("cgroup.procs"));
 	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-	strcpyn(bufp, "cgroup.controllers", strlen("cgroup.controllers"));
-	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-	strcpyn(bufp, "cgroup.subtree_control", strlen("cgroup.subtree_control"));
-	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-	strcpyn(bufp, "cgroup.events", strlen("cgroup.events"));
-	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	if(f->cgp != cgroup_root()){
+		strcpyn(bufp, "cgroup.controllers", strlen("cgroup.controllers"));
+		bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+		strcpyn(bufp, "cgroup.subtree_control", strlen("cgroup.subtree_control"));
+		bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+		strcpyn(bufp, "cgroup.events", strlen("cgroup.events"));
+		bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+	}
 	strcpyn(bufp, "cgroup.max.descendants", strlen("cgroup.max.descendants"));
 	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
 	strcpyn(bufp, "cgroup.max.depth", strlen("cgroup.max.depth"));
@@ -322,7 +336,7 @@ int readcgdirectory(struct file *f, char *addr, int n)
 	strcpyn(bufp, "cgroup.stat", strlen("cgroup.stat"));
 	bufp += MAX_CGROUP_FILE_NAME_LENGTH;
 	
-	get_cgroup_names_at_path(&buf[7 * MAX_CGROUP_FILE_NAME_LENGTH], f->cgp->cgroup_dir_path);
+	get_cgroup_names_at_path(bufp, f->cgp->cgroup_dir_path);
 	
 	int i;
 	for(i = f->off; i < sizeof(buf) && i - f->off < n; i++){
@@ -427,7 +441,7 @@ int cgstat(struct file *f, struct stat *st)
 {
 	if(*f->cgfilename == 0){
 		st->type = T_CGDIR;
-		st->size = 0 /*TODO: set size of directory*/;
+		st->size = MAX_CGROUP_FILE_NAME_LENGTH * (7 + cgorup_num_of_immidiate_children(f->cgp));
 	} else {
 		st->type = T_CGFILE;
 		st->size = cgfilesize(f);

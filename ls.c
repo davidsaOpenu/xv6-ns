@@ -81,7 +81,7 @@ ls(char *path)
 	}
 	strcpy(buf, path);
     p = buf + strlen(buf);
-    *p++ = '/';
+	*p++ = '/';
     while(read(fd, cg_file_name, sizeof(cg_file_name)) == MAX_CGROUP_FILE_NAME_LENGTH && cg_file_name[0] != ' '){
       memmove(p, cg_file_name, MAX_CGROUP_FILE_NAME_LENGTH);
       p[MAX_CGROUP_FILE_NAME_LENGTH] = 0;

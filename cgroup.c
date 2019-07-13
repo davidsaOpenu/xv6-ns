@@ -175,6 +175,7 @@ void cgroup_initialize(struct cgroup * cgroup, char* path, struct cgroup * paren
 		cgroup->cpu_controller_enabled = 1;
 		*(cgroup->depth) = '0';	
 		*(cgroup->cgroup_dir_path) = 0;
+		cgroup->parent = 0;
 	}else{
 		cgroup->parent = parent_cgroup;
 		
@@ -381,7 +382,7 @@ void get_cgroup_names_at_path(char *buf, char *path)
 		return;	
 	
 	for(int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-		if(strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0){
+		if(*(cgroups[i].cgroup_dir_path) != 0 && strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0){
 			char *child_name = &(cgroups[i].cgroup_dir_path[strlen(path) + 1]);
 			int child_name_len = strlen(child_name);
 			while(*child_name != 0)
@@ -390,3 +391,16 @@ void get_cgroup_names_at_path(char *buf, char *path)
 		}
 }
 
+int cgorup_num_of_immidiate_children(struct cgroup *cgroup)
+{
+	char* path = cgroup->cgroup_dir_path;
+	int num = 0;
+	if(*path == 0)
+		return -1;
+	
+	for(int i = 0; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
+		if(*(cgroups[i].cgroup_dir_path) != 0 && strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0)
+			num++;
+
+	return num;
+}

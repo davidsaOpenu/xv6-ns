@@ -132,4 +132,9 @@ void set_nr_dying_descendants(struct cgroup * cgroup, char* value);
  */
 void get_cgroup_names_at_path(char *buf, char *path);
 
+/**
+ * Get number of cgroup's immidiate children.
+ */
+int cgorup_num_of_immidiate_children(struct cgroup *cgroup);
+
 #endif
