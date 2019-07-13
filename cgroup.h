@@ -151,4 +151,9 @@ void get_cgroup_names_at_path(char * buf, char * path);
  */
 int cgorup_num_of_immidiate_children(struct cgroup * cgroup);
 
+/**
+ * Format path and write it into buf.
+ */
+void format_path(char * buf, char * path);
+
 #endif

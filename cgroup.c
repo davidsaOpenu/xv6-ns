@@ -83,12 +83,15 @@ static void initialize_cgroup_depth(struct cgroup * cgroup)
     increment_num_string(cgroup->depth);
 }
 
-static void format_path(char * buf, char * path)
+void format_path(char * buf, char * path)
 {
+	if(*path == 0)
+		return;
+	
 	if(*path != '/')
 		*buf++ = '/';
 	
-	char *path_end = path + strlen(path);
+	char *path_end = path + strlen(path) - 1;
 	while(path_end > path && *path_end == '/')
 		path_end--;
 	
@@ -97,10 +100,6 @@ static void format_path(char * buf, char * path)
 
 	*buf = 0;
 }
-
-
-
-
 
 struct cgroup * cgroup_root(void)
 {
@@ -114,7 +113,8 @@ struct cgroup * cgroup_create(char * path)
     char parent_path[MAX_PATH_LENGTH];
     char new_dir_name[MAX_PATH_LENGTH];
 	
-	get_cg_file_dir_path_and_file_name(fpath, parent_path, new_dir_name);
+	if(get_cg_file_dir_path_and_file_name(fpath, parent_path, new_dir_name) < 0)
+		return 0;
 
     struct cgroup * parent_cgp = get_cgroup_by_path(parent_path);
     /*Cgroup has to be created as a child of another cgroup. (Root cgroup

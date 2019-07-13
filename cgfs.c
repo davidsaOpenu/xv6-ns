@@ -424,22 +424,24 @@ int get_cg_file_dir_path_and_file_name(char * path,
                                        char * dir_path,
                                        char * file_name)
 {
-    char * file_name_temp = path;
-    char * temp = path;
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
+    char * file_name_temp = fpath;
+    char * temp = fpath;
     while (*temp != '\0') {
         if (*temp == '/')
             file_name_temp = temp;
         temp++;
     }
 
-    if (file_name_temp == path || file_name_temp == path + 1)
+    if (file_name_temp == fpath || file_name_temp == fpath + 1)
         return -1;
 
     temp = file_name_temp + 1;
     while (*temp != '\0')
         *file_name++ = *temp++;
 
-    temp = path;
+    temp = fpath;
     while (temp < file_name_temp)
         *dir_path++ = *temp++;
 

@@ -350,9 +350,7 @@ sys_open(void)
   char dir_path[MAX_PATH_LENGTH];
   char file_name[MAX_PATH_LENGTH];
 
-  get_cg_file_dir_path_and_file_name(path, dir_path, file_name);
-  
-  if((cgp = get_cgroup_by_path(dir_path))){
+  if(get_cg_file_dir_path_and_file_name(path, dir_path, file_name) == 0 && (cgp = get_cgroup_by_path(dir_path))){
     fd = opencgfile(file_name, cgp, omode);  
     end_op();
     return fd;
