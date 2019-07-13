@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86689b6b_2a3c6c4c",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-13T14:28:09Z",
+      "side": 1,
+      "message": "can get_pid_for_ns return zero here?",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c425343_88fc888f",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-13T14:28:09Z",
+      "side": 1,
+      "message": "1) I am wondering if this function is the correct logic.\nMaybe i misunderstand but shouldn\u0027t the function kill all children with out reaping them to the init parents namespace?. When init dies there should be no survivors.\n2) get_pid1_for_ns can return 0, i think this is the source of bug mentioned in the tests where somehow children become zombies under pid 0 EG:kernel.",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b35442d_4daa9964",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-13T14:28:09Z",
+      "side": 1,
+      "message": "can get_pid_for_ns return zero here?",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
