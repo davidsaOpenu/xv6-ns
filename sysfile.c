@@ -454,9 +454,21 @@ sys_chdir(void)
   struct inode *ip;
   struct proc *curproc = myproc();
   struct mount *mnt;
+  struct cgroup *cgp;
+  char fpath[MAX_PATH_LENGTH];
   
   begin_op();
-  if(argstr(0, &path) < 0 || (ip = nameimount(path, &mnt)) == 0){
+  if(argstr(0, &path) < 0){
+    end_op();
+    return -1;
+  }
+  if((cgp = get_cgroup_by_path(path))){
+    end_op();
+	safestrcpy(curproc->cwdp, cgp->cgroup_dir_path, sizeof(cgp->cgroup_dir_path));
+	return 0;
+  }  
+  format_path(fpath, path);
+  if((ip = nameimount(fpath, &mnt)) == 0){
     end_op();
     return -1;
   }
@@ -467,11 +479,14 @@ sys_chdir(void)
     return -1;
   }
   iunlock(ip);
-  iput(curproc->cwd);
-  mntput(curproc->cwdmount);
+  if(curproc->cwd)
+    iput(curproc->cwd);
+  if(curproc->cwdmount)
+    mntput(curproc->cwdmount);
   end_op();
   curproc->cwdmount = mnt;
   curproc->cwd = ip;
+  format_path(curproc->cwdp, path);
   return 0;
 }
 

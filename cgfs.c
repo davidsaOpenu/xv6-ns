@@ -132,12 +132,6 @@ int opencgfile(char * filename, struct cgroup * cgp, int omode)
     int fd;
     char writable;
 
-    if (strcmp(filename, ".") == 0)
-        return opencgdirectory(cgp, omode);
-
-    if (strcmp(filename, "..") == 0)
-        return opencgdirectory(cgp->parent, omode);
-
     /* Check that the file to be opened is one of the filesystem files and
      * set writeable accordingly.*/
     if (strcmp(filename, "cgroup.procs") == 0 ||

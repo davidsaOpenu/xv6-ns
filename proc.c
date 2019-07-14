@@ -176,6 +176,7 @@ userinit(void)
 
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = initprocessroot(&p->cwdmount);
+  safestrcpy(p->cwdp, "/", sizeof(p->cwdp));
   p->nsproxy = emptynsproxy();
 
   p->ns_pid = pid_ns_next_pid(p->nsproxy->pid_ns);
@@ -253,6 +254,7 @@ fork(void)
     if(curproc->ofile[i])
       np->ofile[i] = filedup(curproc->ofile[i]);
   np->cwd = idup(curproc->cwd);
+  safestrcpy(np->cwdp, curproc->cwdp, sizeof(curproc->cwdp));
   np->cwdmount = mntdup(curproc->cwdmount);
 
   np->nsproxy = namespacedup(curproc->nsproxy);
@@ -331,6 +333,7 @@ exit(int status)
 
   mntput(curproc->cwdmount);
   curproc->cwdmount = 0;
+  *curproc->cwdp = 0;
   curproc->cwd = 0;
 
   namespaceput(curproc->nsproxy);

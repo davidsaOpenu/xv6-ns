@@ -4,6 +4,8 @@
 #ifndef XV6_PROC_H
 #define XV6_PROC_H
 
+#define MAX_PATH_LENGTH 512
+
 struct cgroup;
 
 // Per-CPU state
@@ -69,10 +71,11 @@ struct proc {
   struct nsproxy *nsproxy;     // Namespace proxy object
   struct pid_ns *child_pid_ns; // PID namespace for child procs
   int status;		               // Process exit status
+  char cwdp[MAX_PATH_LENGTH];  // Current directory path.
   struct cgroup * cgroup;      // The process control group.
   unsigned int cpu_time;       // Process cpu time.
   unsigned int cpu_period_time;// Cpu time in microseconds in the last accounting frame.
-  unsigned int cpu_percent;   // Cpu usage percentage in the last accounting frame.
+  unsigned int cpu_percent;    // Cpu usage percentage in the last accounting frame.
   unsigned int cpu_account_frame; // The cpu account frame.
 };
 

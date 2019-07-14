@@ -85,20 +85,49 @@ static void initialize_cgroup_depth(struct cgroup * cgroup)
 
 void format_path(char * buf, char * path)
 {
-	if(*path == 0)
-		return;
+	/* If the path does not start with '/' then add the current working directory path to the start.*/
+	struct proc* curproc = myproc();
+	char *bufp = buf;
+	if(*path != '/'){
+		char *cwdp = curproc->cwdp;
+		while(*cwdp != 0)
+			*bufp++ = *cwdp++;
+		if(*(bufp - 1) != '/')
+			*bufp++ = '/';
+	}
 	
-	if(*path != '/')
-		*buf++ = '/';
-	
+	/* Get Pointer to end of path ('/'s at the end don't count)*/
 	char *path_end = path + strlen(path) - 1;
 	while(path_end > path && *path_end == '/')
 		path_end--;
 	
-	while(path <= path_end)
-		*buf++ = *path++;
-
-	*buf = 0;
+	/* Copy formatted path to buffer*/
+	while(path <= path_end){
+	    if(*(bufp-1) == '/' && *path == '.'){
+	        if(*(path+1) == 0 || *(path+1) == '/'){
+				path += 2;
+				continue;
+			}
+	        if(*(path+1) == '.' && (*(path+2) == 0 || *(path+2) == '/')){
+	            bufp -= 2;
+	            while(bufp >= buf && *bufp != '/')
+	                bufp--;
+	            if(bufp < buf){
+	                *buf = 0;
+	                return;
+	            }
+	            bufp++;
+	            path += 3;
+				continue;
+	        }
+	    }
+		*bufp++ = *path++;
+	}
+	
+	/* If the path ends with '/' and is not "/" then remove last '/'. */
+	if(bufp - 1 > buf && *(bufp - 1) == '/')
+	    *(bufp - 1) = 0;
+	*bufp = 0;
 }
 
 struct cgroup * cgroup_root(void)
@@ -375,6 +404,7 @@ struct cgroup * get_cgroup_by_path(char * path)
 {
 	char fpath[MAX_PATH_LENGTH];
 	format_path(fpath, path);
+
     if (*fpath != 0)
         for (int i = 0; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
             if (strcmp(cgroups[i].cgroup_dir_path, fpath) == 0)
