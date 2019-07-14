@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c16266a3_1e0dc670",
+        "filename": "windows-debugging/gdbcommand",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-14T14:19:03Z",
+      "side": 1,
+      "message": "is it possible to turn it to the relative path?",
+      "revId": "f33dbc2bbed135397ee22f60c7adf79ce199ae12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "465e0a0d_f7b6a2cf",
+        "filename": "windows-debugging/gdbcommand",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-14T14:19:03Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "f33dbc2bbed135397ee22f60c7adf79ce199ae12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ff248c_911fb467",
+        "filename": "windows-debugging/gdbcommand",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-14T14:19:03Z",
+      "side": 1,
+      "message": "Q: what is the need in those lines?",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 30
+      },
+      "revId": "f33dbc2bbed135397ee22f60c7adf79ce199ae12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "444f7cdb_3cb03e4f",
+        "filename": "windows-debugging/options.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-14T14:19:03Z",
+      "side": 1,
+      "message": "does it makes scene to indicate where from to install the subsystem?",
+      "revId": "f33dbc2bbed135397ee22f60c7adf79ce199ae12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f3f81b2_7813b4cb",
+        "filename": "windows-debugging/options.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-14T14:19:03Z",
+      "side": 1,
+      "message": "same question regarding the path",
+      "revId": "f33dbc2bbed135397ee22f60c7adf79ce199ae12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
