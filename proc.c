@@ -744,7 +744,7 @@ cgroup_move_proc(struct cgroup * cgroup, int pid)
 				release(&ptable.lock);
 				return -1;
 			}
-			cgroup_insert(cgroup, p);
+			unsafe_cgroup_insert(cgroup, p);
 			break;
 		}
 

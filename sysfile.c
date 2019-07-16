@@ -113,7 +113,10 @@ sys_close(void)
   if(argfd(0, &fd, &f) < 0)
     return -1;
   myproc()->ofile[fd] = 0;
-  fileclose(f);
+  if(f->type == FD_CG)
+	  closecgfileordir(f);
+  else
+	  fileclose(f);
   return 0;
 }
 
@@ -212,7 +215,7 @@ sys_unlink(void)
 
   begin_op();
   
-  int delete_cgroup_res = cgroup_delete(path);
+  int delete_cgroup_res = cgroup_delete(path, "unlink");
   if(delete_cgroup_res == -1)
   {
 	  if((dp = nameiparent(path, name)) == 0){

@@ -1,12 +1,21 @@
 #include "cgroup.h"
 #include "cgfs.h"
-#include "defs.h"
+#include "spinlock.h"
 
 #define MAX_DES_DEF "64"
 #define MAX_DEP_DEF "64"
 #define MAX_CGROUP_FILE_NAME_LENGTH 64
 
-struct cgroup cgroups[NPROC];
+struct {
+  struct spinlock lock;
+  struct cgroup cgroups[NPROC];
+} cgtable;
+
+void
+cginit(void)
+{
+  initlock(&cgtable.lock, "cgtable");
+}
 
 static int strcmp(const char * p, const char * q)
 {
@@ -83,6 +92,57 @@ static void initialize_cgroup_depth(struct cgroup * cgroup)
     increment_num_string(cgroup->depth);
 }
 
+static struct cgroup * unsafe_get_cgroup_by_path(char * path)
+{
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
+
+    if (*fpath != 0)
+        for (int i = 0; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+            if (strcmp(cgtable.cgroups[i].cgroup_dir_path, fpath) == 0)
+                return &cgtable.cgroups[i];
+
+    return 0;
+}
+
+static void unsafe_set_cgroup_dir_path(struct cgroup * cgroup, char * path)
+{
+	char fpath[MAX_PATH_LENGTH];
+	format_path(fpath, path);
+	char *fpathp = fpath;
+    char * cgroup_dir_path = cgroup->cgroup_dir_path;
+    if (*fpathp != 0)
+        for (int i = 0; (i < sizeof(cgroup->cgroup_dir_path)) &&
+                        ((*cgroup_dir_path++ = *fpathp++) != 0);
+             i++)
+            ;
+}
+
+static void unsafe_cgroup_erase(struct cgroup * cgroup, struct proc * proc)
+{
+    // Iterate all cgroup processes.
+    for (unsigned int i = 0;
+         i < sizeof(cgroup->proc) / sizeof(*cgroup->proc);
+         ++i) {
+        // If process was found, remove it from the cgroup.
+        if (proc == cgroup->proc[i]) {
+            proc->cgroup = 0;
+            cgroup->proc[i] = 0;
+
+            // Update current number of processes in cgroup subtree for all
+            // ancestors.
+            while (cgroup != 0) {
+                cgroup->num_of_procs--;
+                if (cgroup->num_of_procs == 0)
+                    cgroup->populated = 0;
+                cgroup = cgroup->parent;
+            }
+            break;
+
+        }
+    }
+}
+
 void format_path(char * buf, char * path)
 {
 	/* If the path does not start with '/' then add the current working directory path to the start.*/
@@ -132,7 +192,7 @@ void format_path(char * buf, char * path)
 
 struct cgroup * cgroup_root(void)
 {
-    return &cgroups[0];
+    return &cgtable.cgroups[0];
 }
 
 struct cgroup * cgroup_create(char * path)
@@ -144,40 +204,49 @@ struct cgroup * cgroup_create(char * path)
 	
 	if(get_cg_file_dir_path_and_file_name(fpath, parent_path, new_dir_name) < 0)
 		return 0;
+	
+	acquire(&cgtable.lock);
 
-    struct cgroup * parent_cgp = get_cgroup_by_path(parent_path);
+    struct cgroup * parent_cgp = unsafe_get_cgroup_by_path(parent_path);
     /*Cgroup has to be created as a child of another cgroup. (Root cgroup
      * is not created here)*/
-    if (parent_cgp == 0)
-        return 0;
+    if (parent_cgp == 0){
+		release(&cgtable.lock);
+		return 0;
+	}
+       
 
     /*Check if we are allowed to create a new cgorup at the path. For each
      * ancestor check that we haven't reached maximum number of descendants
      * or maximum subtree depth.*/
     struct cgroup * parent_cgp_temp = parent_cgp;
     for (int i = 0; parent_cgp_temp != 0; i++) {
-        if (atoi(parent_cgp_temp->max_depth_value) <= i)
-            panic("cgroup_create: max depth allowed reached");
-
+        if (atoi(parent_cgp_temp->max_depth_value) <= i){
+			release(&cgtable.lock);
+			panic("cgroup_create: max depth allowed reached");
+		}
         if (strcmp(parent_cgp_temp->max_descendants_value,
-                   parent_cgp_temp->nr_descendants) == 0)
-            panic("cgroup_create: max number of descendants allowed "
-                  "reached");
-
+                   parent_cgp_temp->nr_descendants) == 0){
+			release(&cgtable.lock);
+			panic("cgroup_create: max number of descendants allowed "
+				"reached");
+		}
         parent_cgp_temp = parent_cgp_temp->parent;
     }
 
     /*Find avalible cgroup slot.*/
     struct cgroup * new_cgp = 0;
-    for (int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-        if (*(cgroups[i].cgroup_dir_path) == 0) {
-            new_cgp = &cgroups[i];
+    for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+        if (*(cgtable.cgroups[i].cgroup_dir_path) == 0 && cgtable.cgroups[i].ref_count == 0) {
+            new_cgp = &cgtable.cgroups[i];
             break;
         }
-
+	
     /*Check if we have found an avalible slot.*/
-    if (new_cgp == 0)
+    if (new_cgp == 0){
+		release(&cgtable.lock);
         panic("cgroup_create: no avalible cgroup slots");
+	}
 
     /*Initialize the new cgroup.*/
     cgroup_initialize(new_cgp, fpath, parent_cgp);
@@ -187,34 +256,56 @@ struct cgroup * cgroup_create(char * path)
         increment_num_string(parent_cgp->nr_descendants);
         parent_cgp = parent_cgp->parent;
     }
-
+		
+	release(&cgtable.lock);
     return new_cgp;
 }
 
-int cgroup_delete(char * path)
+int cgroup_delete(char * path, char * type)
 {
-    /*Get cgroup at given path.*/
-    struct cgroup * cgp = get_cgroup_by_path(path);
+	acquire(&cgtable.lock);
+	/*Get cgroup at given path.*/
+    struct cgroup * cgp = unsafe_get_cgroup_by_path(path);
     /*If no cgroup at given path return -1.*/
-    if (cgp == 0)
-        return -1;
+    if (cgp == 0){
+		release(&cgtable.lock);
+		return -1;
+	}
+	
+	if(strcmp(type, "umount") == 0 && cgp != cgroup_root()){
+		release(&cgtable.lock);
+		return -2;
+	}
+	
+	if(strcmp(type, "unlink") == 0 && cgp == cgroup_root()){
+		release(&cgtable.lock);
+		return -2;
+	}
 
     /*Check if we are allowed to delete the cgroup. Check if the cgroup has
      * descendants or processes in it.*/
     if (*(cgp->nr_descendants) != '0' ||
-        (cgp->num_of_procs && cgp != cgroup_root()))
-        return -2;
+        (cgp->num_of_procs && cgp != cgroup_root())){
+			release(&cgtable.lock);
+			return -2;
+		}
 
     /*Delete the path.*/
     *(cgp->cgroup_dir_path) = '\0';
+	
+	char increase_num_dying_desc = 0;
+	if(cgp->ref_count > 0)
+		increase_num_dying_desc = 1;
 
     /*Update number of descendant cgroups for each ancestor.*/
     cgp = cgp->parent;
     while (cgp != 0) {
         decrement_num_string(cgp->nr_descendants);
+		if(increase_num_dying_desc)
+			increment_num_string(cgp->nr_dying_descendants);
         cgp = cgp->parent;
     }
-
+	release(&cgtable.lock);
     return 0;
 }
 
@@ -241,9 +332,10 @@ void cgroup_initialize(struct cgroup * cgroup,
 
         cgroup->cpu_controller_enabled = 0;
         initialize_cgroup_depth(cgroup);
-        set_cgroup_dir_path(cgroup, path);
+        unsafe_set_cgroup_dir_path(cgroup, path);
     }
-
+	
+	cgroup->ref_count = 0;
     cgroup->num_of_procs = 0;
     cgroup->populated = 0;
     set_max_descendants_value(cgroup, MAX_DES_DEF);
@@ -259,6 +351,14 @@ void cgroup_initialize(struct cgroup * cgroup,
 }
 
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_cgroup_insert(cgroup, proc);
+	release(&cgtable.lock);
+	return res;
+}
+
+int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc)
 {
     // Whether a free slot was found.
     int found = 0;
@@ -291,7 +391,7 @@ int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
 
     // Erase the proc from the other cgroup.
     if (proc->cgroup) {
-        cgroup_erase(proc->cgroup, proc);
+        unsafe_cgroup_erase(proc->cgroup, proc);
     }
 
     // Associate the process with the cgroup.
@@ -307,43 +407,26 @@ int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
         cgroup->populated = 1;
         cgroup = cgroup->parent;
     }
-
     return 0;
 }
 
-void cgroup_erase(struct cgroup * cgroup, struct proc * proc)
-{
-    // Iterate all cgroup processes.
-    for (unsigned int i = 0;
-         i < sizeof(cgroup->proc) / sizeof(*cgroup->proc);
-         ++i) {
-        // If process was found, remove it from the cgroup.
-        if (proc == cgroup->proc[i]) {
-            proc->cgroup = 0;
-            cgroup->proc[i] = 0;
-
-            // Update current number of processes in cgroup subtree for all
-            // ancestors.
-            while (cgroup != 0) {
-                cgroup->num_of_procs--;
-                if (cgroup->num_of_procs == 0)
-                    cgroup->populated = 0;
-                cgroup = cgroup->parent;
-            }
-            break;
-        }
-    }
+void cgroup_erase(struct cgroup * cgroup, struct proc * proc){
+	acquire(&cgtable.lock);
+	unsafe_cgroup_erase(cgroup, proc);
+	release(&cgtable.lock);
 }
 
-int enable_cpu_controller(struct cgroup * cgroup)
+int unsafe_enable_cpu_controller(struct cgroup * cgroup)
 {
-    // If cgroup has processes in it, controllers can't be enabled.
-    if (!cgroup || cgroup->populated == 1)
-        return -1;
+	// If cgroup has processes in it, controllers can't be enabled.
+    if (!cgroup || cgroup->populated == 1){
+		return -1;
+	}
 
     // If controller is enabled do nothing.
-    if (cgroup->cpu_controller_enabled)
-        return 0;
+    if (cgroup->cpu_controller_enabled){
+		return 0;
+	}
 
     if (cgroup->cpu_controller_avalible) {
         /* TODO: complete activation of controller. */
@@ -351,66 +434,75 @@ int enable_cpu_controller(struct cgroup * cgroup)
         // Set cpu controller to enabled.
         cgroup->cpu_controller_enabled = 1;
         // Set cpu controller to avalible in all child cgroups.
-        for (int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-            if (cgroups[i].parent == cgroup)
-                cgroups[i].cpu_controller_avalible = 1;
+        for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+            if (cgtable.cgroups[i].parent == cgroup)
+                cgtable.cgroups[i].cpu_controller_avalible = 1;
     }
-
+	
     return 0;
 }
 
-int disable_cpu_controller(struct cgroup * cgroup)
+
+int enable_cpu_controller(struct cgroup * cgroup)
 {
-    if (!cgroup)
-        return -1;
+	acquire(&cgtable.lock);
+	int res = unsafe_enable_cpu_controller(cgroup);
+	release(&cgtable.lock);
+	return res;
+}
+
+int unsafe_disable_cpu_controller(struct cgroup * cgroup)
+{
+    if (!cgroup){
+		return -1;
+	}
 
     // If controller is disabled do nothing.
-    if (!cgroup->cpu_controller_enabled)
+    if (!cgroup->cpu_controller_enabled){
         return 0;
+	}
 
     // Check that all child cgroups have cpu controller disabled. (cannot
     // disable controller when children have it enabled)
-    for (int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-        if (cgroups[i].parent == cgroup &&
-            cgroups[i].cpu_controller_enabled)
-            return -1;
+    for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+        if (cgtable.cgroups[i].parent == cgroup &&
+            cgtable.cgroups[i].cpu_controller_enabled){
+				return -1;
+			}
 
     /* TODO: complete deactivation of controller. */
 
     // Set cpu controller to enabled.
     cgroup->cpu_controller_enabled = 0;
     // Set cpu controller to unavalible in all child cgroups.
-    for (int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-        if (cgroups[i].parent == cgroup)
-            cgroups[i].cpu_controller_avalible = 0;
+    for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+        if (cgtable.cgroups[i].parent == cgroup)
+            cgtable.cgroups[i].cpu_controller_avalible = 0;
 
     return 0;
+}
+
+int disable_cpu_controller(struct cgroup * cgroup)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_disable_cpu_controller(cgroup);
+	release(&cgtable.lock);
+	return res;
 }
 
 void set_cgroup_dir_path(struct cgroup * cgroup, char * path)
 {
-	char fpath[MAX_PATH_LENGTH];
-	format_path(fpath, path);
-	char *fpathp = fpath;
-    char * cgroup_dir_path = cgroup->cgroup_dir_path;
-    if (*fpathp != 0)
-        for (int i = 0; (i < sizeof(cgroup->cgroup_dir_path)) &&
-                        ((*cgroup_dir_path++ = *fpathp++) != 0);
-             i++)
-            ;
+	acquire(&cgtable.lock);
+	unsafe_set_cgroup_dir_path(cgroup, path);
+	release(&cgtable.lock);
 }
 
 struct cgroup * get_cgroup_by_path(char * path)
 {
-	char fpath[MAX_PATH_LENGTH];
-	format_path(fpath, path);
-
-    if (*fpath != 0)
-        for (int i = 0; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-            if (strcmp(cgroups[i].cgroup_dir_path, fpath) == 0)
-                return &cgroups[i];
-
-    return 0;
+	acquire(&cgtable.lock);
+	struct cgroup * cgp = unsafe_get_cgroup_by_path(path);
+	release(&cgtable.lock);
+	return cgp;
 }
 
 void set_max_descendants_value(struct cgroup * cgroup, char * value)
@@ -458,11 +550,11 @@ void get_cgroup_names_at_path(char * buf, char * path)
     if (*path == 0)
         return;
 
-    for (int i = 1; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-        if (*(cgroups[i].cgroup_dir_path) != 0 &&
-            strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0) {
+    for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+        if (*(cgtable.cgroups[i].cgroup_dir_path) != 0 &&
+            strcmp(cgtable.cgroups[i].parent->cgroup_dir_path, path) == 0) {
             char * child_name =
-                &(cgroups[i].cgroup_dir_path[strlen(path) + 1]);
+                &(cgtable.cgroups[i].cgroup_dir_path[strlen(path) + 1]);
             int child_name_len = strlen(child_name);
             while (*child_name != 0)
                 *buf++ = *child_name++;
@@ -477,11 +569,80 @@ int cgorup_num_of_immidiate_children(struct cgroup * cgroup)
     if (*path == 0)
         return -1;
 
-    for (int i = 0; i < sizeof(cgroups) / sizeof(cgroups[0]); i++)
-        if (*(cgroups[i].cgroup_dir_path) != 0 &&
-            strcmp(cgroups[i].parent->cgroup_dir_path, path) == 0)
+    for (int i = 0; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++)
+        if (*(cgtable.cgroups[i].cgroup_dir_path) != 0 &&
+            strcmp(cgtable.cgroups[i].parent->cgroup_dir_path, path) == 0)
             num++;
 
     return num;
 }
+
+void decrement_nr_dying_descendants(struct cgroup * cgroup)
+{
+	while(cgroup != 0){
+		decrement_num_string(cgroup->nr_dying_descendants);
+		cgroup = cgroup->parent;
+	}
+}
+
+int opencgfile(char * filename, struct cgroup * cgp, int omode)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_opencgfile(filename, cgp, omode);
+	release(&cgtable.lock);
+	return res;
+}
+
+int opencgdirectory(struct cgroup * cgp, int omode)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_opencgdirectory(cgp, omode);
+	release(&cgtable.lock);
+	return res;
+}
+
+int readcgfile(struct file * f, char * addr, int n)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_readcgfile(f, addr, n);
+	release(&cgtable.lock);
+	return res;
+}
+
+int readcgdirectory(struct file * f, char * addr, int n)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_readcgdirectory(f, addr, n);
+	release(&cgtable.lock);
+	return res;
+}
+
+int writecgfile(struct file * f, char * addr, int n)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_writecgfile(f, addr, n);
+	release(&cgtable.lock);
+	return res;
+}
+
+int closecgfileordir(struct file *file)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_closecgfileordir(file);
+	release(&cgtable.lock);
+	return res;
+}
+
+int cgstat(struct file * f, struct stat * st)
+{
+	acquire(&cgtable.lock);
+	int res = unsafe_cgstat(f, st);
+	release(&cgtable.lock);
+	return res;
+}
+
+
+
+
+
 

@@ -17,20 +17,6 @@ static int strcmp(const char * p, const char * q)
     return (uchar)*p - (uchar)*q;
 }
 
-static char * strcpyn(char * s, char * t, int n)
-{
-    char * os;
-
-    os = s;
-    if (n == 0)
-        while ((*s++ = *t++) != 0)
-            ;
-    else
-        while ((*s++ = *t++) != 0 && (--n) > 0)
-            ;
-    return os;
-}
-
 static int fdalloc(struct file * f)
 {
     int fd;
@@ -126,7 +112,7 @@ static int copyuntilspace(char * s, char * t, int n)
     return len;
 }
 
-int opencgfile(char * filename, struct cgroup * cgp, int omode)
+int unsafe_opencgfile(char * filename, struct cgroup * cgp, int omode)
 {
     struct file * f;
     int fd;
@@ -159,16 +145,21 @@ int opencgfile(char * filename, struct cgroup * cgp, int omode)
     f->readable = !(omode & O_WRONLY);
     f->writable = ((omode & O_WRONLY) || (omode & O_RDWR)) && writable;
     f->cgp = cgp;
-    strcpyn(f->cgfilename, filename, 0);
+    strncpy(f->cgfilename, filename, sizeof(f->cgfilename));
     f->mnt = 0;
+	
+	cgp->ref_count++;
 
     return fd;
 }
 
-int opencgdirectory(struct cgroup * cgp, int omode)
+int unsafe_opencgdirectory(struct cgroup * cgp, int omode)
 {
     struct file * f;
     int fd;
+
+	if(*cgp->cgroup_dir_path == 0)
+		return -1;
 
     /* Allocate file structure and file desctiptor.*/
     if ((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0) {
@@ -185,23 +176,24 @@ int opencgdirectory(struct cgroup * cgp, int omode)
     f->cgp = cgp;
     *f->cgfilename = 0;
     f->mnt = 0;
+	
+	cgp->ref_count++;
 
     return fd;
 }
 
-int readcgfile(struct file * f, char * addr, int n)
+int unsafe_readcgfile(struct file * f, char * addr, int n)
 {
     int r = 0;
 
-    if (f->readable == 0)
+    if (f->readable == 0 || *f->cgp->cgroup_dir_path == 0)
         return -1;
 
     if (strcmp(f->cgfilename, "cgroup.procs") == 0) {
         int procoff;
         int pidoff;
         if (findprocsoffsets(&procoff, &pidoff, f) < 0) {
-            *addr = '\0';
-            return 1;
+            return 0;
         }
 
         while (procoff < (sizeof(f->cgp->proc) / sizeof(*f->cgp->proc)) &&
@@ -232,7 +224,8 @@ int readcgfile(struct file * f, char * addr, int n)
     if (strcmp(f->cgfilename, "cgroup.controllers") == 0) {
         if (f->cgp->cpu_controller_avalible) {
             char controllerslist[] = "cpu";
-            while (r < n && (r + f->off) < strlen(controllerslist) + 1 &&
+			int listlen = strlen(controllerslist) + 1;
+            while (r < n && (r + f->off) < listlen &&
                    (*addr++ = controllerslist[(r++) + f->off]) != 0)
                 ;
         }
@@ -241,8 +234,9 @@ int readcgfile(struct file * f, char * addr, int n)
     if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
         if (f->cgp->cpu_controller_enabled) {
             char enabledcontrollerslist[] = "cpu";
+			int listlen = strlen(enabledcontrollerslist) + 1;
             while (r < n &&
-                   (r + f->off) < strlen(enabledcontrollerslist) + 1 &&
+                   (r + f->off) < listlen &&
                    (*addr++ = enabledcontrollerslist[r++ + f->off]) != 0)
                 ;
         }
@@ -252,8 +246,9 @@ int readcgfile(struct file * f, char * addr, int n)
         char eventstext[] = "populated - 0";
         if (f->cgp->populated)
             eventstext[strlen(eventstext) - 1] = '1';
-
-        while (r < n && (r + f->off) < strlen(eventstext) + 1 &&
+		
+		int listlen = strlen(eventstext) + 1;
+        while (r < n && (r + f->off) < listlen &&
                (*addr++ = eventstext[r++ + f->off]) != 0)
             ;
     }
@@ -278,15 +273,15 @@ int readcgfile(struct file * f, char * addr, int n)
                       strlen("nr_dying_descendants - ") +
                       strlen(f->cgp->nr_dying_descendants) + 1];
         char * stattextp = stattext;
-        strcpyn(stattextp, "nr_descendants - ", 0);
+        strncpy(stattextp, "nr_descendants - ", sizeof("nr_descendants - "));
         stattextp += strlen("nr_descendants - ");
-        strcpyn(stattextp, f->cgp->nr_descendants, 0);
+        strncpy(stattextp, f->cgp->nr_descendants, sizeof(f->cgp->nr_descendants));
         stattextp += strlen(f->cgp->nr_descendants);
-        strcpyn(stattextp, "\n", 0);
+        strncpy(stattextp, "\n", sizeof("\n"));
         stattextp += strlen("\n");
-        strcpyn(stattextp, "nr_dying_descendants - ", 0);
+        strncpy(stattextp, "nr_dying_descendants - ", sizeof("nr_dying_descendants - "));
         stattextp += strlen("nr_dying_descendants - ");
-        strcpyn(stattextp, f->cgp->nr_dying_descendants, 0);
+        strncpy(stattextp, f->cgp->nr_dying_descendants, sizeof(f->cgp->nr_dying_descendants));
 
         while (r < n && (r + f->off) < sizeof(stattext) &&
                (*addr++ = stattext[r++ + f->off]) != 0)
@@ -295,46 +290,45 @@ int readcgfile(struct file * f, char * addr, int n)
 
     f->off += r;
 
-    if (r == 0 && n > 0) {
-        *addr = '\0';
-        r++;
-    }
-
     return r;
 }
 
-int readcgdirectory(struct file * f, char * addr, int n)
+int unsafe_readcgdirectory(struct file * f, char * addr, int n)
 {
     char buf[MAX_CGROUP_FILE_NAME_LENGTH * MAX_CGROUP_DIR_ENTRIES];
+	
+	if(*f->cgp->cgroup_dir_path == 0)
+		return -1;
+	
     for (int i = 0; i < sizeof(buf); i++)
         buf[i] = ' ';
 
     char * bufp = buf;
 
-    strcpyn(bufp, ".", strlen("."));
+    strncpy(bufp, ".", strlen("."));
     bufp += MAX_CGROUP_FILE_NAME_LENGTH;
     if (f->cgp != cgroup_root()) {
-        strcpyn(bufp, "..", strlen(".."));
+        strncpy(bufp, "..", strlen(".."));
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
     }
-    strcpyn(bufp, "cgroup.procs", strlen("cgroup.procs"));
+    strncpy(bufp, "cgroup.procs", strlen("cgroup.procs"));
     bufp += MAX_CGROUP_FILE_NAME_LENGTH;
     if (f->cgp != cgroup_root()) {
-        strcpyn(bufp, "cgroup.controllers", strlen("cgroup.controllers"));
+        strncpy(bufp, "cgroup.controllers", strlen("cgroup.controllers"));
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-        strcpyn(bufp,
+        strncpy(bufp,
                 "cgroup.subtree_control",
                 strlen("cgroup.subtree_control"));
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-        strcpyn(bufp, "cgroup.events", strlen("cgroup.events"));
+        strncpy(bufp, "cgroup.events", strlen("cgroup.events"));
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
     }
-    strcpyn(
+    strncpy(
         bufp, "cgroup.max.descendants", strlen("cgroup.max.descendants"));
     bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-    strcpyn(bufp, "cgroup.max.depth", strlen("cgroup.max.depth"));
+    strncpy(bufp, "cgroup.max.depth", strlen("cgroup.max.depth"));
     bufp += MAX_CGROUP_FILE_NAME_LENGTH;
-    strcpyn(bufp, "cgroup.stat", strlen("cgroup.stat"));
+    strncpy(bufp, "cgroup.stat", strlen("cgroup.stat"));
     bufp += MAX_CGROUP_FILE_NAME_LENGTH;
 
     get_cgroup_names_at_path(bufp, f->cgp->cgroup_dir_path);
@@ -349,16 +343,16 @@ int readcgdirectory(struct file * f, char * addr, int n)
     return i;
 }
 
-int writecgfile(struct file * f, char * addr, int n)
+int unsafe_writecgfile(struct file * f, char * addr, int n)
 {
     int r = 0;
 
-    if (f->writable == 0)
+    if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0)
         return -1;
 
     if (strcmp(f->cgfilename, "cgroup.procs") == 0) {
         char buf[n];
-        strcpyn(buf, addr, n);
+        strncpy(buf, addr, n);
         int pid = atoi(buf);
         if (pid <= 0)
             panic("writecgfile: invalid pid");
@@ -389,29 +383,38 @@ int writecgfile(struct file * f, char * addr, int n)
                     "writecgfile: invalid subtree_control commands list");
         }
 
-        if (cpucontroller == 1 && enable_cpu_controller(f->cgp) < 0)
+        if (cpucontroller == 1 && unsafe_enable_cpu_controller(f->cgp) < 0)
             panic("writecgfile: cannot enable cpu controller");
-        if (cpucontroller == 2 && disable_cpu_controller(f->cgp) < 0)
+        if (cpucontroller == 2 && unsafe_disable_cpu_controller(f->cgp) < 0)
             panic("writecgfile: cannot disable cpu controller");
 
         r = n;
     }
 
     if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
-        if (atoi(addr) < 0)
+        if (atoi(addr) < 0 || strlen(addr) > 2)
             panic("writecgfile: invalid argument");
-        strcpyn(f->cgp->max_descendants_value, addr, n);
+        strncpy(f->cgp->max_descendants_value, addr, sizeof(f->cgp->max_descendants_value));
         r = n;
     }
 
     if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
-        if (atoi(addr) < 0)
+        if (atoi(addr) < 0 || strlen(addr) > 2)
             panic("writecgfile: invalid argument");
-        strcpyn(f->cgp->max_depth_value, addr, n);
+        strncpy(f->cgp->max_depth_value, addr, sizeof(f->cgp->max_descendants_value));
         r = n;
     }
 
     return r;
+}
+
+int unsafe_closecgfileordir(struct file *file)
+{
+	fileclose(file);
+	file->cgp->ref_count--;
+	if(file->cgp->ref_count == 0 && *file->cgp->cgroup_dir_path == 0)
+		decrement_nr_dying_descendants(file->cgp->parent);
+	return 0;
 }
 
 int get_cg_file_dir_path_and_file_name(char * path,
@@ -445,20 +448,7 @@ int get_cg_file_dir_path_and_file_name(char * path,
     return 0;
 }
 
-int cgstat(struct file * f, struct stat * st)
-{
-    if (*f->cgfilename == 0) {
-        st->type = T_CGDIR;
-        st->size = MAX_CGROUP_FILE_NAME_LENGTH *
-                   (7 + cgorup_num_of_immidiate_children(f->cgp));
-    } else {
-        st->type = T_CGFILE;
-        st->size = cgfilesize(f);
-    }
-    return 0;
-}
-
-int cgfilesize(struct file * f)
+static int cgfilesize(struct file * f)
 {
     int size = 1;
 
@@ -510,3 +500,20 @@ int cgfilesize(struct file * f)
 
     return size;
 }
+
+int unsafe_cgstat(struct file * f, struct stat * st)
+{
+	if (*f->cgp->cgroup_dir_path == 0)
+        return -1;
+    if (*f->cgfilename == 0) {
+        st->type = T_CGDIR;
+        st->size = MAX_CGROUP_FILE_NAME_LENGTH *
+                   (7 + cgorup_num_of_immidiate_children(f->cgp));
+    } else {
+        st->type = T_CGFILE;
+        st->size = cgfilesize(f);
+    }
+    return 0;
+}
+
+

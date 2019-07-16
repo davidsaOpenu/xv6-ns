@@ -1,5 +1,7 @@
 #include "param.h"
 #include "proc.h"
+#include "defs.h"
+
 
 #ifndef XV6_CGROUP_H
 #define XV6_CGROUP_H
@@ -20,6 +22,8 @@ struct cgroup
 {
     char cgroup_dir_path[MAX_PATH_LENGTH]; /* Path of the cgroup
                                               directory.*/
+	
+	int ref_count;				/* Reference count.*/
 
     struct proc * proc[NPROC]; /* Array of all processes in the cgroup.*/
     int num_of_procs;          /* Number of processes in the cgroup subtree
@@ -59,11 +63,6 @@ struct cgroup
 };
 
 /**
- * Control groups.
- */
-extern struct cgroup cgroups[NPROC];
-
-/**
  * Returns the root cgroup, &cgroups[0].
  */
 struct cgroup * cgroup_root(void);
@@ -79,7 +78,7 @@ struct cgroup * cgroup_create(char * path);
  * Returns -1 when path is not a cgroup directory.
  * Returns -2 when cannot delete cgroup.
  */
-int cgroup_delete(char * path);
+int cgroup_delete(char * path, char * type);
 
 /**
  * Initialize a cgroup.
@@ -93,6 +92,7 @@ void cgroup_initialize(struct cgroup * cgroup,
  * Erases the process from the other group.
  * Must be called with locked process table.
  */
+int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc);
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc);
 
 /**
@@ -104,11 +104,13 @@ void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
 /**
  * Enable the cpu controller.
  */
+int unsafe_enable_cpu_controller(struct cgroup * cgroup);
 int enable_cpu_controller(struct cgroup * cgroup);
 
 /**
  * Disable the cpu controller.
  */
+int unsafe_disable_cpu_controller(struct cgroup * cgroup);
 int disable_cpu_controller(struct cgroup * cgroup);
 
 /**
@@ -155,5 +157,28 @@ int cgorup_num_of_immidiate_children(struct cgroup * cgroup);
  * Format path and write it into buf.
  */
 void format_path(char * buf, char * path);
+
+/**
+ * Decrement number of dying descendants for given cgroup and every ancestor.
+ */
+void decrement_nr_dying_descendants(struct cgroup * cgroup);
+
+/**
+ * Safe implementation of cgfs.c functions. (Implementation with locks)
+ */
+
+int opencgfile(char * filename, struct cgroup * cgp, int omode);
+
+int opencgdirectory(struct cgroup * cgp, int omode);
+
+int readcgfile(struct file * f, char * addr, int n);
+
+int readcgdirectory(struct file * f, char * addr, int n);
+
+int writecgfile(struct file * f, char * addr, int n);
+
+int closecgfileordir(struct file *file);
+
+int cgstat(struct file * f, struct stat * st);
 
 #endif

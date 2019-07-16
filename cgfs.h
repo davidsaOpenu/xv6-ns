@@ -14,12 +14,12 @@
  *	6)	"cgroup.max.depth"
  *	7)	"cgroup.stat"
  */
-int opencgfile(char * filename, struct cgroup * cgp, int omode);
+int unsafe_opencgfile(char * filename, struct cgroup * cgp, int omode);
 
 /**
  * Open a cgroup filesystem directory.
  */
-int opencgdirectory(struct cgroup * cgp, int omode);
+int unsafe_opencgdirectory(struct cgroup * cgp, int omode);
 
 /**
  * Read from cgroup filesystem file.
@@ -32,12 +32,12 @@ int opencgdirectory(struct cgroup * cgp, int omode);
  *	6)	"cgroup.max.depth"
  *	7)	"cgroup.stat"
  */
-int readcgfile(struct file * f, char * addr, int n);
+int unsafe_readcgfile(struct file * f, char * addr, int n);
 
 /**
  * Read a cgroup filesystem directory.
  */
-int readcgdirectory(struct file * f, char * addr, int n);
+int unsafe_readcgdirectory(struct file * f, char * addr, int n);
 
 /**
  * Open a cgroup filesystem file.
@@ -47,7 +47,12 @@ int readcgdirectory(struct file * f, char * addr, int n);
  *	3)	"cgroup.max.descendants"
  *	4)	"cgroup.max.depth"
  */
-int writecgfile(struct file * f, char * addr, int n);
+int unsafe_writecgfile(struct file * f, char * addr, int n);
+
+/**
+ * Close cgorup file or directory.
+ */
+int unsafe_closecgfileordir(struct file *file);
 
 /**
  * Get from path the directory path and the file name and set dir_path and
@@ -60,9 +65,4 @@ int get_cg_file_dir_path_and_file_name(char * path,
 /**
  * Get stats of cgorup file or directory.
  */
-int cgstat(struct file * f, struct stat * st);
-
-/**
- * Get size of cgorup filesystem file in bytes.
- */
-int cgfilesize(struct file * f);
+int unsafe_cgstat(struct file * f, struct stat * st);

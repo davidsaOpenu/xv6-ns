@@ -106,6 +106,7 @@ void test_reading_cgroup_files(const char * path)
            "of \"%s\":\n-----------------------------------------\n",
            path);
 
+	empty_string(buf);
     read(cgroup_procs_fd, buf, sizeof(buf));
     printf(1, "Contents of %s/cgroup.procs:\n%s\n", path, buf);
     empty_string(buf);

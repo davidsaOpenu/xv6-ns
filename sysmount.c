@@ -133,7 +133,7 @@ sys_umount(void)
 	
 	begin_op();
 	
-	int delete_cgroup_res = cgroup_delete(mount_path);
+	int delete_cgroup_res = cgroup_delete(mount_path, "umount");
 	
 	if(delete_cgroup_res == -1){
 		struct inode *mount_dir;
@@ -164,7 +164,7 @@ sys_umount(void)
 	
 	if(delete_cgroup_res == -2){
 		end_op();
-        cprintf("cgroup has child cgroups\n");
+        cprintf("cannot unmount cgroup\n");
         return -1;
     }
 	
