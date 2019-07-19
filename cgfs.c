@@ -212,18 +212,14 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
             addr++;
             r++;
         }
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.controllers") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.controllers") == 0) {
         if (f->cgp->cpu_controller_avalible) {
             char controllerslist[] = "cpu\n";
             while (r < n && (r + f->off) < sizeof(controllerslist) - 1  &&
                    (*addr++ = controllerslist[(r++) + f->off]) != 0)
                 ;
         }
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
         if (f->cgp->cpu_controller_enabled) {
             char enabledcontrollerslist[] = "cpu\n";
             while (r < n &&
@@ -231,9 +227,7 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
                    (*addr++ = enabledcontrollerslist[r++ + f->off]) != 0)
                 ;
         }
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.events") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.events") == 0) {
         char eventstext[] = "populated - 0\n";
         if (f->cgp->populated)
             eventstext[sizeof(eventstext) - 3] = '1';
@@ -241,9 +235,7 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
         while (r < n && (r + f->off) < sizeof(eventstext) - 1 &&
                (*addr++ = eventstext[r++ + f->off]) != 0)
             ;
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
         while (r < n &&
             (r + f->off) < sizeof(f->cgp->max_descendants_value)) {
             if (!f->cgp->max_descendants_value[r + f->off]) {
@@ -255,9 +247,7 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
             *addr++ = f->cgp->max_descendants_value[r + f->off];
             ++r;
         }
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
         while (r < n && (r + f->off) < sizeof(f->cgp->max_depth_value)) {
             if (!f->cgp->max_depth_value[r + f->off]) {
                 *addr++ = '\n';
@@ -268,9 +258,7 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
             *addr++ = f->cgp->max_depth_value[r + f->off];
             ++r;
         }
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.stat") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.stat") == 0) {
         char stattext[strlen("nr_descendants - ") +
                       strlen(f->cgp->nr_descendants) + strlen("\n") +
                       strlen("nr_dying_descendants - ") +
@@ -362,9 +350,7 @@ int unsafe_writecgfile(struct file * f, char * addr, int n)
             panic("writecgfile: invalid pid");
         cgroup_move_proc(f->cgp, pid);
         r = n;
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
         char cpucontroller = 0; // change to 1 if need to enable, 2 if need
                                 // to disable, 0 if nothing to change
 
@@ -393,16 +379,12 @@ int unsafe_writecgfile(struct file * f, char * addr, int n)
             panic("writecgfile: cannot disable cpu controller");
 
         r = n;
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
         if (atoi(addr) < 0 || strlen(addr) > 2)
             panic("writecgfile: invalid argument");
         strncpy(f->cgp->max_descendants_value, addr, sizeof(f->cgp->max_descendants_value));
         r = n;
-    }
-
-    if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
+    } else if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
         if (atoi(addr) < 0 || strlen(addr) > 2)
             panic("writecgfile: invalid argument");
         strncpy(f->cgp->max_depth_value, addr, sizeof(f->cgp->max_descendants_value));
