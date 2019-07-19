@@ -216,16 +216,12 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
             addr++;
             r++;
         }
-        if (procoff == (sizeof(f->cgp->proc) / sizeof(*f->cgp->proc)) &&
-            *(addr - 1) == '\n')
-            *(addr - 1) = '\0';
     }
 
     if (strcmp(f->cgfilename, "cgroup.controllers") == 0) {
         if (f->cgp->cpu_controller_avalible) {
-            char controllerslist[] = "cpu";
-			int listlen = strlen(controllerslist) + 1;
-            while (r < n && (r + f->off) < listlen &&
+            char controllerslist[] = "cpu\n";
+            while (r < n && (r + f->off) < sizeof(controllerslist) - 1  &&
                    (*addr++ = controllerslist[(r++) + f->off]) != 0)
                 ;
         }
@@ -233,45 +229,56 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
 
     if (strcmp(f->cgfilename, "cgroup.subtree_control") == 0) {
         if (f->cgp->cpu_controller_enabled) {
-            char enabledcontrollerslist[] = "cpu";
-			int listlen = strlen(enabledcontrollerslist) + 1;
+            char enabledcontrollerslist[] = "cpu\n";
             while (r < n &&
-                   (r + f->off) < listlen &&
+                   (r + f->off) < sizeof(enabledcontrollerslist) - 1 &&
                    (*addr++ = enabledcontrollerslist[r++ + f->off]) != 0)
                 ;
         }
     }
 
     if (strcmp(f->cgfilename, "cgroup.events") == 0) {
-        char eventstext[] = "populated - 0";
+        char eventstext[] = "populated - 0\n";
         if (f->cgp->populated)
-            eventstext[strlen(eventstext) - 1] = '1';
+            eventstext[sizeof(eventstext) - 3] = '1';
 		
-		int listlen = strlen(eventstext) + 1;
-        while (r < n && (r + f->off) < listlen &&
+        while (r < n && (r + f->off) < sizeof(eventstext) - 1 &&
                (*addr++ = eventstext[r++ + f->off]) != 0)
             ;
     }
 
     if (strcmp(f->cgfilename, "cgroup.max.descendants") == 0) {
         while (r < n &&
-               (r + f->off) < sizeof(f->cgp->max_descendants_value) &&
-               (*addr++ = f->cgp->max_descendants_value[r++ + f->off]) !=
-                   0)
-            ;
+            (r + f->off) < sizeof(f->cgp->max_descendants_value)) {
+            if (!f->cgp->max_descendants_value[r + f->off]) {
+                *addr++ = '\n';
+                ++r;
+                break;
+            }
+
+            *addr++ = f->cgp->max_descendants_value[r + f->off];
+            ++r;
+        }
     }
 
     if (strcmp(f->cgfilename, "cgroup.max.depth") == 0) {
-        while (r < n && (r + f->off) < sizeof(f->cgp->max_depth_value) &&
-               (*addr++ = f->cgp->max_depth_value[r++ + f->off]) != 0)
-            ;
+        while (r < n && (r + f->off) < sizeof(f->cgp->max_depth_value)) {
+            if (!f->cgp->max_depth_value[r + f->off]) {
+                *addr++ = '\n';
+                ++r;
+                break;
+            }
+
+            *addr++ = f->cgp->max_depth_value[r + f->off];
+            ++r;
+        }
     }
 
     if (strcmp(f->cgfilename, "cgroup.stat") == 0) {
         char stattext[strlen("nr_descendants - ") +
                       strlen(f->cgp->nr_descendants) + strlen("\n") +
                       strlen("nr_dying_descendants - ") +
-                      strlen(f->cgp->nr_dying_descendants) + 1];
+                      strlen(f->cgp->nr_dying_descendants) + 2];
         char * stattextp = stattext;
         strncpy(stattextp, "nr_descendants - ", sizeof("nr_descendants - "));
         stattextp += strlen("nr_descendants - ");
@@ -282,6 +289,7 @@ int unsafe_readcgfile(struct file * f, char * addr, int n)
         strncpy(stattextp, "nr_dying_descendants - ", sizeof("nr_dying_descendants - "));
         stattextp += strlen("nr_dying_descendants - ");
         strncpy(stattextp, f->cgp->nr_dying_descendants, sizeof(f->cgp->nr_dying_descendants));
+        stattext[sizeof(stattext) - 1] = '\n';
 
         while (r < n && (r + f->off) < sizeof(stattext) &&
                (*addr++ = stattext[r++ + f->off]) != 0)
