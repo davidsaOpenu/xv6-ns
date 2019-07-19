@@ -11,12 +11,23 @@ struct file {
   int ref; // reference count
   char readable;
   char writable;
-  struct pipe *pipe;
-  struct inode *ip;
   uint off;
-  struct mount *mnt;
-  struct cgroup *cgp;
-  char cgfilename[MAX_CGROUP_FILE_NAME_LENGTH];
+  union {
+    // FD_PIPE
+    struct pipe *pipe;
+
+    // FD_INODE
+    struct {
+      struct inode *ip;
+      struct mount *mnt;
+    };
+
+    // FD_CG
+    struct {
+      struct cgroup *cgp;
+      char cgfilename[MAX_CGROUP_FILE_NAME_LENGTH];
+    };
+  };
 };
 
 

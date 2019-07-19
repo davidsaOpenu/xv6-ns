@@ -140,13 +140,11 @@ int unsafe_opencgfile(char * filename, struct cgroup * cgp, int omode)
     }
 
     f->type = FD_CG;
-    f->ip = 0;
     f->off = 0;
     f->readable = !(omode & O_WRONLY);
     f->writable = ((omode & O_WRONLY) || (omode & O_RDWR)) && writable;
     f->cgp = cgp;
     strncpy(f->cgfilename, filename, sizeof(f->cgfilename));
-    f->mnt = 0;
 	
 	cgp->ref_count++;
 
@@ -169,13 +167,11 @@ int unsafe_opencgdirectory(struct cgroup * cgp, int omode)
     }
 
     f->type = FD_CG;
-    f->ip = 0;
     f->off = 0;
     f->readable = !(omode & O_WRONLY);
     f->writable = 0;
     f->cgp = cgp;
     *f->cgfilename = 0;
-    f->mnt = 0;
 	
 	cgp->ref_count++;
 
