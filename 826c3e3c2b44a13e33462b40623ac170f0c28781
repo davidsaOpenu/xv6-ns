@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "694fd2d0_68642d06",
+        "filename": "namespace.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-20T12:14:23Z",
+      "side": 1,
+      "message": "Please add header guard",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8245281_752bd9d8",
         "filename": "pid_ns.c",
         "patchSetId": 2
@@ -13,6 +30,57 @@
       "writtenOn": "2019-07-18T19:18:13Z",
       "side": 1,
       "message": "panic seems to me a bit extreme to me, shouldn\u0027t it free the object or something?",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59ff553d_951d9ae8",
+        "filename": "pid_ns.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-20T12:14:23Z",
+      "side": 1,
+      "message": "Please add a header guard.",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "213de2ab_15c19d7b",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-20T12:14:23Z",
+      "side": 1,
+      "message": "I think we should not rely on sleep for testing.",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5c3b012_f7ed58e6",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-20T12:14:23Z",
+      "side": 1,
+      "message": "I don\u0027t think it is smart to do a real recursion in the kernel where the stack is pretty limited.",
       "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
