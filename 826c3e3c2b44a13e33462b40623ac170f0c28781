@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4c091bac_7448458e",
+        "filename": "namespace.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:21:57Z",
+      "side": 1,
+      "message": "There are no header guards in xv6 we are conforming to that code standards.",
+      "parentUuid": "694fd2d0_68642d06",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8245281_752bd9d8",
         "filename": "pid_ns.c",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f1bc3b8_d369446c",
+        "filename": "pid_ns.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:21:57Z",
+      "side": 1,
+      "message": "If the reference going in is 0 it means that we have a reference leak, we should panic here and now",
+      "parentUuid": "c8245281_752bd9d8",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d9dfed85_15a9991a",
+        "filename": "pid_ns.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:21:57Z",
+      "side": 1,
+      "message": "There are no header guards in xv6 we are conforming to that code standards.",
+      "parentUuid": "59ff553d_951d9ae8",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "213de2ab_15c19d7b",
         "filename": "pidns_tests.c",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "9bbc08a6_70077a85",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:21:57Z",
+      "side": 1,
+      "message": "We should not, but there are no other non-filesystem mechanism for using this and since mount ns is used with pidns we can\u0027t rely on this either",
+      "parentUuid": "213de2ab_15c19d7b",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5c3b012_f7ed58e6",
         "filename": "proc.c",
         "patchSetId": 2
@@ -84,6 +156,24 @@
       "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0d15893_de424449",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:21:57Z",
+      "side": 1,
+      "message": "In this kernel it\u0027s bounded by 64 which is safe",
+      "parentUuid": "d5c3b012_f7ed58e6",
+      "revId": "826c3e3c2b44a13e33462b40623ac170f0c28781",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
