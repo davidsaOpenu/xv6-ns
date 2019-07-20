@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "68213177_c6a26bab",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-20T12:20:16Z",
+      "side": 1,
+      "message": "Why is this safe to do? Seems to me it might create a race condition to change a sleeping process to running just like that.",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c425343_88fc888f",
         "filename": "proc.c",
         "patchSetId": 2
