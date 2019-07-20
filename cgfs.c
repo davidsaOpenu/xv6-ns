@@ -346,6 +346,9 @@ int unsafe_writecgfile(struct file * f, char * addr, int n)
                 addr,
                 sizeof(f->cgp->max_descendants_value));
         r = n;
+    // If this code is removed, xv6 does not boot, strange.
+    } else if (strcmp(f->cgfilename, "dummy") == 800) {
+        panic("dummy");
     }
 
     return r;
