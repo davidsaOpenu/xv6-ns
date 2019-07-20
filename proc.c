@@ -477,6 +477,9 @@ scheduler(void)
       // Set the current cgroup.
       cgroup = p->cgroup;
 
+      // Lock cgroup table.
+      cgroup_lock();
+
       // The cgroup cpu account frame.
       cgroup_cpu_account_frame = now / cgroup->cpu_account_period;
 
@@ -493,8 +496,13 @@ scheduler(void)
 
       // If cpu time is larger than cpu time limit, skip this process.
       if (cgroup->cpu_time > cgroup->cpu_time_limit) {
+        // Unlock the cgroup lock.
+        cgroup_unlock();
         continue;
       }
+
+      // Unlock the cgroup lock.
+      cgroup_unlock();
 
       // Increment scheduled.
       ++scheduled;

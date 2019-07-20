@@ -68,6 +68,16 @@ struct cgroup
 struct cgroup * cgroup_root(void);
 
 /**
+ * Lock the cgroup table.
+ */
+void cgroup_lock();
+
+/**
+ * Unlock the cgroup table.
+ */
+void cgroup_unlock();
+
+/**
  * Create a new cgroup and initialize it.
  */
 struct cgroup * cgroup_create(char * path);

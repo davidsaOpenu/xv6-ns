@@ -17,6 +17,16 @@ cginit(void)
   initlock(&cgtable.lock, "cgtable");
 }
 
+void cgroup_lock()
+{
+    acquire(&cgtable.lock);
+}
+
+void cgroup_unlock()
+{
+    release(&cgtable.lock);
+}
+
 static int strcmp(const char * p, const char * q)
 {
     while (*p && *p == *q)
