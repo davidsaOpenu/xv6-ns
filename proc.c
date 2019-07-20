@@ -133,6 +133,7 @@ found:
   // Set cpu information.
   p->cpu_account_frame = 0;
   p->cpu_time = 0;
+  p->cpu_period_time = 0;
   p->cpu_percent = 0;
 
   return p;
@@ -426,12 +427,12 @@ scheduler(void)
       // If cpu accounting frame has passed, update CPU accounting.
       if (cpu_account_frame > p->cpu_account_frame) {
         unsigned int current_cpu_time =
-            p->cpu_time > cpu_account_period ?
+            p->cpu_period_time > cpu_account_period ?
             cpu_account_period :
-            p->cpu_time;
+            p->cpu_period_time;
         p->cpu_percent = current_cpu_time * 100 / cpu_account_period;
         p->cpu_account_frame = cpu_account_frame;
-        p->cpu_time -= current_cpu_time;
+        p->cpu_period_time -= current_cpu_time;
       }
 
       // If process not runnable, continue.
@@ -470,11 +471,11 @@ scheduler(void)
 
       // Set cpu time.
       p->cpu_time += process_cpu_time;
+      p->cpu_period_time += process_cpu_time;
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
-
     }
     release(&ptable.lock);
 
