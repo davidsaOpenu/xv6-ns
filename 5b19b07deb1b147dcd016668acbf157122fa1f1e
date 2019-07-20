@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b2711d7f_b50d647f",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:10:08Z",
+      "side": 1,
+      "message": "Ok",
+      "parentUuid": "8b8f50ee_e4ac7fc0",
+      "revId": "5b19b07deb1b147dcd016668acbf157122fa1f1e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4cae6a6a_90505ace",
         "filename": "proc.c",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "5b19b07deb1b147dcd016668acbf157122fa1f1e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dbe8409_86bed184",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-20T14:10:08Z",
+      "side": 1,
+      "message": "Yes, curproc must be valid for the lifetime of this function and will not invalidated.",
+      "parentUuid": "4cae6a6a_90505ace",
+      "revId": "5b19b07deb1b147dcd016668acbf157122fa1f1e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
