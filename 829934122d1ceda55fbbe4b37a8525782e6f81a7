@@ -16,6 +16,24 @@
       "revId": "829934122d1ceda55fbbe4b37a8525782e6f81a7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58409e1d_6407bd25",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1016611
+      },
+      "writtenOn": "2019-07-21T08:00:39Z",
+      "side": 1,
+      "message": "Because you can only wait on a zoombie once, after that we are resetting book keeping fields so that the proc structure could be reused.",
+      "parentUuid": "58a6980d_1c3174a0",
+      "revId": "829934122d1ceda55fbbe4b37a8525782e6f81a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
