@@ -7,7 +7,6 @@
 #include "types.h"
 #include "defs.h"
 #include "param.h"
-#include "stat.h"
 #include "mmu.h"
 #include "proc.h"
 #include "fs.h"
@@ -15,6 +14,8 @@
 #include "sleeplock.h"
 #include "file.h"
 #include "fcntl.h"
+#include "cgroup.h"
+#include "cgfs.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -75,7 +76,16 @@ sys_read(void)
 
   if(argfd(0, 0, &f) < 0 || argint(2, &n) < 0 || argptr(1, &p, n) < 0)
     return -1;
-  return fileread(f, p, n);
+
+  if(f->type == FD_CG){
+    if(*f->cgfilename == 0)
+	  return readcgdirectory(f, p, n);
+    else
+	  return readcgfile(f, p, n);
+  }
+	
+  else
+	return fileread(f, p, n);
 }
 
 int
@@ -87,7 +97,11 @@ sys_write(void)
 
   if(argfd(0, 0, &f) < 0 || argint(2, &n) < 0 || argptr(1, &p, n) < 0)
     return -1;
-  return filewrite(f, p, n);
+
+  if(f->type == FD_CG)
+	return writecgfile(f, p, n);
+  else
+	return filewrite(f, p, n);
 }
 
 int
@@ -99,7 +113,10 @@ sys_close(void)
   if(argfd(0, &fd, &f) < 0)
     return -1;
   myproc()->ofile[fd] = 0;
-  fileclose(f);
+  if(f->type == FD_CG)
+	  closecgfileordir(f);
+  else
+	  fileclose(f);
   return 0;
 }
 
@@ -111,6 +128,10 @@ sys_fstat(void)
 
   if(argfd(0, 0, &f) < 0 || argptr(1, (void*)&st, sizeof(*st)) < 0)
     return -1;
+
+  if(f->type == FD_CG)
+	  return cgstat(f, st);
+  
   return filestat(f, st);
 }
 
@@ -193,48 +214,56 @@ sys_unlink(void)
     return -1;
 
   begin_op();
-  if((dp = nameiparent(path, name)) == 0){
-    end_op();
-    return -1;
+  
+  int delete_cgroup_res = cgroup_delete(path, "unlink");
+  if(delete_cgroup_res == -1)
+  {
+	  if((dp = nameiparent(path, name)) == 0){
+		end_op();
+		return -1;
+	  }
+
+	  ilock(dp);
+
+	  // Cannot unlink "." or "..".
+	  if(namecmp(name, ".") == 0 || namecmp(name, "..") == 0)
+		goto bad;
+
+	  if((ip = dirlookup(dp, name, &off)) == 0)
+		goto bad;
+	  ilock(ip);
+
+	  if(ip->nlink < 1)
+		panic("unlink: nlink < 1");
+	  if(ip->type == T_DIR && !isdirempty(ip)){
+		iunlockput(ip);
+		goto bad;
+	  }
+
+	  if (doesbackdevice(ip) == 1) {
+		iunlockput(ip);
+		goto bad;
+	  }
+
+	  memset(&de, 0, sizeof(de));
+	  if(writei(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
+		panic("unlink: writei");
+	  if(ip->type == T_DIR){
+		dp->nlink--;
+		iupdate(dp);
+	  }
+	  iunlockput(dp);
+
+	  ip->nlink--;
+	  iupdate(ip);
+	  iunlockput(ip);
   }
-
-  ilock(dp);
-
-  // Cannot unlink "." or "..".
-  if(namecmp(name, ".") == 0 || namecmp(name, "..") == 0)
-    goto bad;
-
-  if((ip = dirlookup(dp, name, &off)) == 0)
-    goto bad;
-  ilock(ip);
-
-  if(ip->nlink < 1)
-    panic("unlink: nlink < 1");
-  if(ip->type == T_DIR && !isdirempty(ip)){
-    iunlockput(ip);
-    goto bad;
+  if(delete_cgroup_res == -2){
+	  end_op();
+	  return -1;
   }
-
-  if (doesbackdevice(ip) == 1) {
-    iunlockput(ip);
-    goto bad;
-  }
-
-  memset(&de, 0, sizeof(de));
-  if(writei(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
-    panic("unlink: writei");
-  if(ip->type == T_DIR){
-    dp->nlink--;
-    iupdate(dp);
-  }
-  iunlockput(dp);
-
-  ip->nlink--;
-  iupdate(ip);
-  iunlockput(ip);
-
+ 
   end_op();
-
   return 0;
 
 bad:
@@ -308,18 +337,34 @@ sys_open(void)
   struct file *f;
   struct inode *ip;
   struct mount *mnt;
+  struct cgroup *cgp;
 
   if(argstr(0, &path) < 0 || argint(1, &omode) < 0)
     return -1;
 
   begin_op();
+  
+  if((cgp = get_cgroup_by_path(path))){
+	fd = opencgdirectory(cgp, omode);  
+	end_op();
+	return fd;
+  }
+  
+  char dir_path[MAX_PATH_LENGTH];
+  char file_name[MAX_PATH_LENGTH];
 
+  if(get_cg_file_dir_path_and_file_name(path, dir_path, file_name) == 0 && (cgp = get_cgroup_by_path(dir_path))){
+    fd = opencgfile(file_name, cgp, omode);  
+    end_op();
+    return fd;
+  }
+    
   if(omode & O_CREATE){
     ip = createmount(path, T_FILE, 0, 0, &mnt);
     if(ip == 0){
       end_op();
       return -1;
-    }
+  }
   } else {
     if((ip = nameimount(path, &mnt)) == 0){
       end_op();
@@ -331,7 +376,7 @@ sys_open(void)
       mntput(mnt);
       end_op();
       return -1;
-    }
+      }
   }
 
   if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
@@ -351,7 +396,8 @@ sys_open(void)
   f->mnt = mnt;
   f->readable = !(omode & O_WRONLY);
   f->writable = (omode & O_WRONLY) || (omode & O_RDWR);
-  return fd;
+  
+  return fd;	  
 }
 
 int
@@ -359,13 +405,27 @@ sys_mkdir(void)
 {
   char *path;
   struct inode *ip;
-
+  
   begin_op();
-  if(argstr(0, &path) < 0 || (ip = create(path, T_DIR, 0, 0)) == 0){
-    end_op();
+	
+  if(argstr(0, &path) < 0){
+	end_op();
     return -1;
   }
-  iunlockput(ip);
+
+  if(get_cgroup_by_path(path)){
+	  cprintf("cgroup already exists\n");
+			end_op();
+			return -1;
+  }
+
+  if(!cgroup_create(path)){
+    if((ip = create(path, T_DIR, 0, 0)) == 0){
+      end_op();
+      return -1;
+    }
+    iunlockput(ip);
+  }
   end_op();
   return 0;
 }
@@ -397,9 +457,21 @@ sys_chdir(void)
   struct inode *ip;
   struct proc *curproc = myproc();
   struct mount *mnt;
+  struct cgroup *cgp;
+  char fpath[MAX_PATH_LENGTH];
   
   begin_op();
-  if(argstr(0, &path) < 0 || (ip = nameimount(path, &mnt)) == 0){
+  if(argstr(0, &path) < 0){
+    end_op();
+    return -1;
+  }
+  if((cgp = get_cgroup_by_path(path))){
+    end_op();
+	safestrcpy(curproc->cwdp, cgp->cgroup_dir_path, sizeof(cgp->cgroup_dir_path));
+	return 0;
+  }  
+  format_path(fpath, path);
+  if((ip = nameimount(fpath, &mnt)) == 0){
     end_op();
     return -1;
   }
@@ -410,11 +482,14 @@ sys_chdir(void)
     return -1;
   }
   iunlock(ip);
-  iput(curproc->cwd);
-  mntput(curproc->cwdmount);
+  if(curproc->cwd)
+    iput(curproc->cwd);
+  if(curproc->cwdmount)
+    mntput(curproc->cwdmount);
   end_op();
   curproc->cwdmount = mnt;
   curproc->cwd = ip;
+  format_path(curproc->cwdp, path);
   return 0;
 }
 
