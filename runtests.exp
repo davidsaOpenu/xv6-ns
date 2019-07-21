@@ -1,5 +1,7 @@
 #!/usr/bin/expect -f
 
+spawn bash -c "ls -all"
+
 # no limit - usertests are time consuming
 set timeout -1
 
