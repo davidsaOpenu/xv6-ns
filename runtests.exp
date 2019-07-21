@@ -1,5 +1,8 @@
 #!/usr/bin/expect -f
 
+spawn bash -c "ls -al"
+expect eof
+
 # no limit - usertests are time consuming
 set timeout -1
 
@@ -10,8 +13,10 @@ set qemu_command $expect_out(buffer)
 
 # TODO: use the resut of dry run as an agument fot spawn ($expect_out(buffer) is not working for some reason)
 # actual run
-spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
-expect "$ "
+spawn qemu-system-i386 -d -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
+cat /tmp/qemu.log
+expect eof
+
 
 # run usertests and log the output
 send "usertests\n"
