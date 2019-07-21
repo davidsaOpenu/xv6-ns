@@ -16,6 +16,24 @@
       "revId": "7214654f342908b657b284c428025fb0dbdbaff2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c54f015_2b0c11be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-21T14:52:41Z",
+      "side": 1,
+      "message": "1. We added the \"-n\" switch for echo to not print a newline.\n2. One write is essential for special files, because they rely on a single write call, similar to our cgroup infrastructure.",
+      "parentUuid": "de795d09_4c702cdf",
+      "revId": "7214654f342908b657b284c428025fb0dbdbaff2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
