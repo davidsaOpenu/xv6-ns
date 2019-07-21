@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "43b79893_91828e8c",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1016610
+      },
+      "writtenOn": "2019-07-21T07:17:06Z",
+      "side": 1,
+      "message": "no, the new process is defiantly in its parent PID_NS",
+      "parentUuid": "86689b6b_2a3c6c4c",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68213177_c6a26bab",
         "filename": "proc.c",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b4cc4f0_90b607e9",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1016610
+      },
+      "writtenOn": "2019-07-21T07:17:06Z",
+      "side": 1,
+      "message": "this is the same implementation of the kill syscall, if it was safe than, its safe now",
+      "parentUuid": "68213177_c6a26bab",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f848cfc1_d49e8000",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1016610
+      },
+      "writtenOn": "2019-07-21T07:17:06Z",
+      "side": 1,
+      "message": "1) I think that this is the behavior in linux and we want the behave the same\n2) get_pid1_for_ns cannot return 0, as every active namespace has to have a pid_1 process (when pid1 dies the namespace dies)",
+      "parentUuid": "8c425343_88fc888f",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b35442d_4daa9964",
         "filename": "proc.c",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "412bda65_cd25ec26",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1016610
+      },
+      "writtenOn": "2019-07-21T07:17:06Z",
+      "side": 1,
+      "message": "no, if the process is a child of curproc, he must be a member of curproc PID_NS",
+      "parentUuid": "8b35442d_4daa9964",
+      "revId": "69f1fc8fd3778e1095ee802dc46694f82f66c875",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
