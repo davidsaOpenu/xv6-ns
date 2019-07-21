@@ -40,6 +40,7 @@ OBJS = \
 	steady_clock.o\
 	klib.o\
 	cgroup.o\
+	cgfs.o\
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
