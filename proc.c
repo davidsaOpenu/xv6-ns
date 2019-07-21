@@ -9,6 +9,7 @@
 #include "wstatus.h"
 #include "pid_ns.h"
 #include "namespace.h"
+#include "cgroup.h"
 
 struct {
   struct spinlock lock;
@@ -666,4 +667,35 @@ void proc_lock()
 void proc_unlock()
 {
     release(&ptable.lock);
+}
+
+/*
+* Move a process from one cgroup to another.
+* Acquires lock, checks if process is alive, calls cgroup_insert, and releases lock.
+*/
+int
+cgroup_move_proc(struct cgroup * cgroup, int pid)
+{
+    struct proc *p;
+
+    acquire(&ptable.lock);
+
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+        if(proc_pid(p) == pid){
+            if(p->state == UNUSED || p->state == EMBRYO || p->state == ZOMBIE){
+                release(&ptable.lock);
+                return -1;
+            }
+            unsafe_cgroup_insert(cgroup, p);
+            break;
+        }
+
+    /*If we have reached the end of the process table then return failure. */
+    if(p == &ptable.proc[NPROC]){
+        release(&ptable.lock);
+        return -1;
+    }
+
+    release(&ptable.lock);
+    return 0;
 }
