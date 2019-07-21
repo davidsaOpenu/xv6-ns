@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16edb494_8eee6f1c",
+        "filename": "file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-21T08:21:41Z",
+      "side": 1,
+      "message": "seems not related to neither const correctness nor ifndef guards",
+      "revId": "822fce214142f8c0da18dafd1cdc62c2c653c1f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd6f915b_f60bee57",
+        "filename": "sleeplock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-21T08:21:41Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "822fce214142f8c0da18dafd1cdc62c2c653c1f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8756b51_0a9a66ab",
+        "filename": "user.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-21T08:21:41Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "822fce214142f8c0da18dafd1cdc62c2c653c1f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
