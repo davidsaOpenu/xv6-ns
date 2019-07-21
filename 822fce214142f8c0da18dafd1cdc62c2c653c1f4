@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4a44cf96_fe80a0ba",
+        "filename": "file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-21T10:34:54Z",
+      "side": 1,
+      "message": "Header guard approach means including missing includes. Do you want me to change the commit message to make it clearer?",
+      "parentUuid": "16edb494_8eee6f1c",
+      "revId": "822fce214142f8c0da18dafd1cdc62c2c653c1f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd6f915b_f60bee57",
         "filename": "sleeplock.h",
         "patchSetId": 1
