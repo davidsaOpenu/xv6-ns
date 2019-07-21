@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b55f1ef1_a691f5b7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-21T08:15:53Z",
+      "side": 1,
+      "message": "Could you please address the following questions:\n\nWhy is this change necessary?\nHow does it address the issue?",
+      "revId": "3dba237138adbb83c20245e5ff39430e11844cb1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
