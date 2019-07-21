@@ -16,6 +16,24 @@
       "revId": "3dba237138adbb83c20245e5ff39430e11844cb1",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18d32e6f_c93c3193",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-21T14:46:33Z",
+      "side": 1,
+      "message": "The change is necessary because: \n1. File is accessed after decrement of reference count.\n2. Accessing of mount field if the file is PIPE is supposed to be undefined.\n3. In a future change, with cgroup file type point #2 becomes undefined.",
+      "parentUuid": "b55f1ef1_a691f5b7",
+      "revId": "3dba237138adbb83c20245e5ff39430e11844cb1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
