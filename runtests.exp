@@ -3,6 +3,8 @@
 # no limit - usertests are time consuming
 set timeout -1
 
+send "ls -all"
+
 # dry-run to get qemu command - to end qemu with close afterwards
 spawn bash -c "make -n qemu-nox | grep qemu"
 expect eof
