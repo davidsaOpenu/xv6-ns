@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de795d09_4c702cdf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-07-21T08:54:05Z",
+      "side": 1,
+      "message": "just wondering why we need to insist that echo is done in one write?\nalso, what do you mean by \"as support for no newlines using -n switch\" ?",
+      "revId": "7214654f342908b657b284c428025fb0dbdbaff2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
