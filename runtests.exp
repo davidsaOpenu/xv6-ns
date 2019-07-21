@@ -1,5 +1,7 @@
 #!/usr/bin/expect -f
 
+send "ls -all"
+
 # no limit - usertests are time consuming
 set timeout -1
 
