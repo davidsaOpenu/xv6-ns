@@ -2,6 +2,15 @@
 #include "stat.h"
 #include "user.h"
 
+/**
+ * Usage: echo [-n] [text...]
+ * Prints the input text to the stdout using the write system call.
+ * The command will insert a new line at the end of the text except if the -n switch
+ * is provided.
+ * Notes: It is important for text to be written in one write call to allow
+ * echo to interact with special kernel files such as for cgroups.
+ */
+
 int
 main(int argc, char *argv[])
 {
