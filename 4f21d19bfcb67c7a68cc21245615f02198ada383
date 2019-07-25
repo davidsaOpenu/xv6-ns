@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec321f90_97db4165",
+        "filename": "sh.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-25T17:25:50Z",
+      "side": 1,
+      "message": "If i understand correctly when using a command outside the root directory the first exec will fail then the file descriptor is used to check the file is valid, lastly the exec is run a second time with a fixed path (added backslash to the start). \n\nQ: Can\u0027t you just fix the path both for root dir commands and non root commands?\n   This can remove the need for two exec commands?\nQ: Why check a valid fd just to have exec do the same?",
+      "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
