@@ -16,6 +16,24 @@
       "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fb72587_d23e8b42",
+        "filename": "sh.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-07-26T06:47:20Z",
+      "side": 1,
+      "message": "First question: how can you make a path both for root and non root for I\u0027m confused.\nSecond question: Exec can fail for multiple reasons, since this os does not return the reason you have to check if the file is really not there before going to the next exec.",
+      "parentUuid": "ec321f90_97db4165",
+      "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
