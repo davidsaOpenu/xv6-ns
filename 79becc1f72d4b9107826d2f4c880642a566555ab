@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28bd3afe_29479ea3",
+        "filename": "echo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-27T17:08:06Z",
+      "side": 1,
+      "message": "I may be misunderstanding but can\u0027t the allocation size calc once?",
+      "revId": "79becc1f72d4b9107826d2f4c880642a566555ab",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "810ae413_bd902498",
+        "filename": "echo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-07-27T17:08:06Z",
+      "side": 1,
+      "message": "offset can overflow at this point over data size",
+      "revId": "79becc1f72d4b9107826d2f4c880642a566555ab",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
