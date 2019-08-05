@@ -52,6 +52,24 @@
       "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "195bd5a8_86b73751",
+        "filename": "sh.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016686
+      },
+      "writtenOn": "2019-08-05T18:23:28Z",
+      "side": 1,
+      "message": "First question: No, because if you are at the non root directory then /something and something are not the same path. Consider the following layout:\n- root\n-- something\n-- a \u003c-- current directory\n--- something\n\nSecond question: If you are at the \"a\" directory and executing \"something\" fails due to \"something\" execution failure, then you should not go and try to execute \"/something\".",
+      "parentUuid": "f1e2e986_91b141a4",
+      "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
