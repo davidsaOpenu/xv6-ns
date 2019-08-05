@@ -34,6 +34,24 @@
       "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1e2e986_91b141a4",
+        "filename": "sh.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-05T14:53:00Z",
+      "side": 1,
+      "message": "First off i admit i may be misunderstanding something critical.\nSo please correct me if i am wrong.\n\nI will explain what i understood.\nA root command path is in the format \"root_command\" or \"/root_command\" both will be executed by the first exec.\n\nA non root command path is the format \"example_dir/non_root_command\" or \"/example_dir/non_root_command\" where the first format is executed by the second exec (after adding backslash) and the second format by the first exec.\n\nAssuming i understood correctly.\n\nFirst question: can\u0027t the formats be united in to a single one where they all start with \"/\" (root dir)? (Then a single exec can be used on the single path format)\nfor example if all paths formats can be transformed in to there absolute path there for generalizing all formats. \n\nsecond question: In a situation where checking the file descriptor succeeds the check is done in the first exec then again here.\n\nIn the situation where checking the file descriptor fails - the check is done in both the first exec and yet again here then again after added a backslash in the second exec (which can succeed or fail depending on the new path).\n\nI may be mistaken by it seems to me the file descriptor check is a bit redundant.",
+      "parentUuid": "8fb72587_d23e8b42",
+      "revId": "4f21d19bfcb67c7a68cc21245615f02198ada383",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
