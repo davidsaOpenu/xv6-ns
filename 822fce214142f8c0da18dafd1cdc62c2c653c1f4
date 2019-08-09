@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e8bef460_4d736bbb",
+        "filename": "file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-09T12:31:59Z",
+      "side": 1,
+      "message": "best practice is to contain the minimal set of #include directives that are needed to make the header compilable",
+      "parentUuid": "4a44cf96_fe80a0ba",
+      "revId": "822fce214142f8c0da18dafd1cdc62c2c653c1f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd6f915b_f60bee57",
         "filename": "sleeplock.h",
         "patchSetId": 1
