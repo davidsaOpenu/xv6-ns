@@ -1,4 +1,5 @@
 MAKEFILE_DIRECTORY := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+export
 
 OBJS = \
 	bio.o\
@@ -129,7 +130,7 @@ initcode: initcode.S
 	$(OBJCOPY) -S -O binary initcode.out initcode
 	$(OBJDUMP) -S initcode.o > initcode.asm
 
-kernel: $(OBJS) entry.o entryother initcode kernel.ld
+kernel: $(OBJS) entry.o entryother initcode kernel.ld 
 	$(LD) $(LDFLAGS) -T kernel.ld -o kernel entry.o $(OBJS) -b binary initcode entryother
 	$(OBJDUMP) -S kernel > kernel.asm
 	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernel.sym
@@ -159,7 +160,14 @@ _%: %.o $(ULIB)
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
-_forktest: forktest.o $(ULIB)
+POUCH_UPROGS = \
+	_pouch_start\
+
+_pouch:
+	make -C pouch all
+	cp pouch/_pouch_start ./
+
+_forktest: forktest.o $(ULIB) 
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o _forktest forktest.o ulib.o usys.o
@@ -202,8 +210,8 @@ internal_fs_%: mkfs
 	dd if=/dev/zero of=$@ count=80
 	./mkfs $@ 1
 
-fs.img: mkfs README $(UPROGS) $(INTERNAL_DEV)
-	./mkfs fs.img 0 README $(UPROGS) $(INTERNAL_DEV)
+fs.img: mkfs README $(UPROGS) $(INTERNAL_DEV) _pouch
+	./mkfs fs.img 0 README $(UPROGS) $(INTERNAL_DEV) $(POUCH_UPROGS)
 
 -include *.d
 
@@ -214,6 +222,7 @@ clean: windows_debugging_clean
 	.gdbinit \
 	$(UPROGS) \
 	$(INTERNAL_DEV)
+	make -C pouch clean
 
 # make a printout
 FILES = $(shell grep -v '^\#' runoff.list)
