@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71e6a2af_0ebf3fd1",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "Increment num  may be simpler and clearer with an int versus a ascii char. (maybe using atoi, printint)",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab3f5bf4_963a364e",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3c1f6b3_3093557e",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "if you imported most the ulib.c it may be useful to include it in a separate file such as klib.c",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ac19157_743230e9",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "Why not use NPROC as max size?\nIf you decide to change this there are many more compares like this in the c file.",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20c51d03_b96e0f23",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "Uncritical - \nAssuming a NULL termination , may be a good idea to keep track of the max length.\nAssuming strlen(cwdp) \u003e 0",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bfb7b89_550d7d79",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "would be cleaner with strncpy",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca92da08_5e66fe50",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "Uncritical - If cwdp is at max size this incrimination can overflow in to the null termination",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f01471a1_bce43356",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "can strlen return 0?",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f24c6a7_76e7dfaa",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-08-12T16:06:35Z",
+      "side": 1,
+      "message": "if cwdp was not added to bufp (because path started with \u0027/\u0027), bufp -1 is out of bounds.",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
