@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "88f8b4b4_ee95d5f2",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-13T20:23:36Z",
+      "side": 1,
+      "message": "container management utility has to be compiled from the Makefile (just like any other xv6 utility: ls, cat, usertests, etc)",
+      "revId": "79ee4fe8e5df15429391c9402b26335183c89026",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d52a4bbd_1ee88d45",
         "filename": "pouch/README.md",
         "patchSetId": 1
