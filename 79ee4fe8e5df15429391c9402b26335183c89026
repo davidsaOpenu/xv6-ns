@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eaa06f2_bc390c2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-13T20:22:04Z",
+      "side": 1,
+      "message": "guidelines to improve \nhttps://chris.beams.io/posts/git-commit/\nand\nhttps://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53",
+      "revId": "79ee4fe8e5df15429391c9402b26335183c89026",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d52a4bbd_1ee88d45",
+        "filename": "pouch/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-13T20:22:04Z",
+      "side": 1,
+      "message": "everything that is related to namespaces/cgroups should be completely transparent to the user.\nuser wants\n - to create a container\n - to set limitations on the resources that will be avaiable to the container \n - to run the container \n  etc\n\nso cgroup, pidns and mount_ns params can not be externalized. the utility manages pid namespaces/mount namespaces and cgroups internaly \n\n(https://trello.com/c/uRnqBdRf/36-maman13-14-type-c-hypervisor-userspace-kernel-space-integration)",
+      "revId": "79ee4fe8e5df15429391c9402b26335183c89026",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
