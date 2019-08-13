@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e0ac6b00_a441a907",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "When this was written the thought was that the values that use it are supposed to be \"saved in a file as strings\" and so printing them and dealing with them as strings may be better. \nI will try doing the same with integers instead of strings and see if its better.",
+      "parentUuid": "71e6a2af_0ebf3fd1",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab3f5bf4_963a364e",
         "filename": "cgroup.c",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-08-12T16:06:35Z",
       "side": 1,
       "message": "same comment",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5745f9ae_8b9c0420",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "see above.",
+      "parentUuid": "ab3f5bf4_963a364e",
       "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4d64df75_4cdf2dea",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "Only atoi in this file and atoi, itoa in next commits, no reason to create separate file.",
+      "parentUuid": "c3c1f6b3_3093557e",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ac19157_743230e9",
         "filename": "cgroup.c",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2019-08-12T16:06:35Z",
       "side": 1,
       "message": "Why not use NPROC as max size?\nIf you decide to change this there are many more compares like this in the c file.",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d66f0b_51a4c80a",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "What if in the future we decide we don\u0027t want NPROC cgroups but something else? We will have to change a lot of places. Your suggestion would be right if NPROC belonged to this file (defined to symbolize the size of cgroups table).",
+      "parentUuid": "5ac19157_743230e9",
       "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "169699ce_9e6039fa",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "cwdp is always NULL terminated. Will always be set by safestrcpy() or format_path().",
+      "parentUuid": "20c51d03_b96e0f23",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1bfb7b89_550d7d79",
         "filename": "cgroup.c",
         "patchSetId": 4
@@ -98,6 +188,24 @@
       "writtenOn": "2019-08-12T16:06:35Z",
       "side": 1,
       "message": "would be cleaner with strncpy",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0735859_f3f08a12",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "Will change that.",
+      "parentUuid": "1bfb7b89_550d7d79",
       "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "ede68a1b_88903443",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "It is assumed that given buf is big enough to hold all possible paths created by this function.",
+      "parentUuid": "ca92da08_5e66fe50",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f01471a1_bce43356",
         "filename": "cgroup.c",
         "patchSetId": 4
@@ -138,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "b50aee9b_46f59193",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "yes.",
+      "parentUuid": "f01471a1_bce43356",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f24c6a7_76e7dfaa",
         "filename": "cgroup.c",
         "patchSetId": 4
@@ -149,6 +293,24 @@
       "writtenOn": "2019-08-12T16:06:35Z",
       "side": 1,
       "message": "if cwdp was not added to bufp (because path started with \u0027/\u0027), bufp -1 is out of bounds.",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3b7187d_5c1b59ab",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-13T18:05:59Z",
+      "side": 1,
+      "message": "Will add a check for that.",
+      "parentUuid": "7f24c6a7_76e7dfaa",
       "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
