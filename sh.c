@@ -178,6 +178,12 @@ main(void)
         printf(2, "cannot cd %s\n", buf+3);
       continue;
     }
+
+    if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
+      // exit must be called by the parent, not the child.
+      exit(0);
+    }
+
     if(fork1() == 0)
       runcmd(parsecmd(buf));
     wait(0);
