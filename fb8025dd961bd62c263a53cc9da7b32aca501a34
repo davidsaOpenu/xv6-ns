@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e6726250_a24c38a2",
+        "filename": "cgroup.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "I Don\u0027t understand the comment. While *p is not 0 and equals to *q we proceed (we exit while loop when *p or *q become 0 or they are not equal). If they are different we return the difference. If they are the same we reach the end and returned value is 0. Strings must be null terminated.",
+      "parentUuid": "715c3d10_56050109",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 26
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1005cb1_291c6e6f",
         "filename": "cgroup.h",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2019-08-18T14:10:33Z",
       "side": 1,
       "message": "in general:\n- more elaborative descriptions that describe all scenarios\n- description of parameters and return values for all functions",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cb94b68_05103d10",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "Will add better descriptions to all functions.",
+      "parentUuid": "d1005cb1_291c6e6f",
       "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "80ca46c4_08ef5cf2",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "Will change that.",
+      "parentUuid": "437a79e0_39557112",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "373e2ca7_6bcfe31b",
         "filename": "cgroup.h",
         "patchSetId": 5
@@ -76,6 +142,24 @@
       "writtenOn": "2019-08-18T14:10:33Z",
       "side": 1,
       "message": "param.h sounds to be a better place",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6da26e99_9ef50196",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "Will change that.",
+      "parentUuid": "373e2ca7_6bcfe31b",
       "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -243,6 +327,30 @@
     },
     {
       "key": {
+        "uuid": "e6802777_60a3c6f2",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "Changing this right now will require a long rebase. The plan is to change char* to uint values in cgroup struct in a later commit.",
+      "parentUuid": "c042981f_00e06c81",
+      "range": {
+        "startLine": 122,
+        "startChar": 55,
+        "endLine": 122,
+        "endChar": 62
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4c932303_0412a0d1",
         "filename": "cgroup.h",
         "patchSetId": 5
@@ -254,6 +362,30 @@
       "writtenOn": "2019-08-18T14:10:33Z",
       "side": 1,
       "message": "s/char */unit?",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 68
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab9829e1_15a9a6d0",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "same as above.",
+      "parentUuid": "4c932303_0412a0d1",
       "range": {
         "startLine": 127,
         "startChar": 0,
@@ -306,6 +438,24 @@
     },
     {
       "key": {
+        "uuid": "9790a8ae_053bb9f7",
+        "filename": "main.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "No reason.",
+      "parentUuid": "1fb3d5ce_c6688e29",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e33f0b46_bfe96248",
         "filename": "proc.h",
         "patchSetId": 5
@@ -317,6 +467,24 @@
       "writtenOn": "2019-08-18T14:10:33Z",
       "side": 1,
       "message": "defined in cgroup.h \nproper place param.c",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be8db1eb_2a7127df",
+        "filename": "proc.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-08-18T18:03:10Z",
+      "side": 1,
+      "message": "Will change that.",
+      "parentUuid": "e33f0b46_bfe96248",
       "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
