@@ -1,0 +1,302 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1005cb1_291c6e6f",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "in general:\n- more elaborative descriptions that describe all scenarios\n- description of parameters and return values for all functions",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "437a79e0_39557112",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "- comments with description might be useful\n- is it possible to re-factor the name and avoid 2x MAX?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "373e2ca7_6bcfe31b",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "param.h sounds to be a better place",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cd032d8_5a4e8f8b",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "let\u0027s add the description of the path argument",
+      "range": {
+        "startLine": 66,
+        "startChar": 30,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a85fd7d_f7073152",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "let\u0027s add the description of the path and type arguments",
+      "range": {
+        "startLine": 74,
+        "startChar": 18,
+        "endLine": 74,
+        "endChar": 43
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81c5e8f6_dbea3560",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "same: description of the arguments",
+      "range": {
+        "startLine": 79,
+        "startChar": 23,
+        "endLine": 81,
+        "endChar": 52
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "821d8877_e22b68db",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "same: description of the arguments",
+      "range": {
+        "startLine": 88,
+        "startChar": 25,
+        "endLine": 88,
+        "endChar": 67
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8256b30d_562d6a20",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "is this one the safe one that acquires the lock? Let\u0027s add a descrition",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 17
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5de24a46_47155cd8",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "what happens if no cgroup is located at the given path. Other scenarios?",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 116,
+        "endChar": 3
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c042981f_00e06c81",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "maybe uint?",
+      "range": {
+        "startLine": 122,
+        "startChar": 55,
+        "endLine": 122,
+        "endChar": 62
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c932303_0412a0d1",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "s/char */unit?",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 68
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a843ac2e_eb1346f1",
+        "filename": "cgroup.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "possible formats? maybe examples?",
+      "range": {
+        "startLine": 150,
+        "startChar": 3,
+        "endLine": 150,
+        "endChar": 14
+      },
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fb3d5ce_c6688e29",
+        "filename": "main.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "Q: any particular reason to put cginit before ideinit?\nnit: // position",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e33f0b46_bfe96248",
+        "filename": "proc.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-18T14:10:33Z",
+      "side": 1,
+      "message": "defined in cgroup.h \nproper place param.c",
+      "revId": "fb8025dd961bd62c263a53cc9da7b32aca501a34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
