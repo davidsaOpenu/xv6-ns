@@ -99,7 +99,9 @@ sys_close(void)
   if(argfd(0, &fd, &f) < 0)
     return -1;
   myproc()->ofile[fd] = 0;
+
   fileclose(f);
+
   return 0;
 }
 
@@ -300,6 +302,56 @@ create(char *path, short type, short major, short minor)
   return res;
 }
 
+static struct inode* create_tty(char* path,  struct mount **mnt)
+{
+   struct inode * res = 0;
+   int tty_num = (int)(path[3] - '0');
+   path[5] = 0; //Null terminate 
+   if(tty_num >= 0 && tty_num < (NTTY - MINTTY)){
+      int dev_index = MINTTY + tty_num;
+      res = createmount(path, T_DEV, dev_index, dev_index, mnt);    
+   }
+
+   return res;
+   
+}
+
+int
+sys_ioctl(void)
+{
+
+  int fd;
+  int command;
+  struct file *f;
+  struct inode* ip;
+
+  if(argfd(0, &fd, &f) < 0 || argint(1, &command) < 0)
+    return -1;
+
+  if(command != DEV_CONNECT && command != DEV_DISCONNECT)
+	return -1;
+
+  ip = f->ip;
+  ilock(ip);
+  if( ip->type != T_DEV && 
+      ip->major == ip->minor &&
+      ip->major < MINTTY && ip->major >= NTTY){
+	iunlockput(ip);
+	return -1;
+    }
+
+  if(command == DEV_CONNECT){
+  	devsw[ip->major].flags |= DEV_CONNECT;
+  }
+ 
+  if(command == DEV_DISCONNECT){
+  	devsw[ip->major].flags &=  DEV_DISCONNECT;
+  }
+
+ iunlock(ip);
+ return 0;
+}
+
 int
 sys_open(void)
 {
@@ -315,7 +367,13 @@ sys_open(void)
   begin_op();
 
   if(omode & O_CREATE){
-    ip = createmount(path, T_FILE, 0, 0, &mnt);
+    if(strncmp(path,"tty",3) == 0 && path[4] == 0)
+    {
+	ip = create_tty(path, &mnt);
+    }else{
+    	ip = createmount(path, T_FILE, 0, 0, &mnt);
+    }	
+
     if(ip == 0){
       end_op();
       return -1;
@@ -325,6 +383,7 @@ sys_open(void)
       end_op();
       return -1;
     }
+
     ilock(ip);
     if(ip->type == T_DIR && omode != O_RDONLY){
       iunlockput(ip);
@@ -342,6 +401,7 @@ sys_open(void)
     end_op();
     return -1;
   }
+
   iunlock(ip);
   end_op();
 
