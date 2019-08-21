@@ -7,6 +7,7 @@ struct stat;
 struct rtcdate;
 
 // system calls
+int ioctl(int, int);
 int fork(void);
 int exit(int status) __attribute__((noreturn));
 int wait(int* wstatus);

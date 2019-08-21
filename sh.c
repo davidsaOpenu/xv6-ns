@@ -155,11 +155,70 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
+int 
+attach_tty(int tty_fd)
+{
+	close(0);
+	if(dup(tty_fd) < 0)
+		return -1;
+	close(1);
+	if(dup(tty_fd) < 0)
+		return -1;
+	close(2);
+	if(dup(tty_fd) < 0)
+		return -1;
+     return 0;
+
+}
+
+int
+connect_tty(char* buf)
+{
+      int tty_fd = -1;
+
+      //Create tty device
+      if((tty_fd = open(buf, O_CREATE|O_RDWR)) < 0){
+         if((tty_fd = open(buf, O_RDWR)) < 0){
+             printf(2, "cannot connect %s %d\n", buf+8, tty_fd);
+             return -1;
+         }
+      }
+      
+     //attach stderr stdin stdout
+     if(attach_tty(tty_fd) < 0)
+	printf(2,"attach failed"); //2DO disconnect back to console.
+       
+      //Enable tty 
+      ioctl(tty_fd, DEV_CONNECT);
+      return tty_fd;
+}
+
+int
+disconnect_tty(int tty_fd)
+{
+    int console_fd;
+
+    //Disable tty
+    ioctl(tty_fd, DEV_DISCONNECT);
+
+    //fall back to console.
+    if((console_fd = open("console", O_RDWR)) >= 0){
+        //attach stderr stdin stdout
+        attach_tty(console_fd);
+	return 0;
+     }
+
+
+     return -1;
+
+}
+
 int
 main(void)
 {
   static char buf[100];
   int fd;
+  int tty_fd = -1;
 
   // Ensure that three file descriptors are open.
   while((fd = open("console", O_RDWR)) >= 0){
@@ -182,6 +241,39 @@ main(void)
     if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
       // exit must be called by the parent, not the child.
       exit(0);
+    }
+
+    //Connect tty
+    if(buf[0] == 'c' && buf[1] == 'o' && buf[2] == 'n' && buf[3] == 'n' && buf[4] == 'e' && buf[5] == 'c' && buf[6] == 't' &&  buf[7] == ' ' &&  buf[8] == 't' &&  buf[9] == 't' &&  buf[10] == 'y' &&  buf[12] == '\n'){
+
+      buf[strlen(buf)-1] = 0;
+
+      if(tty_fd != -1){
+	close(tty_fd);
+        tty_fd = -1;
+      }
+
+
+     tty_fd = connect_tty(buf+8);
+
+      continue;
+    }
+
+    //Disconnect tty
+    if(buf[0] == 'd' && buf[1] == 'i' && buf[2] == 's' && buf[3] == 'c' && buf[4] == 'o' && buf[5] == 'n' && buf[6] == 'n' &&  buf[7] == 'e' &&  buf[8] == 'c'  &&  buf[9] == 't' &&  buf[10] == '\n'){
+
+     if(disconnect_tty(tty_fd) < 0)
+     {
+	     printf(2, "cannot disconnect tty\n");
+	     continue;	
+     }
+
+     if(tty_fd != -1){
+	 close(tty_fd);
+	 tty_fd = -1;
+     }
+
+      continue;
     }
 
     if(fork1() == 0)
