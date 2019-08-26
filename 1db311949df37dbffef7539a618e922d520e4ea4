@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "b9401f57_545df469",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-08-26T09:47:21Z",
+      "side": 1,
+      "message": "I tend to agree with houdini91. Putting in separate file is cleaner and enables reuse. Chances are little that a person that comes to use atoi will look if cgroup.c includes it\u0027s implementation.",
+      "parentUuid": "4d64df75_4cdf2dea",
+      "revId": "1db311949df37dbffef7539a618e922d520e4ea4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ac19157_743230e9",
         "filename": "cgroup.c",
         "patchSetId": 4
