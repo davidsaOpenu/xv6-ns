@@ -110,6 +110,7 @@ extern int sys_printdevices(void);
 extern int sys_unshare(void);
 extern int sys_usleep(void);
 extern int sys_ioctl(void);
+extern int sys_ioctlcnt(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
