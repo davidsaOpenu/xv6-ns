@@ -68,6 +68,8 @@ runcmd(struct cmd *cmd)
   if(cmd == 0)
     exit(1);
 
+
+
   switch(cmd->type){
   default:
     panic("runcmd");
@@ -76,6 +78,7 @@ runcmd(struct cmd *cmd)
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit(1);
+
     exec(ecmd->argv[0], ecmd->argv);
 
     fd = open(ecmd->argv[0], O_RDONLY);
@@ -139,6 +142,8 @@ runcmd(struct cmd *cmd)
     bcmd = (struct backcmd*)cmd;
     if(fork1() == 0)
       runcmd(bcmd->cmd);
+    else
+      sleep(5);
     break;
   }
   exit(0);
@@ -178,6 +183,67 @@ main(void)
         printf(2, "cannot cd %s\n", buf+3);
       continue;
     }
+
+    if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
+      // exit must be called by the parent, not the child.
+      disconnect_tty(0);
+      exit(0);
+    }
+
+    //Connect tty
+    if(buf[0] == 'c' && buf[1] == 'o' && buf[2] == 'n' && buf[3] == 'n' && buf[4] == 'e' && buf[5] == 'c' && buf[6] == 't' &&  buf[7] == ' ' &&  buf[8] == 't' &&  buf[9] == 't' &&  buf[10] == 'y' &&  buf[12] == '\n'){
+      int tty_fd;
+
+      buf[strlen(buf)-1] = 0;
+
+      tty_fd = open(buf+8, O_RDWR);
+      if(tty_fd < 0){
+	    printf(2, "exec connect tty failed\n");
+	    continue;
+      }
+      
+      connect_tty(tty_fd);
+      close(tty_fd);
+      continue;
+    }
+
+    //Disconnect tty
+    if(buf[0] == 'd' && buf[1] == 'i' && buf[2] == 's' && buf[3] == 'c' && buf[4] == 'o' && buf[5] == 'n' && buf[6] == 'n' &&  buf[7] == 'e' &&  buf[8] == 'c'  &&  buf[9] == 't' &&  buf[10] == '\n'){
+
+     buf[strlen(buf)-1] = 0;
+     disconnect_tty(0);
+     sleep(10);
+
+      continue;
+    }
+
+    if(buf[0] == 'a' && buf[1] == 't' && buf[2] == 't' && buf[3] == 'a' && buf[4] == 'c' && buf[5] == 'h' && buf[6] == ' ' && buf[7] == 't' && buf[8] == 't' && buf[9] == 'y' && buf[11] == '\n'){
+      int tty_fd;
+
+      buf[strlen(buf)-1] = 0;
+      tty_fd = open(buf+7, O_CREATE|O_RDWR);
+      if(tty_fd < 0){
+	    printf(2, "exec attach tty failed\n");
+	    continue;
+      }
+
+      if(attach_tty(tty_fd) < 0){
+	    printf(2, "exec attach tty failed 2\n");
+	    close(tty_fd);
+	    continue;
+      }
+
+      ioctl(tty_fd, DEV_CONNECT);
+      close(tty_fd);
+      printf(2, "%s attached\n",buf+7);
+      continue;
+    }
+
+    if(buf[0] == 'p' && buf[1] == 'i' && buf[2] == 'd' && buf[3] == '\n'){
+	printf(2, "PID: %d\n",getpid());
+        continue;
+    }
+
     if(fork1() == 0)
       runcmd(parsecmd(buf));
     wait(0);
