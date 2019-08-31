@@ -22,7 +22,9 @@ void            bwrite(struct buf*);
 void            invalidateblocks(uint);
 
 // console.c
+void            consoleclear(void);
 void            consoleinit(void);
+void		ttyinit(void);
 void            cprintf(char*, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));

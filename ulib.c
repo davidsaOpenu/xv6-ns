@@ -57,6 +57,8 @@ gets(char *buf, int max)
 
   for(i=0; i+1 < max; ){
     cc = read(0, &c, 1);
+    while(cc == 0)
+	cc = read(0, &c, 1);
     if(cc < 1)
       break;
     buf[i++] = c;

@@ -15,15 +15,20 @@
 #include "pid_ns.h"
 #include "proc.h"
 #include "x86.h"
+#include "fcntl.h"
 
 static void consputc(int);
 
 static int panicked = 0;
 
-static struct {
+
+typedef struct device_lock {
   struct spinlock lock;
   int locking;
-} cons;
+} device_lock;
+
+
+static device_lock cons;
 
 static void
 printint(int xx, int base, int sign)
@@ -163,6 +168,16 @@ cgaputc(int c)
   crt[pos] = ' ' | 0x0700;
 }
 
+void consoleclear(void){
+  int pos = 0;
+  memset(crt, 0, sizeof(crt[0])*(24*80)); 
+  outb(CRTPORT, 14);
+  outb(CRTPORT+1, pos>>8);
+  outb(CRTPORT, 15);
+  outb(CRTPORT+1, pos);
+  crt[pos] = ' ' | 0x0700;
+}
+
 void
 consputc(int c)
 {
@@ -233,6 +248,8 @@ consoleintr(int (*getc)(void))
   }
 }
 
+
+
 int
 consoleread(struct inode *ip, char *dst, int n)
 {
@@ -272,6 +289,15 @@ consoleread(struct inode *ip, char *dst, int n)
 }
 
 int
+ttyread(struct inode *ip, char *dst, int n)
+{
+  if(devsw[ip->major].flags & DEV_CONNECT){
+    return consoleread(ip,dst,n);
+  }
+  return 0;
+}
+
+int
 consolewrite(struct inode *ip, char *buf, int n)
 {
   int i;
@@ -286,15 +312,41 @@ consolewrite(struct inode *ip, char *buf, int n)
   return n;
 }
 
+int
+ttywrite(struct inode *ip, char *buf, int n)
+{ 
+  if(devsw[ip->major].flags & DEV_CONNECT){
+    return consolewrite(ip,buf,n);
+  }
+  return n;
+}
+
 void
 consoleinit(void)
 {
   initlock(&cons.lock, "console");
 
-  devsw[CONSOLE].write = consolewrite;
-  devsw[CONSOLE].read = consoleread;
+  devsw[CONSOLE].write = ttywrite;
+  devsw[CONSOLE].read = ttyread;
+  devsw[CONSOLE].flags = DEV_CONNECT;
+
   cons.locking = 1;
 
   ioapicenable(IRQ_KBD, 0);
 }
+
+void
+ttyinit(void)
+{
+  int i;
+  for(i = CONSOLE+1; i <= CONSOLE+NTTY; i++){
+     devsw[i].write = ttywrite;
+     devsw[i].read = ttyread;
+     devsw[i].flags = 0;
+     ioapicenable(IRQ_KBD, 0);
+  }
+
+}
+
+
 
