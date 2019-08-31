@@ -331,6 +331,88 @@ create(char *path, short type, short major, short minor)
 }
 
 int
+sys_ioctlcnt(void)
+{
+
+  int fd;
+  int command;
+  int request;
+  int i,ret;
+  struct file *f;
+  struct inode* ip;
+
+  if(argfd(0, &fd, &f) < 0 || argint(1, &request) < 0 || argint(2, &command) < 0)
+    return -1;
+
+  if(!(command  & DEV_CONNECT) &&
+     !(command & DEV_DISCONNECT) &&
+     !(command  & DEV_DETACH) &&
+     !(command & DEV_ATTACH)){
+    return -1;
+  }
+
+  ip = f->ip;
+
+  if( ip->major == CONSOLE ){
+    return -1;
+  }
+
+  ilock(ip);
+
+  if( ip->type != T_DEV ){
+      iunlockput(ip);
+      return -1;
+  }  
+
+  if( ip->major > CONSOLE  + NTTY){
+     iunlockput(ip);
+     return -1;
+  }
+
+
+
+ switch (request){
+ case TTYSETS:
+   if((command & DEV_DISCONNECT)){
+       devsw[ip->major].flags &=  ~(DEV_CONNECT);
+       devsw[CONSOLE].flags |=  DEV_CONNECT;
+       consoleclear();
+       cprintf("Console connected\n");
+    }
+
+    if((command & DEV_CONNECT)){
+      devsw[ip->major].flags |= DEV_CONNECT;
+      for(i = CONSOLE; i < CONSOLE + 1 + NTTY; i++){
+          if(ip->major != i){
+             devsw[i].flags &= ~(DEV_CONNECT);
+          }
+      }
+      consoleclear();
+      cprintf("\ntty%d connected\n",ip->major-(CONSOLE+1));
+    }
+
+    if((command & DEV_ATTACH)){
+       devsw[ip->major].flags |= DEV_ATTACH;
+    }
+
+    if((command & DEV_DETACH)){
+       devsw[ip->major].flags &= ~(DEV_ATTACH);
+      }
+   break;
+ case TTYGETS:
+   ret = devsw[ip->major].flags & command;
+   iunlock(ip);
+   return ret;
+ default:
+   iunlock(ip);
+   return -1;
+ }
+
+ iunlock(ip);
+ return 0;
+}
+
+int
 sys_open(void)
 {
   char *path;
