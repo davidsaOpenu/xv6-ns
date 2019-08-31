@@ -1,4 +1,5 @@
 MAKEFILE_DIRECTORY := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+export
 
 OBJS = \
 	bio.o\
@@ -152,12 +153,13 @@ tags: $(OBJS) entryother.S _init
 vectors.S: vectors.pl
 	perl vectors.pl > vectors.S
 
-ULIB = ulib.o usys.o printf.o umalloc.o
+ULIB = ulib.o usys.o printf.o umalloc.o tty.o
 
 _%: %.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
+
 
 _forktest: forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
@@ -194,6 +196,7 @@ UPROGS=\
 	_zombie\
 	_mount\
 	_umount\
+	_pouch\
 	_timer
 
 INTERNAL_DEV=\
