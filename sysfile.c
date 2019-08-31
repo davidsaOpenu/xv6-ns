@@ -99,7 +99,9 @@ sys_close(void)
   if(argfd(0, &fd, &f) < 0)
     return -1;
   myproc()->ofile[fd] = 0;
+
   fileclose(f);
+
   return 0;
 }
 
@@ -298,6 +300,49 @@ create(char *path, short type, short major, short minor)
     mntput(mnt);
   }
   return res;
+}
+
+int
+sys_ioctl(void)
+{
+
+  int fd;
+  int command;
+  int i;
+  struct file *f;
+  struct inode* ip;
+
+  if(argfd(0, &fd, &f) < 0 || argint(1, &command) < 0 )
+    return -1;
+
+  if((command  & DEV_CONNECT) == 0 && (command & DEV_DISCONNECT) == 0)
+    return -1;
+
+  ip = f->ip;
+  ilock(ip);
+  if( ip->type != T_DEV &&
+      ip->major == ip->minor &&
+      ip->major < CONSOLE + 1 && ip->major >= CONSOLE + 1 + NTTY){
+	iunlockput(ip);
+	return -1;
+    }
+
+  if(command == DEV_DISCONNECT){
+     devsw[ip->major].flags &=  ~(DEV_CONNECT);
+     devsw[CONSOLE].flags |=  DEV_CONNECT;
+  }
+
+  for(i = CONSOLE; i < CONSOLE + 1 + NTTY; i++){
+     if(command == DEV_CONNECT){
+        if(ip->major == i)
+           devsw[i].flags |= DEV_CONNECT;
+        else
+           devsw[i].flags &= ~(DEV_CONNECT);
+    }
+  }
+
+ iunlock(ip);
+ return 0;
 }
 
 int
