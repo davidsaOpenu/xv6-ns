@@ -7,6 +7,7 @@ struct stat;
 struct rtcdate;
 
 // system calls
+int ioctl(int, int);
 int fork(void);
 int exit(int status) __attribute__((noreturn));
 int wait(int* wstatus);
@@ -49,5 +50,7 @@ void* memset(void*, int, uint);
 void* malloc(uint);
 void free(void*);
 int atoi(const char*);
-
+int attach_tty(int tty_fd);
+int connect_tty(int tty_fd);
+int disconnect_tty(int tty_fd);
 #endif
