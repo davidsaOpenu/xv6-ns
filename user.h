@@ -53,4 +53,10 @@ void free(void*);
 int atoi(const char*);
 int itoa(char *, int);
 
+int attach_tty(int tty_fd);
+int detach_tty(int tty_fd);
+int connect_tty(int tty_fd);
+int is_attached_tty(int tty_fd);
+int disconnect_tty(int tty_fd);
+
 #endif
