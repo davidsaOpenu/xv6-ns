@@ -280,9 +280,9 @@ consoleread(struct inode *ip, char *dst, int n)
 
 int
 ttyread(struct inode *ip, char *dst, int n)
-{ 
+{
   if(devsw[ip->major].flags & DEV_CONNECT){
-  	return consoleread(ip,dst,n);
+    return consoleread(ip,dst,n);
   }
   return n;
 }
@@ -306,7 +306,7 @@ int
 ttywrite(struct inode *ip, char *buf, int n)
 { 
   if(devsw[ip->major].flags & DEV_CONNECT){
-  	return consolewrite(ip,buf,n);
+    return consolewrite(ip,buf,n);
   }
   return n;
 }
@@ -329,12 +329,11 @@ void
 ttyinit(void)
 {
   int i;
-  for(i = MINTTY; i < NTTY; i++){
-	  devsw[i].write = ttywrite;
-	  devsw[i].read = ttyread;
-	  devsw[i].flags = DEV_DISCONNECT;
-
-	  ioapicenable(IRQ_KBD, 0);
+  for(i = CONSOLE+1; i <= CONSOLE+NTTY; i++){
+     devsw[i].write = ttywrite;
+     devsw[i].read = ttyread;
+     devsw[i].flags = DEV_DISCONNECT;
+     ioapicenable(IRQ_KBD, 0);
   }
 
 }

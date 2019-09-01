@@ -160,28 +160,14 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
-int
-main(void)
-{
-  static char buf[100];
-  int fd;
-
-  // Ensure that three file descriptors are open.
-  while((fd = open("console", O_RDWR)) >= 0){
-    if(fd >= 3){
-      close(fd);
-      break;
-    }
-  }
-
-  // Read and run input commands.
-  while(getcmd(buf, sizeof(buf)) >= 0){
+int 
+runinternal(char* buf){
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       // Chdir must be called by the parent, not the child.
       buf[strlen(buf)-1] = 0;  // chop \n
       if(chdir(buf+3) < 0)
         printf(2, "cannot cd %s\n", buf+3);
-      continue;
+      return 0;
     }
 
     if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
@@ -199,50 +185,70 @@ main(void)
       tty_fd = open(buf+8, O_RDWR);
       if(tty_fd < 0){
 	    printf(2, "exec connect tty failed\n");
-	    continue;
+	    return 0;
       }
       
       connect_tty(tty_fd);
       close(tty_fd);
-      continue;
+      return 0;
     }
 
     //Disconnect tty
     if(buf[0] == 'd' && buf[1] == 'i' && buf[2] == 's' && buf[3] == 'c' && buf[4] == 'o' && buf[5] == 'n' && buf[6] == 'n' &&  buf[7] == 'e' &&  buf[8] == 'c'  &&  buf[9] == 't' &&  buf[10] == '\n'){
-
      buf[strlen(buf)-1] = 0;
      disconnect_tty(0);
-     sleep(10);
-
-      continue;
+     sleep(100);
+     return 0;
     }
 
     if(buf[0] == 'a' && buf[1] == 't' && buf[2] == 't' && buf[3] == 'a' && buf[4] == 'c' && buf[5] == 'h' && buf[6] == ' ' && buf[7] == 't' && buf[8] == 't' && buf[9] == 'y' && buf[11] == '\n'){
       int tty_fd;
 
       buf[strlen(buf)-1] = 0;
-      tty_fd = open(buf+7, O_CREATE|O_RDWR);
+      tty_fd = open(buf+7, O_RDWR);
       if(tty_fd < 0){
 	    printf(2, "exec attach tty failed\n");
-	    continue;
+	    return 0;
       }
 
       if(attach_tty(tty_fd) < 0){
 	    printf(2, "exec attach tty failed 2\n");
 	    close(tty_fd);
-	    continue;
+	    return 0;
       }
 
       ioctl(tty_fd, DEV_CONNECT);
       close(tty_fd);
       printf(2, "%s attached\n",buf+7);
-      continue;
+      return 0;
     }
 
     if(buf[0] == 'p' && buf[1] == 'i' && buf[2] == 'd' && buf[3] == '\n'){
 	printf(2, "PID: %d\n",getpid());
-        continue;
+        return 0;
     }
+
+   return -1;
+}
+
+int
+main(void)
+{
+  static char buf[100];
+  int fd;
+
+  // Ensure that three file descriptors are open.
+  while((fd = open("console", O_RDWR)) >= 0){
+    if(fd >= 3){
+      close(fd);
+      break;
+    }
+  }
+
+  // Read and run input commands.
+  while(getcmd(buf, sizeof(buf)) >= 0){
+    if(runinternal(buf) == 0)
+      continue;
 
     if(fork1() == 0)
       runcmd(parsecmd(buf));
