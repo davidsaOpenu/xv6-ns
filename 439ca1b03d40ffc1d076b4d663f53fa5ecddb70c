@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "338a6bb2_8817580b",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "The truth is i am not the best with makefiles. i need the CC, LD, LDFLAGS, OBJDUMP\ndefines for the pouch sub dir makefile.\nShould i export only the needed ones? or is there another why i should go?",
+      "parentUuid": "1a74c75b_c7f4ef9d",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47e48807_62632b71",
         "filename": "console.c",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5f2454d7_7d8a6738",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47e48807_62632b71",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61647492_a74b5801",
         "filename": "console.c",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2019-09-01T13:10:43Z",
       "side": 1,
       "message": "why n is returned if the device is disconnected?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42141a1f_0bb32669",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "This is because gets in ulib does not take care of a 0 returning from read operation.\nIt can be managed by mending gets function probably. If you like i will try and fix it to work with a return 0.",
+      "parentUuid": "61647492_a74b5801",
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "fdae8b0c_30f5ef16",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b497850_2f343436",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4de5bd2_248ce51c",
         "filename": "console.c",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2019-09-01T13:10:43Z",
       "side": 1,
       "message": "same Q: why n?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af6bf5bc_45a53034",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "This is because filewrite does not allow return 0 - any 0 returns panics the kernel.\nI can try and mend this too, its up to your priority.",
+      "parentUuid": "f4de5bd2_248ce51c",
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -101,6 +191,24 @@
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a211aa62_d404a1df",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41114ddb_cfee8cc0",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -138,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "38588cc8_edef81b6",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "If you mean why not just list the initialization one after another then it because i prefer to allow the NTTY define the amount of ttys in the system than to statically assume.",
+      "parentUuid": "05b7932b_8aa120eb",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c8886ea_09174177",
         "filename": "param.h",
         "patchSetId": 1
@@ -161,6 +287,30 @@
     },
     {
       "key": {
+        "uuid": "4abdc0ee_3b6617bd",
+        "filename": "param.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c8886ea_09174177",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 14
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed5c310b_c2668cf0",
         "filename": "pouch/Makefile",
         "patchSetId": 1
@@ -178,6 +328,24 @@
     },
     {
       "key": {
+        "uuid": "1a3851af_0dd950f5",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed5c310b_c2668cf0",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56bdd141_5e151e45",
         "filename": "pouch/Makefile",
         "patchSetId": 1
@@ -192,6 +360,24 @@
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6e30631_19c01203",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56bdd141_5e151e45",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -218,6 +404,30 @@
     },
     {
       "key": {
+        "uuid": "80d6a282_0cce1238",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "I did not understand your comment, can you please elaborate a bit?",
+      "parentUuid": "d160020b_2b004f0a",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 71
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "baafd0c0_bc4a51a3",
         "filename": "pouch/Makefile",
         "patchSetId": 1
@@ -232,6 +442,24 @@
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "651d41ec_aa69cb92",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baafd0c0_bc4a51a3",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -315,6 +543,24 @@
     },
     {
       "key": {
+        "uuid": "59ba44bc_2c815ed7",
+        "filename": "sh.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "1. Some of the internal cmds are not specific strings but a substrings for example disconnect ttyX where X is a varuable, i followed \u0027cd\u0027 example here.\n2. Done: Created a function",
+      "parentUuid": "69d06855_d05a6554",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a91b035e_dd3e3efc",
         "filename": "sysfile.c",
         "patchSetId": 1
@@ -326,6 +572,24 @@
       "writtenOn": "2019-09-01T14:18:58Z",
       "side": 1,
       "message": "I\u0027m afraid that the way that DEV_DISCONNECT is currently defined, flags will wrongly concatenate values",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3f3bd7a_7860d549",
+        "filename": "sysfile.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "I not sure i understand whats wrong. (value \u0026 (not X)) should clear bit X from value?",
+      "parentUuid": "a91b035e_dd3e3efc",
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -352,6 +616,30 @@
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6313f81e_a98c3f24",
+        "filename": "sysfile.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d48c2655_578df172",
+      "range": {
+        "startLine": 333,
+        "startChar": 0,
+        "endLine": 358,
+        "endChar": 3
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -389,6 +677,30 @@
       "writtenOn": "2019-09-01T13:10:43Z",
       "side": 1,
       "message": "Maybe those functions should live in sh.c?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 1
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6327599b_9d1b65b0",
+        "filename": "tty.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T20:27:30Z",
+      "side": 1,
+      "message": "They are useful for other programs such as \u0027pouch\u0027.\nIf you prefer i will move them to sh.c and re implement them in pouch as well.",
+      "parentUuid": "88bcd5cc_fad019df",
       "range": {
         "startLine": 7,
         "startChar": 0,
