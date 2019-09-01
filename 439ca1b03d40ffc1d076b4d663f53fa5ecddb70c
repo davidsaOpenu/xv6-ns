@@ -1,0 +1,283 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a74c75b_c7f4ef9d",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "any reason for all variables to be exported?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47e48807_62632b71",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61647492_a74b5801",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "why n is returned if the device is disconnected?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b497850_2f343436",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4de5bd2_248ce51c",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "same Q: why n?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41114ddb_cfee8cc0",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "maybe better to use:\ns/MINTTY/CONSOLE+1\ns/NTTY/CONSOLE+NTTY\n?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81570694_eddd90de",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "nit: please remove tabs",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05b7932b_8aa120eb",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "any reason to call this in s loop",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c8886ea_09174177",
+        "filename": "param.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "inconsistent naming (MINTTY/MAXTTY) or other option is to see related comment in console.c",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 14
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed5c310b_c2668cf0",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56bdd141_5e151e45",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "leftover?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d160020b_2b004f0a",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "lines 17-21 came from Makefile. Does it makes sense to add to the OBJS list files piuch/*.o and get rid of this Makefile and repetitions?",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 71
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "baafd0c0_bc4a51a3",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "leftovers?",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88bcd5cc_fad019df",
+        "filename": "tty.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "Maybe those functions should live in sh.c?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 1
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c069db9_8f3a8fab",
+        "filename": "user.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-01T13:10:43Z",
+      "side": 1,
+      "message": "plz, see related comment in tty.c",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 31
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
