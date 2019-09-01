@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "eb784cc5_064a807d",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T22:37:43Z",
+      "side": 1,
+      "message": "I have updated to code to return 0 and updated gets in ulib to block until input is available.",
+      "parentUuid": "42141a1f_0bb32669",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0b497850_2f343436",
         "filename": "console.c",
         "patchSetId": 1
@@ -590,6 +608,24 @@
       "side": 1,
       "message": "I not sure i understand whats wrong. (value \u0026 (not X)) should clear bit X from value?",
       "parentUuid": "a91b035e_dd3e3efc",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fb0e524_07eba015",
+        "filename": "sysfile.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-01T22:37:43Z",
+      "side": 1,
+      "message": "I think i understood take a look at the new code i updated the review with.",
+      "parentUuid": "f3f3bd7a_7860d549",
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
