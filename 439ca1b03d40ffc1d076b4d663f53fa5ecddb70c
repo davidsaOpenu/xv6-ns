@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "61c394d7_ae54d201",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "how about something like this:\n\nPOUCH_OBJS \u003d \n   file1.o\\\n   file2.o\\\n\nOBJS \u003d \\\n   .. \\\n   POUCH_OBJS",
+      "parentUuid": "338a6bb2_8817580b",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47e48807_62632b71",
         "filename": "console.c",
         "patchSetId": 1
@@ -125,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "bfa0b3f3_a5f54486",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "eb784cc5_064a807d",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b497850_2f343436",
         "filename": "console.c",
         "patchSetId": 1
@@ -154,6 +190,24 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "0b497850_2f343436",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9eeb1f26_05e74976",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fdae8b0c_30f5ef16",
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -192,6 +246,24 @@
       "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a829d0e0_844b3b58",
+        "filename": "console.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "af6bf5bc_45a53034",
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -434,6 +506,30 @@
       "side": 1,
       "message": "I did not understand your comment, can you please elaborate a bit?",
       "parentUuid": "d160020b_2b004f0a",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 71
+      },
+      "revId": "439ca1b03d40ffc1d076b4d663f53fa5ecddb70c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e2330b4_b3223df0",
+        "filename": "pouch/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "sure. if you see the comment in ../Makefile (the main Makefile) it should become clear",
+      "parentUuid": "80d6a282_0cce1238",
       "range": {
         "startLine": 18,
         "startChar": 1,

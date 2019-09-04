@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ca7956d_ddfe9654",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "any need in this nested loop here?",
+      "revId": "a8e817aa6cc89159677328b0485a2aba3d173de8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "add09694_6ed6148f",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-04T08:26:28Z",
+      "side": 1,
+      "message": "nit:tab",
+      "revId": "a8e817aa6cc89159677328b0485a2aba3d173de8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
