@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bd073817_af7d7e68",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-09-06T08:06:32Z",
+      "side": 1,
+      "message": "I don\u0027t understand the comment. This will only be used when text is written into the cgroup.subtree_control file to hold the name of the current controller in a buffer. In our implementation the only supported controller name is \"cpu\". Other controllers may be added later and the names will be according to the cgorups v2 linux implementation.",
+      "parentUuid": "d99027de_43f2e3fa",
+      "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "21fea58e_e5c49d26",
         "filename": "klib.c",
         "patchSetId": 8
@@ -30,6 +48,30 @@
       "writtenOn": "2019-09-01T08:05:28Z",
       "side": 1,
       "message": "maybe better place for atio is string.c?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 16
+      },
+      "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b109f678_2002d4d4",
+        "filename": "klib.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-09-06T08:06:32Z",
+      "side": 1,
+      "message": "This file will later include itoa, atoi, utoi functions. These functions were not written as foolproof ones meant to be used by everyone. They were specifically written for the cgroups implementation. I thought it would be better to put them in a separate file. If you still think they belong in string.c then i will move them.",
+      "parentUuid": "21fea58e_e5c49d26",
       "range": {
         "startLine": 2,
         "startChar": 0,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "095c5879_35359b3a",
+        "filename": "main.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-09-06T08:06:32Z",
+      "side": 1,
+      "message": "You are right, there is no reason. cginit only has to come before userinit. I will move it.",
+      "parentUuid": "648223af_55c50fe9",
+      "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9e6bf62f_6bf84500",
         "filename": "proc.h",
         "patchSetId": 8
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "1db4ae4d_ddc88a4c",
+        "filename": "proc.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-09-06T08:06:32Z",
+      "side": 1,
+      "message": "Will remove that.",
+      "parentUuid": "9e6bf62f_6bf84500",
+      "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c498145c_9ee610c0",
         "filename": "proc.h",
         "patchSetId": 8
@@ -87,6 +165,24 @@
       "writtenOn": "2019-09-01T08:14:16Z",
       "side": 1,
       "message": "$ grep cwdp * -rn \ncgroup.c:137:\t\tchar * cwdp \u003d curproc-\u003ecwdp;\ncgroup.c:138:        strncpy(bufp, cwdp, strlen(cwdp));\ncgroup.c:139:\t\tbufp +\u003d strlen(cwdp);\nproc.h:74:  char cwdp[MAX_PATH_LENGTH];  // Current directory path.\n\nseems that no one is updating the cwdp.",
+      "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "114c8516_f134aa0f",
+        "filename": "proc.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-09-06T08:06:32Z",
+      "side": 1,
+      "message": "It is only added right now (not used anywhere). Updates and full functionality support of cwdp will be added in a later commit (a commit that implements the cgroup functionality). This commit and the next one are just the functions and fields of cgroups. Integration of cgroups into the system will happen in a separate commit.",
+      "parentUuid": "c498145c_9ee610c0",
       "revId": "e7423018bdd660dac59e13d9cb51fe6239575c5a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
