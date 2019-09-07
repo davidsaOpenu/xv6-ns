@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "96821785_b1fe60dd",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-07T16:23:23Z",
+      "side": 1,
+      "message": "The nested loop is to block until read returns successfully.\nWhen using a tty all another ttys are disabled and reading from them will return 0.",
+      "parentUuid": "6ca7956d_ddfe9654",
+      "revId": "a8e817aa6cc89159677328b0485a2aba3d173de8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "add09694_6ed6148f",
         "filename": "ulib.c",
         "patchSetId": 6
@@ -33,6 +51,24 @@
       "revId": "a8e817aa6cc89159677328b0485a2aba3d173de8",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "802fca4e_6ae377c8",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-07T16:23:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "add09694_6ed6148f",
+      "revId": "a8e817aa6cc89159677328b0485a2aba3d173de8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
