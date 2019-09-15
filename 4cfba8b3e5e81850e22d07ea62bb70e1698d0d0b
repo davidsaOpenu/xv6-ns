@@ -208,6 +208,29 @@
     },
     {
       "key": {
+        "uuid": "2f02b16b_ae68119c",
+        "filename": "sysfile.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:39:28Z",
+      "side": 1,
+      "message": "seems that using case (command) will be more clear and, when relevant, case (request) for each command.",
+      "range": {
+        "startLine": 334,
+        "startChar": 1,
+        "endLine": 334,
+        "endChar": 24
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f3b2b3b_ec67e7af",
         "filename": "tty.c",
         "patchSetId": 9
