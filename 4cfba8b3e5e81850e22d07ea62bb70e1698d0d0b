@@ -1,0 +1,296 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f7969c2_b6a7a4d7",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 173,
+        "startChar": 41,
+        "endLine": 173,
+        "endChar": 42
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8fee1aa_8c67f74a",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "maybe worth doing in an inline function? \nsince ll 164-168 are exactly the same",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 26
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdab9fd8_67f77e98",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 3
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8619362_8ec9ca8c",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "looking at the \nfs.c:475:    return devsw[ip-\u003emajor].read(ip, dst, n);\nand \nfs.c:504:    return devsw[ip-\u003emajor].write(ip, src, n);\n\nshouldn\u0027t -1 be returned here if disconnected?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "664fb348_fcf02c3b",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ac2f608_2969950b",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "looking at the \nfs.c:475:    return devsw[ip-\u003emajor].read(ip, dst, n);\nand \nfs.c:504:    return devsw[ip-\u003emajor].write(ip, src, n);\n\nshouldn\u0027t -1 be returned here if disconnected?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7991d9a1_3fb3240d",
+        "filename": "fcntl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit: maybe just to padd with spaces before 0x..",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1e522e3_ed1a9eb2",
+        "filename": "param.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "e",
+      "range": {
+        "startLine": 17,
+        "startChar": 43,
+        "endLine": 17,
+        "endChar": 48
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eda23f97_61d9cc07",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "leftover?",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 15
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdfcc66e_ee927e1d",
+        "filename": "syscall.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "maybe worth adding ioctl tests?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f3b2b3b_ec67e7af",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "is there any concern that this line will attach the device just as in line 14?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f9dd88_057708ee",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 4
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60e092db_03207151",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "nit: TABS",
+      "range": {
+        "startLine": 13,
+        "startChar": 1,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65fdde85_c1b31506",
+        "filename": "ulib.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-15T14:29:56Z",
+      "side": 1,
+      "message": "just curious why this is needed?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 26
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
