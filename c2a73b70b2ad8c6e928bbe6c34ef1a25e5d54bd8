@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17513102_a74fa6ac",
+        "filename": "proc.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-09-16T07:31:29Z",
+      "side": 1,
+      "message": "s/TABS/spaces",
+      "range": {
+        "startLine": 73,
+        "startChar": 13,
+        "endLine": 73,
+        "endChar": 15
+      },
+      "revId": "c2a73b70b2ad8c6e928bbe6c34ef1a25e5d54bd8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
