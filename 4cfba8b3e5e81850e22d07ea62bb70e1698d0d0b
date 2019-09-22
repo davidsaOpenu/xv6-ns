@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "81e7687c_2df6826d",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8fee1aa_8c67f74a",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 26
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdab9fd8_67f77e98",
         "filename": "console.c",
         "patchSetId": 9
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "c60c4649_8f43a4f3",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fdab9fd8_67f77e98",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 3
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8619362_8ec9ca8c",
         "filename": "console.c",
         "patchSetId": 9
@@ -85,6 +133,24 @@
       "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd53623d_5c2885f4",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8619362_8ec9ca8c",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "ac5818e9_2dc663f5",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "664fb348_fcf02c3b",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ac2f608_2969950b",
         "filename": "console.c",
         "patchSetId": 9
@@ -116,6 +200,24 @@
       "writtenOn": "2019-09-15T14:29:56Z",
       "side": 1,
       "message": "looking at the \nfs.c:475:    return devsw[ip-\u003emajor].read(ip, dst, n);\nand \nfs.c:504:    return devsw[ip-\u003emajor].write(ip, src, n);\n\nshouldn\u0027t -1 be returned here if disconnected?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9bdac5c_219a871b",
+        "filename": "console.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "fileread panics on such values. \nWe have agreed its not in our priority to fix it.",
+      "parentUuid": "0ac2f608_2969950b",
       "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -145,6 +247,30 @@
     },
     {
       "key": {
+        "uuid": "f47ec2e0_68b7a9d1",
+        "filename": "fcntl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7991d9a1_3fb3240d",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1e522e3_ed1a9eb2",
         "filename": "param.h",
         "patchSetId": 9
@@ -168,6 +294,30 @@
     },
     {
       "key": {
+        "uuid": "7241c861_54aca74b",
+        "filename": "param.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1e522e3_ed1a9eb2",
+      "range": {
+        "startLine": 17,
+        "startChar": 43,
+        "endLine": 17,
+        "endChar": 48
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda23f97_61d9cc07",
         "filename": "sh.c",
         "patchSetId": 9
@@ -188,6 +338,30 @@
       "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a815371_38169fc3",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "yes.",
+      "parentUuid": "eda23f97_61d9cc07",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 15
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
@@ -231,6 +405,30 @@
     },
     {
       "key": {
+        "uuid": "67a7a02c_0cd560e2",
+        "filename": "sysfile.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "I have added a switch case for (request).\nI am unsure how to add a switch case for (command) as its a bit field compares",
+      "parentUuid": "2f02b16b_ae68119c",
+      "range": {
+        "startLine": 334,
+        "startChar": 1,
+        "endLine": 334,
+        "endChar": 24
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f3b2b3b_ec67e7af",
         "filename": "tty.c",
         "patchSetId": 9
@@ -242,6 +440,24 @@
       "writtenOn": "2019-09-15T14:29:56Z",
       "side": 1,
       "message": "is there any concern that this line will attach the device just as in line 14?",
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fba0c54d_ecac30fa",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "line TTYGETS does not attach the the tty only returns the DEV_ATTACH bit for tty",
+      "parentUuid": "7f3b2b3b_ec67e7af",
       "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -271,6 +487,30 @@
     },
     {
       "key": {
+        "uuid": "4cc80283_7c23b5cc",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0f9dd88_057708ee",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 4
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60e092db_03207151",
         "filename": "tty.c",
         "patchSetId": 9
@@ -294,6 +534,30 @@
     },
     {
       "key": {
+        "uuid": "27f2248a_23dd4cb7",
+        "filename": "tty.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60e092db_03207151",
+      "range": {
+        "startLine": 13,
+        "startChar": 1,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65fdde85_c1b31506",
         "filename": "ulib.c",
         "patchSetId": 9
@@ -305,6 +569,30 @@
       "writtenOn": "2019-09-15T14:29:56Z",
       "side": 1,
       "message": "just curious why this is needed?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 26
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61e3b9b2_b4d8ae54",
+        "filename": "ulib.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1016771
+      },
+      "writtenOn": "2019-09-22T15:24:02Z",
+      "side": 1,
+      "message": "gets fails when read returns 0 -\u003e shell fails.\nAfter starting a container a shell script tries to gets from a disconnected tty - \u0027ttyread\u0027 returns 0 and shell fails.\n\nxv6 assumed read never returns 0. \nNow that a tty can be disconnected a blocking logic needs to be added.\n\nAnother option is to change if(cc \u003c 1)break; to if(cc \u003c 1)continue;",
+      "parentUuid": "65fdde85_c1b31506",
       "range": {
         "startLine": 60,
         "startChar": 0,
