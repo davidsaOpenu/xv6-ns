@@ -176,7 +176,7 @@ void format_path(char * buf, char * path)
     *bufp = 0;
 }
 
-int get_cg_file_dir_path_and_file_name(char * path,
+static int get_cg_file_dir_path_and_file_name(char * path,
                                        char * dir_path,
                                        char * file_name)
 {
