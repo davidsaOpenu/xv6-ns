@@ -1,4 +1,5 @@
 #include "cgroup.h"
+#include "cgfs.h"
 #include "spinlock.h"
 
 #define MAX_DES_DEF "64"
@@ -174,35 +175,6 @@ void format_path(char * buf, char * path)
     if (bufp - 1 > buf && *(bufp - 1) == '/')
         *(bufp - 1) = 0;
     *bufp = 0;
-}
-
-int get_cg_file_dir_path_and_file_name(char * path,
-                                       char * dir_path,
-                                       char * file_name)
-{
-    char * file_name_temp = path;
-    char * temp = path;
-    while (*temp != '\0') {
-        if (*temp == '/')
-            file_name_temp = temp;
-        temp++;
-    }
-
-    if (file_name_temp == path || file_name_temp == path + 1)
-        return -1;
-
-    temp = file_name_temp + 1;
-    while (*temp != '\0')
-        *file_name++ = *temp++;
-
-    temp = path;
-    while (temp < file_name_temp)
-        *dir_path++ = *temp++;
-
-    *file_name = 0;
-    *dir_path = 0;
-
-    return 0;
 }
 
 struct cgroup * cgroup_root(void)
