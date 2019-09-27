@@ -90,7 +90,10 @@ LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 debug ?= false
-HOST_CPU_TSC_FREQ := $(shell cat /proc/cpuinfo | grep -i "cpu mhz" | head -n 1 | rev | cut -d ' ' -f 1 | rev | cut -d '.' -f 1)*1000
+#x86
+#HOST_CPU_TSC_FREQ := $(shell cat /proc/cpuinfo | grep -i "cpu mhz" | head -n 1 | rev | cut -d ' ' -f 1 | rev | cut -d '.' -f 1)*1000
+#ARM
+HOST_CPU_TSC_FREQ := $(shell cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq )
 ifeq ($(debug), true)
 CFLAGS = -DXV6_WAIT_FOR_DEBUGGER=1 -fno-pic -static -fno-builtin -fno-strict-aliasing -Og -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer -std=gnu99 -DXV6_TSC_FREQUENCY=$(HOST_CPU_TSC_FREQ)
 else
