@@ -1,9 +1,16 @@
 #include "syscall.h"
 #include "types.h"
 #include "user.h"
+#include "wstatus.h"
 #include "fcntl.h"
 #include "ns_types.h"
 #include "file.h"
+
+#define CLONE_NEWPID 2
+#define NULL 0
+
+typedef	signed int		pid_t;
+typedef signed int		size_t;
 
 typedef int (*test_func_t)(void);
 
