@@ -322,13 +322,24 @@ sys_ioctl(void)
   }
 
   ip = f->ip;
+
+  if( ip->major == CONSOLE ){
+    return -1;
+  }
+
   ilock(ip);
-  if( ip->type != T_DEV &&
-      ip->major == ip->minor &&
-      ip->major < CONSOLE + 1 && ip->major >= CONSOLE + 1 + NTTY){
-	iunlockput(ip);
-	return -1;
-    }
+
+  if( ip->type != T_DEV ){
+      iunlockput(ip);
+      return -1;
+  }  
+
+  if( ip->major > CONSOLE  + NTTY){
+     iunlockput(ip);
+     return -1;
+  }
+
+
 
  switch (request){
  case TTYSETS:
@@ -347,7 +358,7 @@ sys_ioctl(void)
           }
       }
       consoleclear();
-      cprintf("tty%d connected\n",ip->major-(CONSOLE+1));
+      cprintf("\ntty%d connected\n",ip->major-(CONSOLE+1));
     }
 
     if((command & DEV_ATTACH)){
