@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba1a6d84_32ad1318",
+        "filename": "sysfile.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-10-09T23:07:20Z",
+      "side": 1,
+      "message": "If device is a console (test usage), kernel will panic on the lock before this if. So I rewrote this part.",
+      "range": {
+        "startLine": 328,
+        "startChar": 6,
+        "endLine": 328,
+        "endChar": 66
+      },
+      "revId": "42af541f6d333d91d8cf9e914b84b94e59706fce",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
