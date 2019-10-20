@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "58e93305_c2c83773",
+        "filename": "cgfs.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "4cd032aa_16bf47e3",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c3aa056_d33d391b",
         "filename": "cgfs.c",
         "patchSetId": 37
@@ -30,6 +48,30 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "worth having constants instead (for cgroup.stat, cgroup.events etc as well)",
+      "range": {
+        "startLine": 79,
+        "startChar": 24,
+        "endLine": 79,
+        "endChar": 39
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ec1f480_b496bf14",
+        "filename": "cgfs.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "I really don\u0027t think having constants will be better. Since we receive the filename parameter from the user in string form (we get it from the given path), all of those strcmp function calls will still be needed at some point. Hence what you are suggesting is to move the strcmp calls to the functions that call this one. I think this will just result in more lines of code and in a more complicated code.",
+      "parentUuid": "0c3aa056_d33d391b",
       "range": {
         "startLine": 79,
         "startChar": 24,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "d365f7d2_3d1f4c7a",
+        "filename": "cgfs.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "e3f4676a_a08f1573",
+      "range": {
+        "startLine": 147,
+        "startChar": 12,
+        "endLine": 147,
+        "endChar": 28
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "566d7995_d73f3411",
         "filename": "cgfs.h",
         "patchSetId": 37
@@ -76,6 +142,24 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "same naming convention note as in  cgroup.h",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f42a85f4_1f62a5da",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "566d7995_d73f3411",
       "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "9ef68826_2cec4c3d",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "70412148_3714f925",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5884805d_a10c9c0d",
         "filename": "cgfs.h",
         "patchSetId": 37
@@ -110,6 +212,24 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "same naming convention note as in  cgroup.h",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09df8afb_daf57969",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "5884805d_a10c9c0d",
       "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -133,6 +253,24 @@
     },
     {
       "key": {
+        "uuid": "8f8a1ce4_f80d677b",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "f326e949_f23b727a",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "00893797_c5ab5a8a",
         "filename": "cgfs.h",
         "patchSetId": 37
@@ -144,6 +282,24 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "same naming convention note as in  cgroup.h",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aebd1abf_170ac30a",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "00893797_c5ab5a8a",
       "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -167,6 +323,24 @@
     },
     {
       "key": {
+        "uuid": "e4d547b8_ea3db525",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "163a79eb_66812de5",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64e277ca_3f1987b8",
         "filename": "cgfs.h",
         "patchSetId": 37
@@ -184,6 +358,24 @@
     },
     {
       "key": {
+        "uuid": "c472c9f6_fc6f4603",
+        "filename": "cgfs.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "64e277ca_3f1987b8",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98703ddb_4d8d0615",
         "filename": "cgroup.h",
         "patchSetId": 37
@@ -195,6 +387,30 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "does it makes scene to have 2 different functions?\ncan we have e.g. one function \n cg_open(enum {CG_FILE, CG_DIR},  struct cgroup * cgp, int omode, char *name) while the last name param is optional?.\n\n\nSame comment for the read and close functions. This way we can get rid of clumsy \u0027closefileordir\u0027 naming",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 52
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2255bb9b_d71c266e",
+        "filename": "cgroup.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "See main reply comment.",
+      "parentUuid": "98703ddb_4d8d0615",
       "range": {
         "startLine": 251,
         "startChar": 0,
@@ -230,6 +446,30 @@
     },
     {
       "key": {
+        "uuid": "d3f03c61_5187f719",
+        "filename": "cgroup.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "1. See main reply comment.\n2. All function descriptions are in cgfs.h. These function are the exact same apart from being protected with locks. Hence the comment in line 248.",
+      "parentUuid": "19ba5ebd_505bd029",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 46
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b180cc51_00f7655f",
         "filename": "file.h",
         "patchSetId": 37
@@ -247,6 +487,24 @@
     },
     {
       "key": {
+        "uuid": "cbcd8fa9_92cb08f2",
+        "filename": "file.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "You are right. A better place for it will be in cgfs.h. Will move it there.",
+      "parentUuid": "b180cc51_00f7655f",
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7186035a_2e294e55",
         "filename": "proc.c",
         "patchSetId": 37
@@ -258,6 +516,30 @@
       "writtenOn": "2019-10-20T13:23:45Z",
       "side": 1,
       "message": "guess we can spear this check by releasing a lock and returning 0 instead of \u0027break\u0027 in line 968",
+      "range": {
+        "startLine": 694,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 3
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e88ded8_ff3961ce",
+        "filename": "proc.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-20T16:21:08Z",
+      "side": 1,
+      "message": "If we have reached the end of the ptable and have not found the process with the given pid, that means that we have failed to move the process from one cgroup to another.\nI think it is correct to have this check here.\nMy mistake was not checking the return value from this function when called from cgfs.c. I will add the check there.",
+      "parentUuid": "7186035a_2e294e55",
       "range": {
         "startLine": 694,
         "startChar": 0,
