@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "6f263511_15a53306",
+        "filename": "cgfs.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-23T07:42:11Z",
+      "side": 1,
+      "message": "cgroup.procs sting (and others) is (are) used in several lines. Accidental erased character may result in errors that are hard to detect. String definitions shell be done in one place to catch errors at the compilation stage. Defining constant CGROUP_PROCS \u003d \"cgroup.procs\" and using it everywhere is much less error prone.",
+      "parentUuid": "6ec1f480_b496bf14",
+      "range": {
+        "startLine": 79,
+        "startChar": 24,
+        "endLine": 79,
+        "endChar": 39
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3f4676a_a08f1573",
         "filename": "cgfs.c",
         "patchSetId": 37
@@ -470,6 +494,30 @@
     },
     {
       "key": {
+        "uuid": "4d4e33ea_6cdea00d",
+        "filename": "cgroup.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-23T07:42:11Z",
+      "side": 1,
+      "message": "let\u0027s then add a reference. something like \"this is a lock protected version of the corresponding unsafe functions defined in fileXYZ.h\"",
+      "parentUuid": "d3f03c61_5187f719",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 46
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b180cc51_00f7655f",
         "filename": "file.h",
         "patchSetId": 37
@@ -540,6 +588,30 @@
       "side": 1,
       "message": "If we have reached the end of the ptable and have not found the process with the given pid, that means that we have failed to move the process from one cgroup to another.\nI think it is correct to have this check here.\nMy mistake was not checking the return value from this function when called from cgfs.c. I will add the check there.",
       "parentUuid": "7186035a_2e294e55",
+      "range": {
+        "startLine": 694,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 3
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "642f64bf_196c96ee",
+        "filename": "proc.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-23T07:42:11Z",
+      "side": 1,
+      "message": "I mean that the code will look better if \n\nfor(...){\n    if (proc_pid(p) \u003d\u003d pid){\n        \n          unsafe_cgroup_insert(cgroup, p);\n          release lock\n          return 0\n    }\n\n    release lock\n    return -1\n\n}\n\nAlso it seems that that unsafe_cgroup_insert can fail in line 689 and its return value to be checked.",
+      "parentUuid": "6e88ded8_ff3961ce",
       "range": {
         "startLine": 694,
         "startChar": 0,
