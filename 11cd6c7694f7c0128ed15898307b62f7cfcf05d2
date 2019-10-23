@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "4487e78e_0b8fd155",
+        "filename": "cgfs.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-23T12:33:56Z",
+      "side": 1,
+      "message": "I understand. Since the functions will be different in the commit that fixes their names and merges them (merges readcgfile() and readcgfile() into one and readcgfile() and readcgfile() into one) I will add constants there.",
+      "parentUuid": "6f263511_15a53306",
+      "range": {
+        "startLine": 79,
+        "startChar": 24,
+        "endLine": 79,
+        "endChar": 39
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3f4676a_a08f1573",
         "filename": "cgfs.c",
         "patchSetId": 37
@@ -518,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "ebe4c07d_7d9f1f98",
+        "filename": "cgroup.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-23T12:33:56Z",
+      "side": 1,
+      "message": "Since all of those functions will be different in the commit that fixes their names and merges them (merges readcgfile() and readcgfile() into one and readcgfile() and readcgfile() into one) I will add the appropriate references there.",
+      "parentUuid": "4d4e33ea_6cdea00d",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 46
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b180cc51_00f7655f",
         "filename": "file.h",
         "patchSetId": 37
@@ -612,6 +660,30 @@
       "side": 1,
       "message": "I mean that the code will look better if \n\nfor(...){\n    if (proc_pid(p) \u003d\u003d pid){\n        \n          unsafe_cgroup_insert(cgroup, p);\n          release lock\n          return 0\n    }\n\n    release lock\n    return -1\n\n}\n\nAlso it seems that that unsafe_cgroup_insert can fail in line 689 and its return value to be checked.",
       "parentUuid": "6e88ded8_ff3961ce",
+      "range": {
+        "startLine": 694,
+        "startChar": 0,
+        "endLine": 694,
+        "endChar": 3
+      },
+      "revId": "11cd6c7694f7c0128ed15898307b62f7cfcf05d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9853885c_d6b8659f",
+        "filename": "proc.c",
+        "patchSetId": 37
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-10-23T12:33:56Z",
+      "side": 1,
+      "message": "Will change that.",
+      "parentUuid": "642f64bf_196c96ee",
       "range": {
         "startLine": 694,
         "startChar": 0,
