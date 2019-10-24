@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8da009b_9023382b",
+        "filename": "proc.c",
+        "patchSetId": 43
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-24T08:54:06Z",
+      "side": 1,
+      "message": "nit: TAB",
+      "revId": "59dd4a59cc932b911e5857f7c70ddde4e1a72df0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb64d933_c7d2cced",
+        "filename": "proc.c",
+        "patchSetId": 43
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-24T08:54:06Z",
+      "side": 1,
+      "message": "nit: indentation",
+      "range": {
+        "startLine": 691,
+        "startChar": 1,
+        "endLine": 692,
+        "endChar": 18
+      },
+      "revId": "59dd4a59cc932b911e5857f7c70ddde4e1a72df0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
