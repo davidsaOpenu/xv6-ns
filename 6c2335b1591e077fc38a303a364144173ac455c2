@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56996d4c_875176e7",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-24T09:27:57Z",
+      "side": 1,
+      "message": "nit: TAB",
+      "revId": "6c2335b1591e077fc38a303a364144173ac455c2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
