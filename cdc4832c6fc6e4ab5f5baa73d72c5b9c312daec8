@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be88b978_4caf0d71",
+        "filename": "cgfs.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-10-27T05:54:23Z",
+      "side": 1,
+      "message": "same note, all those strings are error prone and shell be defined as constants. Adding for late cleanup to the same trello card as it was done with the previous CR.",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 20
+      },
+      "revId": "cdc4832c6fc6e4ab5f5baa73d72c5b9c312daec8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
