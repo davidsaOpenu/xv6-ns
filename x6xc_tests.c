@@ -26,6 +26,14 @@ int check(int r, const char *msg) {
   return r;
 }
 
+void assert_msg(int r, const char *msg) {
+  if (r) {
+    return;
+  }
+  printf(stderr, "%s\n", (char *)msg);
+  exit(1);
+}
+
 static int child_exit_status(int pid) {
   int changed_pid = -1;
   int wstatus;
@@ -40,6 +48,7 @@ static int child_exit_status(int pid) {
 int run_test(test_func_t func, const char *name) {
   int status = 0;
   int pid = -1;
+  int childstatus;
 
   printf(stderr, "    '%s'--------", name);
   int ret = check(fork(), "fork failed");
@@ -48,8 +57,9 @@ int run_test(test_func_t func, const char *name) {
   }
 
   pid = ret;
-  if (child_exit_status(pid) != 0) {
-    printf(stderr, "> > > > > > > failed test - '%s'\n", name);
+  childstatus = child_exit_status(pid);
+  if (childstatus != 0) {
+    printf(stderr, "> > > > > > > failed test - '%s'  child exit: %d\n", name, childstatus);
   }else{
     printf(stderr, "    :OK - '%s'\n", name);
   }
@@ -272,7 +282,6 @@ int ioctl_wrong_device_test() {
     printf(stderr, " %s device passed verification? - wrong! \n",tty_name);
     close(tty_fd);
     return -1;
-    /* failing here */
   }
 
   else if(status > 0){
@@ -282,7 +291,6 @@ int ioctl_wrong_device_test() {
   }
 
   else if(status == -1){
-    //printf(stderr, " %s device is not in the tty list, sys_call returned -1 - correct \n",tty_name);
     close(tty_fd);
     return 0;
   }
@@ -322,24 +330,25 @@ int ioctl_args_test() {
   return 0;
 }
 
+
+
+
 int main() {
-  //init tty tests
+
   printf(stderr, "TTY INIT TESTS:\n");
   run_test(init_tests, "init test");
 
-  //ioctl tests
   printf(stderr, "IOCTL TESTS:\n");
   run_test(ioctl_args_test, "ioctl args test,");
   run_test(ioctl_wrong_device_test, "ioctl wrongdev test");
-  run_test(ioctl_console_test, "ioctl console test"); /*ilock panic*/
+  run_test(ioctl_console_test, "ioctl console test");
 
-  //ioctl syscall scenario  tests
+
   printf(stderr, "IOCTL SCENARIO TESTS:\n");
   run_test(ioctl_attach_test, "ioctl attach test");
   run_test(ioctl_connect_test, "ioctl connect test");
   
-  
-  
+  printf(stderr, "IOCTL TESTS PASS:\n");
   exit(0);
 }
 
