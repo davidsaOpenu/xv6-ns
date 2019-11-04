@@ -1,0 +1,366 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c836bb23_9dafaf9d",
+        "filename": "ls.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "IIRC you have already defined it elsewhere. please include an appropriate header file",
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3924bc3f_a4db02df",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "in general, I thick that this change is way more then argument checking. It\u0027 brings logics implementation in fact. I whould suggesting to move logics to cg related files.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 45
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ed637ed_aa8be1a7",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "function naming conventions. Adding this CR to the list of cleanups as well",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 29
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7af2753_026f56d7",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "function naming conventions. Adding this CR to the list of cleanups as well",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 30
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dc9ecc2_1b49a304",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "function naming conventions. Adding this CR to the list of cleanups as well",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 19
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35e6952f_cb5702c3",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 2
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aac7ca96_95f0db98",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 2
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0cd00f69_fdd7c88e",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 4
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "258b7ca2_3522f0e4",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "naming convections cleanup",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 358,
+        "endChar": 45
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f6bdc38_49c75cba",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: missindantation",
+      "range": {
+        "startLine": 380,
+        "startChar": 6,
+        "endLine": 380,
+        "endChar": 7
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d12a5d1_f148e208",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: spaces",
+      "range": {
+        "startLine": 400,
+        "startChar": 0,
+        "endLine": 409,
+        "endChar": 2
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "949a5bf2_edb8629b",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: spaces",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 13
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4198842_6f64cb19",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "naming conventions cleanup (for later)",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 429,
+        "endChar": 3
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c6523c4_cd55f076",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 462,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 2
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b36cf03_763fb37a",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 472,
+        "startChar": 2,
+        "endLine": 472,
+        "endChar": 5
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49f4ec7e_47baf0bc",
+        "filename": "sysmount.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-04T10:07:26Z",
+      "side": 1,
+      "message": "lines 28-168: spaces",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
