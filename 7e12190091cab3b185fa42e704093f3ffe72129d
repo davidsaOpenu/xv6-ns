@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "49c74d86_1d57cbf4",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-11-04T11:36:18Z",
+      "side": 1,
+      "message": "This commit adds routing of arguments to their related functions. If for example we read a regular file then sys_read() will call fileread(), and if we read a cgroup file then cgroup related read functions will be called. Where do you think this routing should move to?",
+      "parentUuid": "3924bc3f_a4db02df",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 45
+      },
+      "revId": "7e12190091cab3b185fa42e704093f3ffe72129d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4ed637ed_aa8be1a7",
         "filename": "sysfile.c",
         "patchSetId": 2
