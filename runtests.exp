@@ -247,7 +247,7 @@ expect {
 
 send "pouch start m &\n"
 log_file -noappend [lindex $argv 0]
-set timeout 1
+set timeout 3
 expect {
    "Pouch container - cont_m starting" 
 }
@@ -263,7 +263,7 @@ expect {
 }
 
 send "pouch start m1 &\n"
-set timeout 1
+set timeout 3
 log_file -noappend [lindex $argv 0]
 expect {
    "Pouch container - cont_m1 starting"
@@ -280,7 +280,7 @@ expect {
 }
 
 send "pouch start m2 &\n"
-set timeout 1
+set timeout 3
 log_file -noappend [lindex $argv 0]
 expect {
    "Pouch container - cont_m2 starting"
@@ -297,7 +297,7 @@ expect {
 }
 
 send "pouch start m3 &\n"
-set timeout 1
+set timeout 3
 log_file -noappend [lindex $argv 0]
 expect {
    "Pouch container - cont_m3 starting"
@@ -316,7 +316,7 @@ expect {
 
 # run usertests and log the output-------------------------------
 
-set timeout 3
+set timeout 5
 set timeout -1
 send "usertests\n"
 log_file -noappend [lindex $argv 0]

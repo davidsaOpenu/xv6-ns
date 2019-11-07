@@ -41,16 +41,14 @@ static int child_exit_status(int pid) {
     changed_pid = check(wait(&wstatus), "failed to waitpid");
   } while (changed_pid != pid);
 
-  // TODO: there is no exit status in xv6
   return WEXITSTATUS(wstatus);
 }
 
 int run_test(test_func_t func, const char *name) {
-  int status = 0;
+
   int pid = -1;
   int childstatus;
 
-  printf(stderr, "    '%s'--------", name);
   int ret = check(fork(), "fork failed");
   if (ret == 0) {
     exit(func());
@@ -58,12 +56,8 @@ int run_test(test_func_t func, const char *name) {
 
   pid = ret;
   childstatus = child_exit_status(pid);
-  if (childstatus != 0) {
-    printf(stderr, "> > > > > > > failed test - '%s'  child exit: %d\n", name, childstatus);
-  }else{
-    printf(stderr, "    :OK - '%s'\n", name);
-  }
-  return status;
+
+  return childstatus;
 }
 
 /* Verify init
@@ -335,18 +329,23 @@ int ioctl_args_test() {
 
 int main() {
 
-  printf(stderr, "TTY INIT TESTS:\n");
-  run_test(init_tests, "init test");
+  //TTY INIT TESTS
+  if(run_test(init_tests, "init test") < 0)
+    return -1;
 
-  printf(stderr, "IOCTL TESTS:\n");
-  run_test(ioctl_args_test, "ioctl args test,");
-  run_test(ioctl_wrong_device_test, "ioctl wrongdev test");
-  run_test(ioctl_console_test, "ioctl console test");
+  //IOCTL TESTS
+  if(run_test(ioctl_args_test, "ioctl args test,") < 0)
+    return -1;
+  if(run_test(ioctl_wrong_device_test, "ioctl wrongdev test") < 0)
+    return -1;
+  if(run_test(ioctl_console_test, "ioctl console test") < 0)
+    return -1;
 
-
-  printf(stderr, "IOCTL SCENARIO TESTS:\n");
-  run_test(ioctl_attach_test, "ioctl attach test");
-  run_test(ioctl_connect_test, "ioctl connect test");
+  //IOCTL SCENARIO TESTS
+  if(run_test(ioctl_attach_test, "ioctl attach test") < 0)
+    return -1;
+  if(run_test(ioctl_connect_test, "ioctl connect test") < 0)
+    return -1;
   
   printf(stderr, "IOCTL TESTS PASS:\n");
   exit(0);
