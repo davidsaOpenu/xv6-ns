@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b162ac3_50b6ac73",
+        "filename": "ioctl_request.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-28T12:51:17Z",
+      "side": 1,
+      "message": "nit: space",
+      "revId": "975e62d36438cacbeaa7afc2b29e92e53b3489ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
