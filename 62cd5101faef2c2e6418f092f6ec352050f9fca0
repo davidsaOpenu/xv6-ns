@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89fdf966_8d614fd9",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-28T12:46:46Z",
+      "side": 1,
+      "message": "let\u0027s define macros with meaningful names instead 1, 100, 1000",
+      "revId": "62cd5101faef2c2e6418f092f6ec352050f9fca0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eef513e_f5a857a1",
+        "filename": "cpu_account.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-28T12:46:46Z",
+      "side": 1,
+      "message": "nit: TAB",
+      "revId": "62cd5101faef2c2e6418f092f6ec352050f9fca0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b775f26f_f1989a16",
+        "filename": "cpu_account.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-28T12:46:46Z",
+      "side": 1,
+      "message": "let\u0027s add the description for those functions. it\u0027s hard to understand from the name what\nthey are for.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "62cd5101faef2c2e6418f092f6ec352050f9fca0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
