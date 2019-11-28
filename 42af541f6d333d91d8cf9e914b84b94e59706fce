@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e512fc94_185202f0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2019-11-28T13:04:17Z",
+      "side": 1,
+      "message": "lets keep commit massage \u003c 50 chars",
+      "revId": "42af541f6d333d91d8cf9e914b84b94e59706fce",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ba1a6d84_32ad1318",
         "filename": "sysfile.c",
         "patchSetId": 18
