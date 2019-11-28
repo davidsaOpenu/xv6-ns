@@ -41,9 +41,9 @@ struct cgroup
 
     int depth; /*Current depth of the cgroup.*/
 
-    int nr_descendants; /* Current number of descendant cgroups.*/
+    unsigned int nr_descendants; /* Current number of descendant cgroups.*/
 
-    int nr_dying_descendants; /*Current number of dying descendant cgroups.*/
+    unsigned int nr_dying_descendants; /*Current number of dying descendant cgroups.*/
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -205,7 +205,7 @@ void set_max_depth_value(struct cgroup * cgroup, int value);
  * "value" is an integer containing the new value to set. We set the nr_descendants field to this value.
  * Return value is void.
  */
-void set_nr_descendants(struct cgroup * cgroup, int value);
+void set_nr_descendants(struct cgroup * cgroup, unsigned int value);
 
 /**
  * This function sets the nr_dying_descendants field of a cgroup.
@@ -214,7 +214,7 @@ void set_nr_descendants(struct cgroup * cgroup, int value);
  * "value" is an integer containing the new value to set. We set the nr_dying_descendants field to this value.
  * Return value is void.
  */
-void set_nr_dying_descendants(struct cgroup * cgroup, int value);
+void set_nr_dying_descendants(struct cgroup * cgroup, unsigned int value);
 
 /**
  * This function gets all names of children cgroup of cgroup at a path.

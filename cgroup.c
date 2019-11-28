@@ -469,13 +469,13 @@ void set_max_depth_value(struct cgroup * cgroup, int value)
         cgroup->max_depth_value = value;
 }
 
-void set_nr_descendants(struct cgroup * cgroup, int value)
+void set_nr_descendants(struct cgroup * cgroup, unsigned int value)
 {
     if (value >= 0)
         cgroup->nr_descendants = value;
 }
 
-void set_nr_dying_descendants(struct cgroup * cgroup, int value)
+void set_nr_dying_descendants(struct cgroup * cgroup, unsigned int value)
 {
     if (value >= 0)
         cgroup->nr_dying_descendants = value;
