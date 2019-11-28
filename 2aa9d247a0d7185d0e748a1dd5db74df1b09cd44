@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f7d5ea83_b5921d6e",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-11-28T15:17:58Z",
+      "side": 1,
+      "message": "moved.",
+      "parentUuid": "786b48ae_09056e0e",
+      "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ba591df4_67beb986",
         "filename": "cgroupstests.c",
         "patchSetId": 1
@@ -112,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "b8796360_cd1cc4b1",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-11-28T15:17:58Z",
+      "side": 1,
+      "message": "Other tests follow later.",
+      "parentUuid": "ba591df4_67beb986",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 67
+      },
+      "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a08d9b7_74674b92",
         "filename": "cgroupstests.c",
         "patchSetId": 1
@@ -123,6 +165,30 @@
       "writtenOn": "2019-11-28T14:18:31Z",
       "side": 1,
       "message": "looks like a code duplication (see lines 250-255). IIRIC we have somewhere strcmp implemented, isn\u0027t is?",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 1
+      },
+      "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cebbdfb_eda20f07",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1016153
+      },
+      "writtenOn": "2019-11-28T15:17:58Z",
+      "side": 1,
+      "message": "4 lines of same code but i don\u0027t see a reason to create a function for it. strcmp() is not applicable here. We search for the word \"cpu\" somewhere in a given string. If you insist for a function to be created i will do it.",
+      "parentUuid": "2a08d9b7_74674b92",
       "range": {
         "startLine": 271,
         "startChar": 0,
