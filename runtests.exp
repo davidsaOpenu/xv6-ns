@@ -1,5 +1,309 @@
 #!/usr/bin/expect -f
 
+#-------------------------------------------------------------------------
+#-HELPER PROCEDURES-------------------------------------------------------
+#-------------------------------------------------------------------------
+
+proc start_container {argv} {
+
+    # - this is the wrapper for container start
+    # @argv - file name for logging
+
+    send "pouch start m &\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Pouch container - cont_m starting"
+    }
+}
+
+proc start_container_id_multiple_expect { argv id } {
+
+    # - This is the wrapper for container start and can handle
+    # - multiple expects. This procedure is used in "too many cntns test"
+    # - Because we can run out of containers then multiple expect is required
+    # @argv - file name for logging
+    # @id - int for specifiyng container name
+
+    send "pouch start m$id &\n"
+    set timeout 3
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Pouch container - cont_m$id starting"
+    }
+    log_file -noappend [lindex $argv 0]
+    set timeout 1
+    expect {
+       "Cannot find tty"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "zombie!"
+    }
+}
+
+
+proc connect_container {argv} {
+
+    # - this is the wrapper for pouch connect command
+    # @argv - file name for logging
+
+    send "pouch connect m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Pouch container - cont_m connecting"
+    }
+
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "tty0 connected" {
+                    exp_continue
+       }
+       "CONT TTY NOT FOUND" {
+                    send "pouch connect m\n"
+                    log_file -noappend [lindex $argv 0]
+                    expect {
+                            "tty1 connected"
+                    }
+                    exp_continue
+       }
+    }
+}
+
+
+proc destroy_container {argv} {
+
+    # - this is the wrapper for pouch destroy command
+    # @argv - file name for logging
+
+    send "pouch destroy m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Pouch container - cont_m destroying"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Console connected"
+    }
+
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Exiting container"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "zombie!"
+    }
+}
+
+
+proc disconnect_container {argv} {
+
+    # - this is the arapper for pouch disconnect command
+    # @argv - file name for logging
+
+    send "pouch disconnect m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Pouch container - cont_m disconnecting"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Console connected"
+    }
+}
+
+#-------------------------------------------------------------------------
+#-TESTS-------------------------------------------------------------------
+#-------------------------------------------------------------------------
+
+proc ioctl_syscall_test {argv} {
+
+    # - this is the wrapper for ioctl syscall tests
+    # - for details: x6xc_tests.c
+    # @argv - file name for logging
+
+    send "x6xc_tests\n"
+    expect {
+       "ioctlcnt TESTS PASS"
+    }
+}
+
+proc pouch_start_test {argv} {
+
+    # - This test start the container
+    # - The pid should be 2 because we still remain in the console,
+    # - and not connected to any tty device yet
+    # - Finally we destroy the container
+    # @argv - file name for logging
+
+    set running [start_container $argv]
+
+    send "pid\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "PID: 2"
+    }
+
+    set running [destroy_container $argv]
+}
+
+proc pouch_connect_test {argv} {
+
+    # - * This test checks container connection after it was started,
+    # - once the container is connected the pid should be 1
+    # - * Also we try to destroy the container once we are connected to it
+    # - this shoul'd not happen
+    # - * After disconnect we can destroy it
+    # @argv - file name for logging
+
+    set running [start_container $argv]
+    set running [connect_container $argv]
+
+    send "pid\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "PID: 1"
+    }
+
+    send "pouch destroy m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "cannot destroy container while connected to it"
+    }
+
+    set timeout 1
+    send "disconnect\n"
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Console connected"
+    }
+
+    send "pid\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "PID: 2"
+    }
+
+    set running [destroy_container $argv]
+
+}
+
+
+proc pouch_disconnect_test {argv} {
+
+    # - This test checks disconnecting from the container back to console
+    # - it means PID shoud be 2
+    # @argv - file name for logging
+
+    set running [start_container $argv]
+    set running [connect_container $argv]
+    set running [disconnect_container $argv]
+
+    send "pid\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "PID: 2"
+    }
+}
+
+
+proc pouch_destroy_test {argv} {
+
+    # - Test starts the container and checks the file that was created
+    # - after we destroy the container recheck for the file
+    # @argv - file name for logging
+
+    set running [start_container $argv]
+
+    set timeout 1
+    send "ls cont_m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "cont_m         2 31 40" {
+                    exp_continue
+       }
+       "cont_m         2 33 40" {
+                    exp_continue
+       }
+    }
+
+    send "pouch destroy m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Console connected"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "Exiting container"
+    }
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "zombie!"
+    }
+
+    #set running [destroy_container $argv]
+
+    send "ls cont_m\n"
+    set timeout 1
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "ls: cannot open cont_m"
+    }
+
+}
+
+
+proc pouch_to_many_cnts_test {argv} {
+
+    # - Test creates 4 containers, in the last one we are expecting:
+    # - 'Cannot find tty' because there are only 3 containers available
+    # @argv - file name for logging
+
+    set running [start_container_id_multiple_expect $argv "1"]
+    set running [start_container_id_multiple_expect $argv "2"]
+    set running [start_container_id_multiple_expect $argv "3"]
+    set running [start_container_id_multiple_expect $argv "4"]
+
+}
+
+
+proc usertests {argv} {
+
+    # - basic xv6 usertests
+    # @argv - file name for logging
+
+    set timeout -1
+    send "usertests\n"
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "$ "
+    }
+    log_file
+}
+
+#-------------------------------------------------------------------------
+#-MAIN--------------------------------------------------------------------
+#-------------------------------------------------------------------------
+
 # no limit - usertests are time consuming
 set timeout -1
 
@@ -13,15 +317,19 @@ set qemu_command $expect_out(buffer)
 spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
 expect "$ "
 
-# run cgroupstests and usertests and log the output
-send "cgroupstests\n"
-expect "$ "
-send "usertests\n"
-log_file -noappend [lindex $argv 0]
-expect {
-   "$ "
-}
-log_file
+#uncomment for expect debugging
+#exp_internal 1
+
+set running [ioctl_syscall_test $argv]
+
+set running [pouch_start_test $argv]
+set running [pouch_connect_test $argv]
+set running [pouch_disconnect_test $argv]
+set running [pouch_destroy_test $argv]
+set running [pouch_to_many_cnts_test $argv]
+
+set timeout 5
+set running [usertests $argv]
 
 # just in case
 close
