@@ -341,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "cc7c4dd4_19e38caa",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-12-07T14:07:00Z",
+      "side": 1,
+      "message": "TABS and trailing spaces removed",
+      "parentUuid": "967d73f5_eea515c6",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 3
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8da9a9b_7fb67d9e",
         "filename": "pouch.c",
         "patchSetId": 9
@@ -352,6 +376,30 @@
       "writtenOn": "2019-11-28T10:59:11Z",
       "side": 1,
       "message": "100, 30 magic numbers",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 15
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8fbb0aa_7970a197",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-12-07T14:07:00Z",
+      "side": 1,
+      "message": "define added",
+      "parentUuid": "c8da9a9b_7fb67d9e",
       "range": {
         "startLine": 219,
         "startChar": 0,
@@ -387,6 +435,30 @@
     },
     {
       "key": {
+        "uuid": "505ad672_07ef868c",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-12-07T14:07:00Z",
+      "side": 1,
+      "message": "this loop checks is user used \u0027--daemonize\u0027 argument in the command",
+      "parentUuid": "9d8cda8e_e265b209",
+      "range": {
+        "startLine": 229,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 29
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1b004e1e_01bd81c1",
         "filename": "pouch.c",
         "patchSetId": 9
@@ -410,6 +482,30 @@
     },
     {
       "key": {
+        "uuid": "d773cd3b_1c6194c2",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-12-07T14:07:00Z",
+      "side": 1,
+      "message": "changed",
+      "parentUuid": "1b004e1e_01bd81c1",
+      "range": {
+        "startLine": 256,
+        "startChar": 13,
+        "endLine": 256,
+        "endChar": 20
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4fa4e817_7a80a58d",
         "filename": "pouch.c",
         "patchSetId": 9
@@ -421,6 +517,30 @@
       "writtenOn": "2019-11-28T10:59:11Z",
       "side": 1,
       "message": "daemonize",
+      "range": {
+        "startLine": 263,
+        "startChar": 38,
+        "endLine": 263,
+        "endChar": 46
+      },
+      "revId": "4cfba8b3e5e81850e22d07ea62bb70e1698d0d0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e42d043f_18b94870",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2019-12-07T14:07:00Z",
+      "side": 1,
+      "message": "changed",
+      "parentUuid": "4fa4e817_7a80a58d",
       "range": {
         "startLine": 263,
         "startChar": 38,
