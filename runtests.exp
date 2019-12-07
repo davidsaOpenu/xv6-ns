@@ -13,9 +13,347 @@ set qemu_command $expect_out(buffer)
 spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
 expect "$ "
 
-# run cgroupstests and usertests and log the output
-send "cgroupstests\n"
-expect "$ "
+#uncomment for expect debugging
+#exp_internal 1
+
+#run container tests---------------------------------------------------
+
+#..............................ioctlcnt test:
+#ioctlcnt syscall test
+
+send "x6xc_tests\n"
+expect {
+   "ioctlcnt TESTS PASS"
+}
+
+#..............................userspace commands tests
+#..............................pouch start test:
+#command: 'pouch start m &'
+#expect: 'Pouch container - cont_m starting'
+#command: 'pid'
+#expect 'PID: 2' (!=1)
+#command: 'pouch destroy m'
+
+send "pouch start m &\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m starting"
+}
+
+send "pid\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "PID: 2"
+}
+
+send "pouch destroy m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m distorying"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Console connected"
+}
+
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Exiting container"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+
+#..............................pouch connect test:
+#command: 'pouch start m &'
+#command: 'pouch connect m'
+#expect: 'Pouch container - cont_m connecting'
+#command: 'pid'
+#expect: 'PID: 1'
+#command: 'pouch destroy m'
+
+send "pouch start m &\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m starting"
+}
+
+send "pouch connect m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m connecting"
+}
+
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "tty0 connected" {
+   		exp_continue
+   }
+   "CONT TTY NOT FOUND" {
+   		send "pouch connect m\n"
+   		log_file -noappend [lindex $argv 0]
+   		expect {
+   			"tty1 connected"
+   		}
+   		exp_continue
+   }
+}
+
+send "pid\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "PID: 1"
+}
+
+send "pouch destroy m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "cannot destroy container while connected to it"
+}
+
+set timeout 1
+send "disconnect\n"
+log_file -noappend [lindex $argv 0]
+expect {
+   "Console connected"
+}
+
+send "pid\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "PID: 2"
+}
+
+send "pouch destroy m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m distorying"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Console connected"
+}
+
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Exiting container"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+
+#..............................pouch disconnect test:
+#command: 'pouch start m &'
+#command: 'pouch connect m'
+#command: 'pouch disconnect m'
+#expect: 'Pouch container - cont_m disconnecting'
+#command: 'pid'
+#expect: 'PID: 2' (!=1)
+#command: 'pouch destroy m'
+
+send "pouch start m &\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m starting"
+}
+
+send "pouch connect m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m connecting"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "tty0 connected" {
+   		exp_continue
+   }
+   "CONT TTY NOT FOUND" {
+   		send "pouch connect m\n"
+   		log_file -noappend [lindex $argv 0]
+   		expect {
+   			"tty1 connected"
+   		}
+   		exp_continue
+   }
+}
+
+send "pouch disconnect m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m disconnecting"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Console connected"
+}
+
+send "pid\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "PID: 2"
+}
+
+#..............................pouch destroy test:
+#command: 'pouch start m &'
+#command: 'ls cont_m'
+#expect: 'cont_m 2 31 40'
+#command: 'pouch destroy m'
+#expect: 'Pouch container - cont_m distorying'
+#command: 'ls cont_m'
+#expect: 'ls: cannot open cont_m
+
+send "pouch start m &\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m starting"
+}
+set timeout 1
+send "ls cont_m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "cont_m         2 31 40" {
+   		exp_continue
+   }
+   "cont_m         2 33 40" {
+   		exp_continue
+   }
+}
+
+send "pouch destroy m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Console connected"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "Exiting container"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+send "ls cont_m\n"
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "ls: cannot open cont_m"
+}
+
+#..............................to many containers test
+#command: 'pouch start m &'
+#expect: 'Pouch container - cont_m starting'
+#command: 'pouch start m1 &'
+#expect: 'Pouch container - cont_m1 starting'
+#command: 'pouch start m2 &'
+#expect: 'Pouch container - cont_m2 starting'
+#command: 'pouch start m3 &'
+#expect: 'Cannot find tty'
+
+send "pouch start m &\n"
+log_file -noappend [lindex $argv 0]
+set timeout 3
+expect {
+   "Pouch container - cont_m starting" 
+}
+log_file -noappend [lindex $argv 0]
+set timeout 1
+expect {
+   "Cannot find tty"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+send "pouch start m1 &\n"
+set timeout 3
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m1 starting"
+}
+log_file -noappend [lindex $argv 0]
+set timeout 1
+expect {
+   "Cannot find tty"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+send "pouch start m2 &\n"
+set timeout 3
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m2 starting"
+}
+log_file -noappend [lindex $argv 0]
+set timeout 1
+expect {
+   "Cannot find tty"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+send "pouch start m3 &\n"
+set timeout 3
+log_file -noappend [lindex $argv 0]
+expect {
+   "Pouch container - cont_m3 starting"
+}
+log_file -noappend [lindex $argv 0]
+set timeout 1
+expect {
+   "Cannot find tty"
+}
+set timeout 1
+log_file -noappend [lindex $argv 0]
+expect {
+   "zombie!"
+}
+
+
+# run usertests and log the output-------------------------------
+
+set timeout 5
+set timeout -1
 send "usertests\n"
 log_file -noappend [lindex $argv 0]
 expect {
