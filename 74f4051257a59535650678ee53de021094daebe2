@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d9c1ce8_f65627d5",
+        "filename": "pouch.c",
+        "patchSetId": 27
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-01-03T07:56:34Z",
+      "side": 1,
+      "message": "1. It should be clear from the help what\u0027s the difference bw --daemonize and \u0026\n2. $ pouch start c1 results in a vague message (the \"exec pouch failed\"). Suggestion: print the correct command line synopsis (\"pouch start \u003cname\u003e \u003c...\u003e\").\n3. https://trello.com/c/uRnqBdRf/36-maman13-14-type-c-hypervisor-userspace-kernel-space-integration - we need a functionality of the first 3 commands (create/limit/start)\n4. $ pouch start c1 --daemonize\nPouch container - cont_c1 starting\n$ pouch start c1 --daemonize\nPouch container - cont_c1 starting\n$ pouch start c1 --daemonize\nPouch container - cont_c1 starting\nCannot find tty\n\nWhat happens at the second/third time the cont_c1 is started?\n\n5. what is the reason for cont_ preffix addition to the container name?\n$ pouch connect cont_c1\nPouch container - cont_cont_c1 connecting\ncannot open cont_cont_c1",
+      "revId": "74f4051257a59535650678ee53de021094daebe2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "376cd2d5_b2fd4e04",
+        "filename": "pouch.c",
+        "patchSetId": 27
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-01-03T07:56:34Z",
+      "side": 1,
+      "message": "if no container was started\npouch connect c2 should result in a message that states \"There is no container named c2 is a started stage\" rather then: \nPouch container - cont_c2 connecting\ncannot open cont_c2",
+      "revId": "74f4051257a59535650678ee53de021094daebe2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
