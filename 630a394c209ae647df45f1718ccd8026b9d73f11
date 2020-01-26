@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fe15c4cd_6b7502d5",
+        "filename": "cgfs.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-01-26T14:35:35Z",
+      "side": 1,
+      "message": "Test code: \n\nvoid test_writing_cgroup_files()\n{\n\tprintf(1, \"Writing cgroup max: \");\n\tchar buf[256];\n        char result \u003d 1;\n\t\n\tint cgroup_subtree_control_fd \u003d\n        open(\"/cgroup/test1/cgroup.subtree_control\", O_RDWR);\n\t\n\tresult \u0026\u003d cgroup_subtree_control_fd \u003e\u003d 0;\n\tempty_string(buf, sizeof(buf));\n        strcpy(buf, \"+cpu\");\n        result \u0026\u003d write(cgroup_subtree_control_fd, buf, sizeof(buf)) \u003e 0;\t\n\tresult \u0026\u003d close(cgroup_subtree_control_fd) \u003d\u003d 0\n\t\n\tempty_string(buf, sizeof(buf));\n\tstrcpy(buf, \"300 1000\");\t\n\tint cpu_max_fd \u003d open(\"/cgroup/test1/cpu.max\", O_RDWR); \n\tresult \u0026\u003d write(cpu_max_fd, buf, sizeof(buf));\n\tresult \u0026\u003d close(cpu_max_fd) \u003d\u003d 0\n\n\tif (result)\n           printf(1, \"OK.\\n\");\n        else{\n           printf(1, \"FAIL.\\n\");\n        exit(1);\n    }\n}",
+      "parentUuid": "45532659_8053ac2a",
+      "revId": "630a394c209ae647df45f1718ccd8026b9d73f11",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74a83295_d906e87a",
         "filename": "cgfs.c",
         "patchSetId": 7
