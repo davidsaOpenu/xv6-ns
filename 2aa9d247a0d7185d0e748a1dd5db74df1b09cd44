@@ -221,6 +221,23 @@
       "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcab5181_fec029ce",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-01-26T01:31:53Z",
+      "side": 1,
+      "message": "No tests for limiting process\u0027s cpu via cpu controller. \nI added them (after enabling cpu controller):\n\nint cpu_max_fd \u003d open(\"/cgroup/test1/cpu.max\", O_RDWR); \nand then: write(cpu_max_fd, buf, sizeof(buf)); \nbuf: \"300 1000\" as it says in the functional spec.\n\nResult:\nBefore enabling cpu controller:\n\nReading contents of \"/cgroup/test1\":\n-----------------------------------------\nContents of /cgroup/test1/cgroup.procs:\nContents of /cgroup/test1/cgroup.controllers:\ncpu\nContents of /cgroup/test1/cgroup.subtree_control:\nContents of /cgroup/test1/cgroup.events:\npopulated - 0\nContents of /cgroup/test1/cgroup.max.descendants:\n64\nContents of /cgroup/test1/cgroup.max.depth:\n64\nContents of /cgroup/test1/cgroup.stat:\nnr_descendants - 2\nnr_dying_descendants - 0\nContents of /cgroup/test1/cpu.max:\nmax - 4294967295\nperiod - 100000\nContents of /cgroup/test1/cpu.weight:\nweight - 0\nContents of /cgroup/test1/cpu.stat:\nusage_usec - 0\nuser_usec - 0\nsystem_usec - 0\nReading cgroup files test result: OK.\n\nAfter enabling cpu controller:\n\nReading contents of \"/cgroup/test1\":\n-----------------------------------------\nContents of /cgroup/test1/cgroup.procs:\nContents of /cgroup/test1/cgroup.controllers:\ncpu\nContents of /cgroup/test1/cgroup.subtree_control:\ncpu\nContents of /cgroup/test1/cgroup.events:\npopulated - 0\nContents of /cgroup/test1/cgroup.max.descendants:\n64\nContents of /cgroup/test1/cgroup.max.depth:\n64\nContents of /cgroup/test1/cgroup.stat:\nnr_descendants - 2\nnr_dying_descendants - 0\nContents of /cgroup/test1/cpu.max:\nmax - 4294967295\nperiod - 100000\nContents of /cgroup/test1/cpu.weight:\nweight - 0\nContents of /cgroup/test1/cpu.stat:\nusage_usec - 0\nuser_usec - 0\nsystem_usec - 0\nnr_periods - 0\nnr_throttled - 0\nthrottled_usec - 0\n\nReading cgroup files test result: OK.\n\nIssues here:\n1) why cpu.max.max has this value: 4294967295, and cpu.max.period has the value 100000, that per func spec supposed to be max\u0027s value. \n2) The values I set didn\u0027t applied. \n3) Weight is 0, although in spec it said to be \u0027100\u0027. (anyway weight functionality is not implemented)",
+      "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
