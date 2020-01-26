@@ -238,6 +238,24 @@
       "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f008a35e_834dbad2",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-01-26T14:37:46Z",
+      "side": 1,
+      "message": "To print cpu.max I added the following in the test_reading_cgroup_files();\n\nint cpu_max_fd \u003d open(\"/cgroup/test1/cpu.max\", O_RDWR);\nempty_string(buf, sizeof(buf));\nresult \u0026\u003d read(cgroup_procs_fd, buf, sizeof(buf)) \u003e\u003d 0;\nprintf(1, \"Contents of /cgroup/test1/cpu.max:\\n%s\\n\", buf);\nresult \u0026\u003d close(cpu_max_fd) \u003d\u003d 0;",
+      "parentUuid": "fcab5181_fec029ce",
+      "revId": "2aa9d247a0d7185d0e748a1dd5db74df1b09cd44",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
