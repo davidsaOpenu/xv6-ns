@@ -51,6 +51,24 @@
       "revId": "74f4051257a59535650678ee53de021094daebe2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01c1b3fc_3affb58d",
+        "filename": "pouch.c",
+        "patchSetId": 27
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-01-28T03:24:39Z",
+      "side": 1,
+      "message": "Added message \"There is no container named \u003ccnt_name\u003e in a started stage\", if user tries to connect to an unknown container.",
+      "parentUuid": "376cd2d5_b2fd4e04",
+      "revId": "74f4051257a59535650678ee53de021094daebe2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
