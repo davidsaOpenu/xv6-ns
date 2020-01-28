@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c5ec53ea_9935178b",
+        "filename": "pouch.c",
+        "patchSetId": 27
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-01-28T03:23:48Z",
+      "side": 1,
+      "message": "1. user is no longer required to provide arguments like \u0027--daemonize\u0027 or \u0027\u0026\u0027, the container creation process is happening in the background by default.\n\n2. \u0027exec \u003cprogram_name\u003e failed\u0027 is message from the shell, usually results because of 1) typo or 2) error, seems like it is the first one.\n\n3. The commands we are going to implement are: start/connect/disconnect/destroy and need to consider if we are going to make limit in the start command or implement another one.\n\n4. Return is now \"\u003ccnt_name\u003e already started\"\n\n5. prefix removed. And message \"There is no container named \u003ccnt_name\u003e in a started stage\", if user tries to connect to an unknown container.",
+      "parentUuid": "0d9c1ce8_f65627d5",
+      "revId": "74f4051257a59535650678ee53de021094daebe2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "376cd2d5_b2fd4e04",
         "filename": "pouch.c",
         "patchSetId": 27
