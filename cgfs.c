@@ -569,37 +569,17 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
                f->cgp->cpu_controller_enabled) {
         char max_string[32] = {0};
         char period_string[32] = {0};
-        int i = 0;
-        int j = 0;
         int max = -1;
         int period = -1;
 
-        // Copy the max string part.
-        for (i = 0; i < n && i < sizeof(max_string) - 1 && addr[i] != ' ';
-             ++i) {
-            max_string[i] = addr[i];
-        }
+        if (*addr != '\0' && n > 0) {
 
-        // If more than max string size, fail.
-        if (i >= sizeof(max_string) - 1) {
-            return -1;
-        }
+            int len = copy_until_space(max_string, addr, n - 1);
+            addr += len;
 
-        // Skip spaces.
-        for (; i < n; ++i) {
-            if (addr[i] != ' ') {
-                break;
+            if(*addr != '\0'){
+                strncpy(period_string,addr,31);
             }
-        }
-
-        // Copy the period string part.
-        for (j = 0; i < n && j < sizeof(period_string) - 1; ++i, ++j) {
-            period_string[j] = addr[i];
-        }
-
-        // If more than period string size, fail.
-        if (j >= sizeof(period_string) - 1) {
-            return -1;
         }
 
         // Update max.
@@ -623,6 +603,8 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         // Update max fields.
         f->cgp->cpu_time_limit = max;
         f->cpu.max.max = max;
+
+        r = n;
     }
 
     return r;
