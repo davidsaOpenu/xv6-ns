@@ -1,0 +1,262 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63aa9583_ec05bcc1",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "lets move these lines to tests_common.c/h file and also remove them pidns_tests.c",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d91e5d_1d0e4ad7",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "lets change to something  like this:\nverify that ttys were created by xv6",
+      "range": {
+        "startLine": 61,
+        "startChar": 3,
+        "endLine": 61,
+        "endChar": 25
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f22de2e_5c8569bf",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "can be removed?",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 3
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "503e0b4a_2816d301",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "lets describe in words that we are trying to get status of the device and depending on the status the test performs the \"opposite\" operation. I\u0027g if the device is attached the test will detach it and vice versa. This wa the test remains agnostic to the initial status of the device.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 48
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31acbeba_167cf7ae",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "same remark as in case of attach_detach test",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 53
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db76fc02_201b90fb",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "that any attach/connect operation to the console device fails",
+      "range": {
+        "startLine": 221,
+        "startChar": 2,
+        "endLine": 221,
+        "endChar": 49
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "034d2f0f_49fb34a1",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "look like can be safely removed",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 3
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97bec69e_70fc990a",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "maybe worth having something like TTYGETS+2, ATTACH+2?",
+      "range": {
+        "startLine": 312,
+        "startChar": 19,
+        "endLine": 312,
+        "endChar": 24
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2eee71f6_a4d442ba",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "lets change the name to ioctltests.c \nand let\u0027s update the doc that ioctl tests are located ioctltests.c",
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e74f111_a4a256bd",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "attach_detach",
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96570541_aacb1e51",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "let\u0027s change to ioctl_connect_disconnect_test",
+      "range": {
+        "startLine": 345,
+        "startChar": 14,
+        "endLine": 345,
+        "endChar": 32
+      },
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f82cb13d_01de1141",
+        "filename": "pouchtests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-26T08:05:07Z",
+      "side": 1,
+      "message": "spaces here and above",
+      "revId": "27257f84ec58bccf4501410edb4be2d0504049ff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
