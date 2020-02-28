@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "76860c17_018750a9",
+        "filename": "pouch.c",
+        "patchSetId": 38
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-28T07:37:52Z",
+      "side": 1,
+      "message": "stderr",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 10
+      },
+      "revId": "4c40d9da9b9915a0077437d7fa74caa19ce2f86b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e05a4510_de674153",
         "filename": "pouch.c",
         "patchSetId": 38
@@ -82,6 +105,57 @@
         "endLine": 568,
         "endChar": 3
       },
+      "revId": "4c40d9da9b9915a0077437d7fa74caa19ce2f86b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "097d0e0c_e24e0805",
+        "filename": "pouch.c",
+        "patchSetId": 38
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-28T07:37:52Z",
+      "side": 1,
+      "message": "AI: to open a trello ticket - Rewrite the pouch command line parser with getopt or any other lib  - assingmemnt for 2020b",
+      "revId": "4c40d9da9b9915a0077437d7fa74caa19ce2f86b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a80dfeb_7cabdd36",
+        "filename": "pouch.c",
+        "patchSetId": 38
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-28T07:37:52Z",
+      "side": 1,
+      "message": "_",
+      "revId": "4c40d9da9b9915a0077437d7fa74caa19ce2f86b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be2921ce_1cc6a7c7",
+        "filename": "pouch.c",
+        "patchSetId": 38
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-02-28T07:37:52Z",
+      "side": 1,
+      "message": "seems that here pouch is about to issue an informative error message, isn\u0027t it?",
       "revId": "4c40d9da9b9915a0077437d7fa74caa19ce2f86b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
