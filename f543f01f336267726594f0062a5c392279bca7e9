@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29a6fae3_ccaacbc5",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "add goto block?\nrefactor ioctl calls",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a5db006_f9a9167d",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "change to: on the init, we are able to open all the tty devices",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "557e9041_a6669acc",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "change: make sure no tty devices in use, e.g. make sure pouch container occupy no tty device. No rerun tests afterwards",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50aa59ac_fed153bf",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "change error message , what is the expected result",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a221201_ff331c27",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "consider to leave only error messages / add detailed messages of expected results",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "729128b4_7b2cbef9",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "change description, remove implementation details",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "813d748f_6e790f94",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "expectation: disconnected/detached",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ba33d78_63144153",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "expectation: disconnected/detached",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec58c10e_4e43e366",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "result should be different on set/attach?",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88152a7a_e3bb9231",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "add description about major/minor numbers",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2df9c22d_eab99713",
+        "filename": "ioctltests.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-12T07:51:11Z",
+      "side": 1,
+      "message": "consider if this test is required",
+      "revId": "f543f01f336267726594f0062a5c392279bca7e9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
