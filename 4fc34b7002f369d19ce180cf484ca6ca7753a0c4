@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "dbe7dd8c_ba7c2bf6",
+        "filename": "runtests.exp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-21T18:21:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20a69f22_85716006",
+      "range": {
+        "startLine": 23,
+        "startChar": 62,
+        "endLine": 23,
+        "endChar": 67
+      },
+      "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b7f4d7d_aee0dcd3",
+        "filename": "runtests.exp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-21T18:21:08Z",
+      "side": 1,
+      "message": "start container procedures refactored",
+      "parentUuid": "234eb010_91cb1ff0",
+      "range": {
+        "startLine": 22,
+        "startChar": 8,
+        "endLine": 23,
+        "endChar": 73
+      },
+      "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e163e716_bb3dd3dd",
         "filename": "runtests.exp",
         "patchSetId": 3
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "86a36b2d_24c01d49",
+        "filename": "runtests.exp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-21T18:21:08Z",
+      "side": 1,
+      "message": "yes, otherwise the log will do not rewrite on each expect run\nwe can consider to remove the logging instead of the last step in usertest, where jenkins is seeking for \u0027all tests pass\u0027 this is because all the outputs exists in jenkin\u0027s console output.",
+      "parentUuid": "e163e716_bb3dd3dd",
+      "range": {
+        "startLine": 30,
+        "startChar": 14,
+        "endLine": 30,
+        "endChar": 22
+      },
+      "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77ca9897_7217bc50",
         "filename": "runtests.exp",
         "patchSetId": 3
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "183c1258_a372a913",
+        "filename": "runtests.exp",
+        "patchSetId": 3
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-21T18:21:08Z",
+      "side": 1,
+      "message": "Do we need to stop it?  This is not a program error, but a user one, user gets an output according his actions.",
+      "parentUuid": "77ca9897_7217bc50",
+      "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "380c49ba_e0c7066d",
         "filename": "runtests.exp",
         "patchSetId": 3
@@ -102,6 +192,24 @@
       "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ca547a2_446182b7",
+        "filename": "runtests.exp",
+        "patchSetId": 3
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1016753
+      },
+      "writtenOn": "2020-03-21T18:21:08Z",
+      "side": 1,
+      "message": "usertests if the final test, cgroupstests is the second one, runs after ioctl syscall tests",
+      "parentUuid": "380c49ba_e0c7066d",
+      "revId": "4fc34b7002f369d19ce180cf484ca6ca7753a0c4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
