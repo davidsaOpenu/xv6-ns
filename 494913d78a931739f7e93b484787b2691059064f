@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c47dc9fd_b653181a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-06T09:51:05Z",
+      "side": 1,
+      "message": "non informative",
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9352cb3d_3a42cdb0",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-06T09:51:05Z",
+      "side": 1,
+      "message": "Reason to be reflected (commit message)",
+      "range": {
+        "startLine": 100,
+        "startChar": 154,
+        "endLine": 100,
+        "endChar": 162
+      },
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "545aebfd_1a35c665",
+        "filename": "fs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-06T09:51:05Z",
+      "side": 1,
+      "message": "looks like a different CR to submit. Is it instead of double indirect?",
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
