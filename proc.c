@@ -16,6 +16,8 @@ struct {
   struct proc proc[NPROC];
 } ptable;
 
+
+/*Return the process id inside the given namespace, else returns zero*/
 int get_pid_for_ns(struct proc* proc, struct pid_ns* pid_ns) {
   for (int i = 0; i < MAX_PID_NS_DEPTH; i++) {
     if (proc->pids[i].pid_ns == pid_ns) {
@@ -60,10 +62,10 @@ struct cpu*
 mycpu(void)
 {
   int apicid, i;
-  
+
   if(readeflags()&FL_IF)
     panic("mycpu called with interrupts enabled\n");
-  
+
   apicid = lapicid();
   // APIC IDs are not guaranteed to be contiguous. Maybe we should have
   // a reverse map, or reserve a register to store &cpus[i].
@@ -109,6 +111,7 @@ allocproc(void)
 
 found:
   p->state = EMBRYO;
+  p->killed = 0;
 
   release(&ptable.lock);
 
@@ -157,7 +160,7 @@ userinit(void)
   cgroup_initialize(cgroup_root(), 0, 0);
 
   p = allocproc();
-  
+
   initproc = p;
   if((p->pgdir = setupkvm()) == 0)
     panic("userinit: out of memory?");
@@ -268,10 +271,10 @@ fork(void)
     cur = np->nsproxy->pid_ns;
   }
 
-
   // for each pid_ns get me a pid
   i = 0;
   while (cur) {
+    //cprintf("Integer i: %d\n", i); /*DELETE LATER*/
     if (i >= MAX_PID_NS_DEPTH) {
       panic("too many danif!");
     }
@@ -303,18 +306,34 @@ fork(void)
   return pid;
 }
 
-void kill_recursively(struct proc* proc) {
+/*Kill the given process p, and set its parent to given process reaper*/
+void kill_proc(struct proc* p, struct proc* reaper) {
+   p->killed = 1;
+   if (p->state == SLEEPING)
+    p->state = RUNNABLE;
+   p->parent = reaper;
+}
+
+/*Kill all the processes inside the namespace of a given process, called parent
+reaper in this case becomes their parent process*/
+void kill_all_pid_ns(struct proc* parent, struct proc* reaper) {
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->parent == proc){
-      p->killed = 1;
-      // Wake process from sleep if necessary.
-      if(p->state == SLEEPING)
-        p->state = RUNNABLE;
-      kill_recursively(p);
-      p->parent = initproc;
+    /*Change didnt break and works, no difference in result though*/
+    if(p != parent && p->nsproxy->pid_ns == parent->nsproxy->pid_ns) {
+      kill_proc(p, reaper);
     }
   }
+}
+
+/*Return the process whose pid=1 inside the given namespace*/
+struct proc* get_pid1_for_ns(struct pid_ns* pid_ns) {
+  for (struct proc* p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(get_pid_for_ns(p, pid_ns) == 1){
+      return p;
+    }
+  }
+  return 0;
 }
 
 // Exit the current process.  Does not return.
@@ -326,7 +345,7 @@ exit(int status)
   struct proc *curproc = myproc();
   struct proc *p;
   int fd;
- 
+
   curproc->status = status;
 
   if(curproc == initproc)
@@ -348,45 +367,41 @@ exit(int status)
   curproc->cwdmount = 0;
   *curproc->cwdp = 0;
   curproc->cwd = 0;
-  
-  // In the new namespace world, init could be another process than the
-  // initproc 
-  struct proc* procpid1 = 0;
 
   acquire(&ptable.lock);
-
-  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-    if(get_pid_for_ns(p, curproc->nsproxy->pid_ns) == 1){
-      procpid1 = p;
-      break;
-    }
-  }
-
-  if (!procpid1) {
-    panic("coundn't find pid 1");
-  }
-
-
-  namespaceput(curproc->nsproxy);
 
   // Parent might be sleeping in wait().
   wakeup1(curproc->parent);
 
-  // If pid1 dies, all of it's children must be killed as well
-  if (curproc == procpid1) {
-    // find parent procpid1
-    curproc->parent->child_pid_ns_destroyed = 1;
-    kill_recursively(procpid1);
-  } else {
-    // Pass abandoned children to init.
+
+  /*If the current process holds pid=1 within its namespace, mark all child processes as killed*/
+  if (curproc->ns_pid == 1) {
+    curproc->parent->child_pid_ns_destroyed = 1; /*Mark inside the parent process that the current
+    name space is gone*/
+
+    kill_all_pid_ns(curproc, curproc->parent); /*Documentation for this command see above*/
+
+  } else { /*The current process does not hold pid=1 within its namespace*/
+
+    struct proc* procpid1 = 0;
+    /*Pass the child processes of the current process to pid=1 process within the namespace*/
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->parent == curproc){
+        procpid1 = get_pid1_for_ns(curproc->nsproxy->pid_ns); /*Find process with pid=1 within namespace*/
+        if (!procpid1) /*Here we could not find process with pid 1 inside the namespace*/
+           panic("coundn't find pid 1");
         p->parent = procpid1;
-        if(p->state == ZOMBIE)
-          wakeup1(initproc);
+        if(p->state == ZOMBIE) {
+  	      wakeup1(initproc);
+        }
       }
     }
   }
+
+  namespaceput(curproc->nsproxy);
+
+  if (curproc->child_pid_ns)
+	 pid_ns_put(curproc->child_pid_ns);
 
   // Remove the process cgroup.
   cgroup_erase(curproc->cgroup, curproc);
@@ -405,7 +420,7 @@ wait(int *wstatus)
   struct proc *p;
   int havekids, pid;
   struct proc *curproc = myproc();
-  
+
   acquire(&ptable.lock);
   for(;;){
     // Scan through table looking for exited children.
@@ -420,6 +435,7 @@ wait(int *wstatus)
         kfree(p->kstack);
         p->kstack = 0;
         freevm(p->pgdir);
+        p->state = UNUSED;
         p->ns_pid = 0;
         memset(p->pids, 0, sizeof(p->pids));
         p->child_pid_ns = 0;
@@ -427,18 +443,17 @@ wait(int *wstatus)
         p->parent = 0;
         p->name[0] = 0;
         p->killed = 0;
-        p->state = UNUSED;
-        if (wstatus != 0) {
-         *wstatus = W_STOPCODE(p->status); 
-        }
+        if (wstatus != 0)
+         *wstatus = W_STOPCODE(p->status);
         p->status = 0;
+
         release(&ptable.lock);
         return pid;
       }
     }
 
     // No point waiting if we don't have any children.
-    if(!havekids || curproc->killed){
+    if(havekids == 0 || curproc->killed){
       release(&ptable.lock);
       return -1;
     }
@@ -603,7 +618,7 @@ void
 sleep(void *chan, struct spinlock *lk)
 {
   struct proc *p = myproc();
-  
+
   if(p == 0)
     panic("sleep");
 
@@ -670,11 +685,7 @@ kill(int pid)
   struct pid_ns* pid_ns = myproc()->nsproxy->pid_ns;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(get_pid_for_ns(p, pid_ns) == pid){
-      p->killed = 1;
-      // Wake process from sleep if necessary.
-      if(p->state == SLEEPING)
-        p->state = RUNNABLE;
-      release(&ptable.lock);
+	kill_proc(p, p->parent);
       return 0;
     }
   }
