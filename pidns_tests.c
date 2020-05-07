@@ -275,11 +275,14 @@ int test_all_children_kill_when_nspid1_dies() {
 
   int ret = check(fork(), "failed to fork");
   if (ret == 0) {
+    pid_t child_pids[2];
 
     // child is pid 1
     assert_msg(getpid() == 1, "pid not equal to 1");
 
-    create_children(2, NULL, loop_forever);
+    //create_children(2, NULL, loop_forever);
+
+    create_children(ARRAY_SIZE(child_pids), child_pids, loop_forever);
 
     // pid 1 exits
     exit(0);
@@ -361,10 +364,10 @@ int _test_unshare_recrusive_limit(int count) {
   return 0;
 }
 
-int test_unshare_recrusive_limit() { 
+int test_unshare_recrusive_limit() {
   // there's an init namespace so we start counting from 1
   _test_unshare_recrusive_limit(MAX_RECURSION-1);
-  return 0; 
+  return 0;
 }
 
 /* Verify that a process can call unshare PID only once
@@ -397,7 +400,7 @@ int test_calling_fork_twice_after_unshare() {
     // child is pid 1
     assert_msg(getpid() == 1, "pid not equal to 1");
 
-    sleep(1);
+    sleep(5); /*Changed to 5 to remove a zombie process appearing*/
 
     // pid 1 exits
     exit(0);
@@ -416,7 +419,7 @@ int test_calling_fork_twice_after_unshare() {
   // make sure it's dead
   int status = child_exit_status(ret2);
   assert_msg(status == 0, "child process failed");
-  
+
   // make sure it's dead
   status = child_exit_status(ret);
   assert_msg(status == 0, "child process failed");
@@ -425,7 +428,7 @@ int test_calling_fork_twice_after_unshare() {
 }
 
 int run_test(test_func_t func, const char *name) {
-  int status = 0;
+  int status = 0; /*0 indicates tess passed, 1 indicates test failed*/
   int pid = -1;
 
   printf(stderr, "running test - '%s'\n", name);
@@ -437,6 +440,7 @@ int run_test(test_func_t func, const char *name) {
   pid = ret;
   if (child_exit_status(pid) != 0) {
     printf(stderr, "failed test - '%s'\n", name);
+    status = 1; /*Test failed*/
   }
 
   return status;
@@ -450,6 +454,8 @@ int main() {
   run_test(test_children_reaped_by_nspid1, "test_children_reaped_by_nspid1");
   run_test(test_all_children_kill_when_nspid1_dies,
            "test_all_children_kill_when_nspid1_dies");
+  sleep(5); /*Necessary to keep the 'zombie' messages from interfearing with other
+  messages output. Without this sleep, the 'zombie' message will eclipse other messege outputs*/
   run_test(test_calling_fork_twice_after_unshare, "test_calling_fork_twice_after_unshare");
   run_test(test_calling_fork_after_nspid1_dies_fails, "test_calling_fork_after_nspid1_dies_fails");
   run_test(test_unshare_recrusive_limit, "test_unshare_recrusive_limit");
