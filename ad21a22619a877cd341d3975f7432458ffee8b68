@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cc4dfc34_779d0b7b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1017897
+      },
+      "writtenOn": "2020-05-08T06:02:10Z",
+      "side": 1,
+      "message": "a. Ill know for future commits.\nc. this review is instead of the on in the link - because it didn\u0027t have the right commit message - I tried to work with git review.\nI answered your comments over there.",
+      "parentUuid": "75bd83c8_78184485",
+      "revId": "ad21a22619a877cd341d3975f7432458ffee8b68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ced02a58_4518ff7b",
         "filename": "Makefile",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2020-05-06T09:55:24Z",
       "side": 1,
       "message": "any reason to have -g in the repo?",
+      "range": {
+        "startLine": 177,
+        "startChar": 5,
+        "endLine": 177,
+        "endChar": 8
+      },
+      "revId": "ad21a22619a877cd341d3975f7432458ffee8b68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e18572ec_94b4622f",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1017897
+      },
+      "writtenOn": "2020-05-08T06:02:10Z",
+      "side": 1,
+      "message": "Yes, it\u0027s useful for further usage. And there is no reason to not include it. It\u0027s a good practice.",
+      "parentUuid": "ced02a58_4518ff7b",
       "range": {
         "startLine": 177,
         "startChar": 5,
