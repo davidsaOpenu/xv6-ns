@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "e340af3a_8bfd9c8c",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1017897
+      },
+      "writtenOn": "2020-05-08T06:03:54Z",
+      "side": 1,
+      "message": "What do you mean?\nThe reason I added it - the process context xv6 keep is only on the 32 bit registers. Thus, the processes must not use 128/256 bit registers. This flag promise the registers won\u0027t be in use in the binaries.",
+      "parentUuid": "9352cb3d_3a42cdb0",
+      "range": {
+        "startLine": 100,
+        "startChar": 154,
+        "endLine": 100,
+        "endChar": 162
+      },
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "545aebfd_1a35c665",
         "filename": "fs.h",
         "patchSetId": 1
@@ -53,6 +77,24 @@
       "writtenOn": "2020-05-06T09:51:05Z",
       "side": 1,
       "message": "looks like a different CR to submit. Is it instead of double indirect?",
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c941c22a_78f8d059",
+        "filename": "fs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1017897
+      },
+      "writtenOn": "2020-05-08T06:03:54Z",
+      "side": 1,
+      "message": "Yes, I didn\u0027t want to make a big change in the code. If you think it\u0027s the right thing to do we should do it.",
+      "parentUuid": "545aebfd_1a35c665",
       "revId": "494913d78a931739f7e93b484787b2691059064f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
