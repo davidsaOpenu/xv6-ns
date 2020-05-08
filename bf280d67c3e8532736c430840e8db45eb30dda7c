@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f896fafe_45172821",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T11:38:06Z",
+      "side": 1,
+      "message": "lets remove \u0027\\n\u0027s is this commit message as well and make it look nice",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 11
+      },
+      "revId": "bf280d67c3e8532736c430840e8db45eb30dda7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
