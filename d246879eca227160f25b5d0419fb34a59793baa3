@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d859345_c6247eec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T10:54:54Z",
+      "side": 1,
+      "message": "seems that the new gerrit version handles longs lines without any need to break them. Let\u0027s remove our \u0027\\n\u0027s.",
+      "revId": "d246879eca227160f25b5d0419fb34a59793baa3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0582ee6e_4ff4760f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T10:54:54Z",
+      "side": 1,
+      "message": "worth rephrasing.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "d246879eca227160f25b5d0419fb34a59793baa3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
