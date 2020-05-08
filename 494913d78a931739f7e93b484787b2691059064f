@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "b77459e7_82563036",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T06:21:38Z",
+      "side": 1,
+      "message": "Each commit meesage must include the description of how the problem was detected and how it was fixed: https://chris.beams.io/posts/git-commit/#why-not-how",
+      "parentUuid": "e340af3a_8bfd9c8c",
+      "range": {
+        "startLine": 100,
+        "startChar": 154,
+        "endLine": 100,
+        "endChar": 162
+      },
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "545aebfd_1a35c665",
         "filename": "fs.h",
         "patchSetId": 1
@@ -95,6 +119,24 @@
       "side": 1,
       "message": "Yes, I didn\u0027t want to make a big change in the code. If you think it\u0027s the right thing to do we should do it.",
       "parentUuid": "545aebfd_1a35c665",
+      "revId": "494913d78a931739f7e93b484787b2691059064f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0f5838b_e41b6925",
+        "filename": "fs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T06:21:38Z",
+      "side": 1,
+      "message": "Ok. Seems that the code that relates to BSIZE is written well. \nPlease submit this change in a different CR.",
+      "parentUuid": "c941c22a_78f8d059",
       "revId": "494913d78a931739f7e93b484787b2691059064f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
