@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b436b1cc_62a067c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T06:29:39Z",
+      "side": 1,
+      "message": "please discard this empty CR or reuse it\u0027s ChangeId to split the 491339",
+      "parentUuid": "cc4dfc34_779d0b7b",
+      "revId": "ad21a22619a877cd341d3975f7432458ffee8b68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ced02a58_4518ff7b",
         "filename": "Makefile",
         "patchSetId": 2
@@ -72,6 +90,30 @@
       "side": 1,
       "message": "Yes, it\u0027s useful for further usage. And there is no reason to not include it. It\u0027s a good practice.",
       "parentUuid": "ced02a58_4518ff7b",
+      "range": {
+        "startLine": 177,
+        "startChar": 5,
+        "endLine": 177,
+        "endChar": 8
+      },
+      "revId": "ad21a22619a877cd341d3975f7432458ffee8b68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "197f04b4_0805614b",
+        "filename": "Makefile",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-08T06:29:39Z",
+      "side": 1,
+      "message": "Adding -g makes executable sizes bigger. It\u0027s uncommon to add debugging info.",
+      "parentUuid": "e18572ec_94b4622f",
       "range": {
         "startLine": 177,
         "startChar": 5,
