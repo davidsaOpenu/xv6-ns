@@ -138,6 +138,24 @@
     },
     {
       "key": {
+        "uuid": "40320cac_5f66d7b8",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1017918
+      },
+      "writtenOn": "2020-05-22T17:05:41Z",
+      "side": 1,
+      "message": "This is code simplification (easier to follow than the original)",
+      "parentUuid": "63c89b39_f253c1cb",
+      "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "687858aa_5df8f080",
         "filename": "proc.c",
         "patchSetId": 2
