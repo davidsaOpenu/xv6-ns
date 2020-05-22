@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d38dd18b_f2b3a066",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1017918
+      },
+      "writtenOn": "2020-05-22T17:31:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4a7a9f5_47f45d30",
+      "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e16bedc4_5223fcb4",
         "filename": "pidns_tests.c",
         "patchSetId": 2
@@ -118,6 +136,24 @@
       "side": 1,
       "message": "Change was reverted. Please observe the next patchset.",
       "parentUuid": "597f6bf7_7a7a39ce",
+      "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9369aa_68a3c0e6",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1017918
+      },
+      "writtenOn": "2020-05-22T17:31:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e511bd5c_327d5940",
       "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
