@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "cecdeb55_cb7fdd44",
+        "filename": "pidns_tests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-26T12:09:11Z",
+      "side": 1,
+      "message": "as a matter of fact the introduction of sleep here looks confusing. E.g. why here and not before the previous test? How one is going to remember that the sleep should be kept in the \"right\" place when the code changes? Why not more or less then 5 seconds?",
+      "parentUuid": "095203f1_65d5092f",
+      "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "597f6bf7_7a7a39ce",
         "filename": "proc.c",
         "patchSetId": 2
@@ -294,6 +312,24 @@
       "side": 1,
       "message": "This is code simplification (easier to follow than the original)",
       "parentUuid": "63c89b39_f253c1cb",
+      "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd484687_0ed10d1c",
+        "filename": "proc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-26T12:09:11Z",
+      "side": 1,
+      "message": "most programmers writing on C will treat variables containing boolean values as it was done before this change. The reason for that is that \"if (!havekids)\" reads as \"If there are no kids\",while \"if (havekids \u003d\u003d 0)\" reads as  \"If havekids variable holds 0\".",
+      "parentUuid": "40320cac_5f66d7b8",
       "revId": "8e7db9028ae6f27cc1aa7d4ff24d2e12bb954fad",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true

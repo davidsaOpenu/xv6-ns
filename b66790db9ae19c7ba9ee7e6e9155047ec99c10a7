@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99ae86f1_8982006b",
+        "filename": "pidns_tests.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-26T12:09:11Z",
+      "side": 1,
+      "message": "returns 0 even in case of failure.",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151df929_34f79e25",
+        "filename": "proc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-26T12:09:11Z",
+      "side": 1,
+      "message": "the line sill contains TAB.",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c0d88d4_b1c76c82",
+        "filename": "runtests.exp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-26T12:09:11Z",
+      "side": 1,
+      "message": "we are expecting to see echo $? to be 0 (subject to fix in pid ns tests to return something different then 0 on failure)",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
