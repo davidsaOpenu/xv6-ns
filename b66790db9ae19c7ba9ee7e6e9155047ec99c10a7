@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "96ca5737_203ca086",
+        "filename": "pidns_tests.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-27T05:28:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "eec5b95d_54b1ade4",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "151df929_34f79e25",
         "filename": "proc.c",
         "patchSetId": 5
@@ -104,6 +122,24 @@
       "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67c89221_e8d08d15",
+        "filename": "runtests.exp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-05-27T05:28:56Z",
+      "side": 1,
+      "message": "I\u0027m afraid it will not work.  Try to change tests and return status \u003d\u003d 1.\n\nAs mentioned above \"$ \" is expected in either successful or faulty runs of pidns_tests. So pifns_tests return value should be also examined.",
+      "parentUuid": "8203c278_39eb5f5b",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
     }
   ]
 }
