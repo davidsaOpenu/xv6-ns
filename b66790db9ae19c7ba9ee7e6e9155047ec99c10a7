@@ -140,6 +140,24 @@
       "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee382293_59ca854c",
+        "filename": "runtests.exp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1017918
+      },
+      "writtenOn": "2020-05-27T12:44:54Z",
+      "side": 1,
+      "message": "Pidns_tests.c and runtests.exp files both been changed. Now the build will fail if one of the pidns tests fails, to see that, please observe patchset 9. To see the changes, please observe patchset 10.",
+      "parentUuid": "67c89221_e8d08d15",
+      "revId": "b66790db9ae19c7ba9ee7e6e9155047ec99c10a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
