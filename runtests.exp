@@ -361,6 +361,16 @@ proc pidns_tests {argv} {
     }
 }
 
+proc mounttest {argv} {
+
+    set timeout -1
+    send "mounttest\n"
+    log_file -noappend [lindex $argv 0]
+    expect {
+       "mount tests passed successfully"
+    }
+}
+
 #-------------------------------------------------------------------------
 #-MAIN--------------------------------------------------------------------
 #-------------------------------------------------------------------------
@@ -401,6 +411,7 @@ set running [pouch_cgroup_limit_test $argv]
 set running [usertests $argv]
 
 set running [pidns_tests $argv]
+set running [mounttest $argv]
 
 log_file
 # just in case

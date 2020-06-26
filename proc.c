@@ -395,7 +395,9 @@ exit(int status)
     }
   }
 
+  release(&ptable.lock);
   namespaceput(curproc->nsproxy);
+  acquire(&ptable.lock);
 
   if (curproc->child_pid_ns)
     pid_ns_put(curproc->child_pid_ns);
