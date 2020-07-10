@@ -494,5 +494,6 @@ main(int argc, char *argv[])
   unlink("a");
   unlink("b");
 
+  printf(1, "mounttest tests passed successfully\n");
   exit(0);
 }
