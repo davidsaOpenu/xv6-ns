@@ -8,6 +8,11 @@
 #include "traps.h"
 #include "memlayout.h"
 #include "ns_types.h"
+#include "wstatus.h"
+
+int stderr = 2;
+
+typedef int (*test_func_t)(void);
 
 static void
 fstat_file(char *path, struct stat *st) {
@@ -123,280 +128,273 @@ umounta(void) {
   return 0;
 }
 
-static void
+static int
 mounttest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
   
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "mounttest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 statroottest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   struct stat st;
   fstat_file("a", &st);
   if (st.type != T_DIR || st.ino != 1 || st.size != BSIZE) {
-    printf(1, "statroottest: FAILED - %d %d %d\n", st.type, st.ino, st.size);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "statroottest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 writefiletest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   if (testfile("a/test1") != 0) {
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "writefiletest: SUCCESS\n"); 
+  return 0;
 }
 
-static void
+static int
 invalidpathtest(void) {
   int res = mount("internal_fs_a", "AAA", 0);
   if (res != -1) {
     printf(1, "invalidpathtest: mount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   res = umount("b");
   if (res != -1) {
     printf(1, "invalidpathtest: umount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   mkdir("b");
   res = umount("b");
   if (res != -1) {
     printf(1, "invalidpathtest: umount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "invalidpathtest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 doublemounttest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   mkdir("b");
   int res = mount("internal_fs_a", "b", 0);
   if (res != 0) {
     printf(1, "doublemounttest: mount returned %d\n", res);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
   res = umount("b");
   if (res != 0) {
     printf(1, "doublemounttest: umount returned %d\n", res);
-    return;
+    return 1;
   }
 
-  printf(1, "doublemounttest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 samedirectorytest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   int res = mount("internal_fs_b", "a", 0);
   if (res != -1) {
     printf(1, "samedirectorytest: mount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "samedirectorytest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 directorywithintest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   mkdir ("a/ttt");
   if (testfile("a/ttt/test1") != 0) {
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "directorywithintest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 nestedmounttest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   mkdir("a/b");
   int res = mount("internal_fs_b", "a/b", 0);
   if (res != 0) {
     printf(1, "nestedmounttest: mount returned %d\n", res);
-    return;
+    return 1;
   }
 
   if (testfile("a/b/test1") != 0) {
-    return;
+    return 1;
   }
 
   res = umount("a");
   if (res != -1) {
     printf(1, "nestedmounttest: umount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   res = umount("a/b");
   if (res != 0) {
     printf(1, "nestedmounttest: umount returned %d\n", res);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "nestedmounttest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 devicefilestoretest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   if (createfile("a/devicefilestoretest", "ababab") != 0) {
-    return;
+    return 1;
   }
   
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
   mkdir("ccc");
   int res = mount("internal_fs_a", "ccc", 0);
   if (res != 0) {
     printf(1, "devicefilestoretest: mount returned %d\n", res);
-    return;
+    return 1;
   }
 
   if (verifyfilecontents("ccc/devicefilestoretest", "ababab") != 0) {
-    return;
+    return 1;
   }
 
   res = umount("ccc");
   if (res != 0) {
     printf(1, "devicefilestoretest: umount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   unlink("ccc");
 
-  printf(1, "devicefilestoretest: SUCCESS\n");
+  return 0;
 }
 
-static void
+static int
 umountwithopenfiletest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   int fd;
   if((fd = open("a/umountwithop", O_WRONLY|O_CREATE)) < 0){
     printf(1, "umountwithopenfiletest: cannot open file\n");
-    return;
+    return 1;
   }
 
   int res = umount("a");
   if (res != -1) {
     printf(1, "umountwithopenfiletest: umount did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   close(fd);
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
-  printf(1, "umountwithopenfiletest: SUCCESS\n");
+  return 0;
 }
 
-static void
-printheader(char *s) {
-  printf(1, "----------------------------\n");
-  printf(1, "--- %s\n", s);
-  printf(1, "----------------------------\n");
-}
-
-static void
+static int
 errorondeletedevicetest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   int res = unlink("internal_fs_a");
   if (res != -1) {
     printf(1, "errorondeletedevicetest: unlink did not fail as expected %d\n", res);
-    return;
+    return 1;
   }
 
   if (umounta() != 0) {
-    return;
+    return 1;
   }
 
+  return 0;
   printf(1, "errorondeletedevicetest: SUCCESS\n");
 }
 
-static void
+static int
 namespacetest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
 
   int pid = fork();
@@ -409,17 +407,17 @@ namespacetest(void) {
   } else {
     wait(0);
     if (umounta() != 0) {
-      return;
+      return 1;
     }
     
-    printf(1, "namespacetest: SUCCESS\n");
+	return 0;
   }
 }
 
-static void
+static int
 namespacefiletest(void) {
   if (mounta() != 0) {
-    return;
+    return 1;
   }
   int pid = fork();
   if (pid == 0) {
@@ -428,7 +426,7 @@ namespacefiletest(void) {
     int res = mount("internal_fs_b", "b", 0);
     if (res != 0) {
       printf(1, "namespacefiletest: mount returned %d\n", res);
-      return;
+      return 1;
     }
 
     createfile("b/nsfiletest", "aaa");
@@ -437,23 +435,23 @@ namespacefiletest(void) {
     wait(0);
 
     if (umounta() != 0) {
-      return;
+      return 1;
     }
     if (open("b/nsfiletest", 0) >= 0) {
       printf(1, "namespacefiletest: should not have been able to open file\n");
-      return;
+      return 1;
     }
 
     int res = mount("internal_fs_b", "b", 0);
     if (res != 0) {
       printf(1, "namespacefiletest: mount returned %d\n", res);
-      return;
+      return 1;
     }
 
     int fd;
     if ((fd = open("b/nsfiletest", 0)) < 0) {
       printf(1, "namespacefiletest: failed to open file after mount\n");
-      return;
+      return 1;
     }
 
     close(fd);
@@ -461,38 +459,81 @@ namespacefiletest(void) {
     res = umount("b");
     if (res != 0) {
       printf(1, "namespacefiletest: umount returned %d\n", res);
-      return;
+      return 1;
     }
     
-    printf(1, "namespacefiletest: SUCCESS\n");
+	return 0;
+  }
+}
+
+int check(int r, const char *msg) {
+  if (r < 0) {
+    printf(stderr, "%s\n", (char *)msg);
+    exit(1);
+  }
+
+  return r;
+}
+
+static int child_exit_status(int pid) {
+  int changed_pid = -1;
+  int wstatus;
+  do {
+    changed_pid = check(wait(&wstatus), "failed to waitpid");
+  } while (changed_pid != pid);
+
+  // TODO: there is no exit status in xv6
+  return WEXITSTATUS(wstatus);
+}
+
+int testsPassed = 0; /*In case all tests passed, this value will remain 0, else
+it will become 1*/
+
+/*This function runs the test, if a test fails, it will print which test failed,
+and set the variable testsPassed to be 1*/
+void run_test(test_func_t func, const char *name) {
+  int pid = -1;
+
+  int ret = check(fork(), "fork failed");
+  if (ret == 0) {
+    exit(func());
+  }
+
+  pid = ret;
+  if (child_exit_status(pid) != 0) { /*Test failed*/
+    printf(stderr, "failed test - '%s'\n", name);
+    testsPassed = 1; /*Denotes some test has failed to pass*/
   }
 }
 
 int
 main(int argc, char *argv[])
 {
-  printheader("Basic unit tests:");
-  mounttest();
-  statroottest();
-  invalidpathtest();
-  doublemounttest();
-  samedirectorytest();
+  printf(stderr, "Running all mounttest\n");
+  run_test(mounttest, "mounttest");
+  run_test(statroottest, "statroottest");
+  run_test(invalidpathtest, "invalidpathtest");
+  run_test(doublemounttest, "doublemounttest");
+  run_test(samedirectorytest, "samedirectorytest");
+  run_test(writefiletest, "writefiletest");
+  run_test(directorywithintest, "directorywithintest");
+  run_test(nestedmounttest, "nestedmounttest");
+  run_test(devicefilestoretest, "devicefilestoretest");
+  run_test(umountwithopenfiletest, "umountwithopenfiletest");
+  run_test(errorondeletedevicetest, "errorondeletedevicetest");
+  run_test(namespacetest, "namespacetest");
+  run_test(namespacefiletest, "namespacefiletest");
 
-  printheader("Scenario tests:");
-  writefiletest();
-  directorywithintest();
-  nestedmounttest();
-  devicefilestoretest();
-  umountwithopenfiletest();
-  errorondeletedevicetest();
-
-  printheader("Mount namespace tests:");
-  namespacetest();
-  namespacefiletest();
-
-  printheader("Cleaning up:");
   unlink("a");
   unlink("b");
 
+  if (testsPassed == 0) {
+    printf(stderr, "mounttest tests passed successfully\n");
+    exit(0);
+  }
+  else {
+    printf(stderr, "mounttest tests failed to pass, \n");
+    exit(1);
+  }
   exit(0);
 }

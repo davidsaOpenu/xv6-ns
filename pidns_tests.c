@@ -454,8 +454,7 @@ int main() {
   run_test(test_simple_pidns_fork, "test_simple_pidns_fork");
   run_test(test_nested_pidns_create, "test_nested_pidns_create");
   run_test(test_children_reaped_by_nspid1, "test_children_reaped_by_nspid1");
-  run_test(test_all_children_kill_when_nspid1_dies,
-           "test_all_children_kill_when_nspid1_dies");
+  run_test(test_all_children_kill_when_nspid1_dies, "test_all_children_kill_when_nspid1_dies");
   run_test(test_calling_fork_twice_after_unshare, "test_calling_fork_twice_after_unshare");
   run_test(test_calling_fork_after_nspid1_dies_fails, "test_calling_fork_after_nspid1_dies_fails");
   run_test(test_unshare_recrusive_limit, "test_unshare_recrusive_limit");
