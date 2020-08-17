@@ -9,6 +9,7 @@
 
 #define MAX_PID_LENGTH 5
 #define MAX_CGROUP_DIR_ENTRIES 64
+#define MAX_STR 64
 
 #define CGROUP_PROCS 1
 #define CGROUP_SUBTREE_CONTROL 2
@@ -17,11 +18,15 @@
 #define CGROUP_CONTROLLERS 5
 #define CGROUP_EVENTS 6
 #define CGROUP_STAT 7
-
 #define CPU_WEIGHT 8
 #define CPU_MAX 9
 #define CPU_STAT 10
+#define PID_MAX 11
+#define PID_CUR 12
 
+#define move_and_add(source, destination, var)             \
+  memmove(source + var, destination, strlen(destination)); \
+  var += strlen(destination);
 
 static int fdalloc(struct file * f)
 {
@@ -82,26 +87,31 @@ static int copy_until_char(char * s, char * t, char ch, int n)
 
 static int get_file_name_constant(char * filename)
 {
-    if (strcmp(filename, "cgroup.procs") == 0)
-        return CGROUP_PROCS;
-    else if(strcmp(filename, "cgroup.subtree_control") == 0)
-        return CGROUP_SUBTREE_CONTROL;
-    else if(strcmp(filename, "cgroup.max.descendants") == 0)
-        return CGROUP_MAX_DESCENDANTS;
-    else if(strcmp(filename, "cgroup.max.depth") == 0)
-        return CGROUP_MAX_DEPTH;
-    else if(strcmp(filename, "cgroup.controllers") == 0)
-        return CGROUP_CONTROLLERS;
-    else if(strcmp(filename, "cgroup.events") == 0)
-        return CGROUP_EVENTS;
-    else if(strcmp(filename, "cgroup.stat") == 0)
-        return CGROUP_STAT;
-    else if(strcmp(filename, "cpu.weight") == 0)
-        return CPU_WEIGHT;
-    else if(strcmp(filename, "cpu.max") == 0)
-        return CPU_MAX;
-    else if(strcmp(filename, "cpu.stat") == 0)
-        return CPU_STAT;
+	if (strcmp(filename, "cgroup.procs") == 0)
+		return CGROUP_PROCS;
+	else if (strcmp(filename, "cgroup.subtree_control") == 0)
+		return CGROUP_SUBTREE_CONTROL;
+	else if (strcmp(filename, "cgroup.max.descendants") == 0)
+		return CGROUP_MAX_DESCENDANTS;
+	else if (strcmp(filename, "cgroup.max.depth") == 0)
+		return CGROUP_MAX_DEPTH;
+	else if (strcmp(filename, "cgroup.controllers") == 0)
+		return CGROUP_CONTROLLERS;
+	else if (strcmp(filename, "cgroup.events") == 0)
+		return CGROUP_EVENTS;
+	else if (strcmp(filename, "cgroup.stat") == 0)
+		return CGROUP_STAT;
+	else if (strcmp(filename, "cpu.weight") == 0)
+		return CPU_WEIGHT;
+	else if (strcmp(filename, "cpu.max") == 0)
+		return CPU_MAX;
+	else if (strcmp(filename, "cpu.stat") == 0)
+		return CPU_STAT;
+	else if (strcmp(filename, "pid.max") == 0)
+		return PID_MAX;
+	else if (strcmp(filename, "pid.current") == 0) {
+		return PID_CUR;
+	}
 
     return -1;
 }
@@ -125,6 +135,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CGROUP_MAX_DEPTH:
             case CPU_WEIGHT:
             case CPU_MAX:
+            case PID_MAX:
                 writable = 1;
                 break;
 
@@ -132,6 +143,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CGROUP_EVENTS:
             case CGROUP_STAT:
             case CPU_STAT:
+            case PID_CUR:
                 writable = 0;
                 break;
 
@@ -171,6 +183,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                     return -1;
                 f->cpu.max.max = cgp->cpu_time_limit;
                 f->cpu.max.period = cgp->cpu_account_period;
+                break;
+
+            case PID_MAX:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->pid.active = cgp->pid_controller_enabled;
+                f->pid.max = cgp->max_num_of_procs;
                 break;
         }
 
@@ -248,18 +267,36 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
                 r++;
             }
         } else if (filename_const == CGROUP_CONTROLLERS) {
+            char buf[MAX_STR];
+            int i = 0;
+
             if (f->cgp->cpu_controller_avalible) {
-                char controllerslist[] = "cpu\n";
-                while (r < n && (r + f->off) < sizeof(controllerslist) - 1 &&
-                       (*addr++ = controllerslist[(r++) + f->off]) != 0)
+                move_and_add(buf, "cpu\n", i)
+            }
+            if (f->cgp->pid_controller_avalible) {
+                move_and_add(buf, "pid\n", i)
+            }
+
+            if (i != 0) {
+                while (r < n && (r + f->off) < i &&
+                        (*addr++ = buf[(r++) + f->off]) != 0)
                     ;
             }
         } else if (filename_const == CGROUP_SUBTREE_CONTROL) {
+            char buf[MAX_STR];
+            int i = 0;
+
             if (f->cgp->cpu_controller_enabled) {
-                char enabledcontrollerslist[] = "cpu\n";
+                move_and_add(buf, "cpu\n", i)
+            }
+            if (f->cgp->pid_controller_enabled) {
+                move_and_add(buf, "pid\n", i)
+            }
+
+            if (i != 0) {
                 while (r < n &&
-                       (r + f->off) < sizeof(enabledcontrollerslist) - 1 &&
-                       (*addr++ = enabledcontrollerslist[r++ + f->off]) != 0)
+                        (r + f->off) < i &&
+                        (*addr++ = buf[r++ + f->off]) != 0)
                     ;
             }
         } else if (filename_const == CGROUP_EVENTS) {
@@ -302,13 +339,14 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             itoa(nr_descendants_buf, f->cgp->nr_descendants);
             char nr_dying_descendants_buf[MAX_DECS_SIZE];
             itoa(nr_dying_descendants_buf, f->cgp->nr_dying_descendants);
+
             char stattext[strlen("nr_descendants - ") +
-                          strlen(nr_descendants_buf) + strlen("\n") +
-                          strlen("nr_dying_descendants - ") +
-                          strlen(nr_dying_descendants_buf) + 2];
+                strlen(nr_descendants_buf) + strlen("\n") +
+                strlen("nr_dying_descendants - ") +
+                strlen(nr_dying_descendants_buf) + strlen("\n") ];
             char * stattextp = stattext;
             strncpy(
-                stattextp, "nr_descendants - ", sizeof("nr_descendants - "));
+                    stattextp, "nr_descendants - ", sizeof("nr_descendants - "));
             stattextp += strlen("nr_descendants - ");
             strncpy(stattextp,
                     nr_descendants_buf,
@@ -323,10 +361,13 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             strncpy(stattextp,
                     nr_dying_descendants_buf,
                     sizeof(nr_dying_descendants_buf));
-            stattext[sizeof(stattext) - 1] = '\n';
+            stattextp += strlen(nr_dying_descendants_buf);
+
+            strncpy(stattextp, "\n", sizeof("\n"));
+            stattextp += strlen("\n");
 
             while (r < n && (r + f->off) < sizeof(stattext) &&
-                   (*addr++ = stattext[r++ + f->off]) != 0)
+                    (*addr++ = stattext[r++ + f->off]) != 0)
                 ;
         } else if (filename_const == CPU_STAT) {
             char buf[11];
@@ -417,7 +458,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
                 ;
         } else if (filename_const == CPU_MAX) {
             char buf[11];
-            char maxtext[strlen("max - ") + itoa(buf, f->cpu.max.max) +
+            char maxtext[strlen("max - ") + utoa(buf, f->cpu.max.max) +
                          strlen("\n") + strlen("period - ") +
                          itoa(buf, f->cpu.max.period) + 2];
             char * maxtextp = maxtext;
@@ -433,21 +474,57 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             maxtextp += strlen("period - ");
             itoa(buf, f->cpu.max.period);
             strncpy(maxtextp, buf, sizeof(buf));
+            maxtextp += strlen(buf);
+            strncpy(maxtextp, "\n", sizeof("\n"));
 
+            int maxttextlen = strlen(maxtext);
+
+            while (r < n && (r + f->off) < maxttextlen &&
+                   (*addr++ = maxtext[r++ + f->off]) != 0)
+                ;
+        } else if (filename_const == PID_MAX) {
+            char buf[11];
+            char maxtext[strlen("max - ") + itoa(buf, f->pid.max) + 2];
+            char * maxtextp = maxtext;
+
+            strncpy(maxtextp, "max - ", sizeof("max - "));
+            maxtextp += strlen("max - ");
+            itoa(buf, f->pid.max);
+            strncpy(maxtextp, buf, sizeof(buf));
             maxtextp += strlen(buf);
             strncpy(maxtextp, "\n", sizeof("\n"));
 
             int maxttextlen = strlen(maxtext);
             while (r < n && (r + f->off) < maxttextlen &&
-                   (*addr++ = maxtext[r++ + f->off]) != 0)
+                    (*addr++ = maxtext[r++ + f->off]) != 0)
                 ;
+        } else if (filename_const == PID_CUR) {
+            char nr_of_procs_buf[MAX_DECS_SIZE];
+            itoa(nr_of_procs_buf, f->cgp->num_of_procs);
+
+            char stattext[strlen("num_of_procs - ") +
+                strlen(nr_of_procs_buf) + strlen("\n")];
+            char * stattextp = stattext;
+
+            strncpy(stattextp, "num_of_procs - ", sizeof("num_of_procs - "));
+            stattextp += strlen("num_of_procs - ");
+            strncpy(stattextp,
+                    nr_of_procs_buf,
+                    sizeof(nr_of_procs_buf));
+            stattextp += strlen(nr_of_procs_buf);
+            strncpy(stattextp, "\n", sizeof("\n"));
+            stattextp += strlen("\n");
+
+
+            while (r < n && (r + f->off) < sizeof(stattext) &&
+                    (*addr++ = stattext[r++ + f->off]) != 0);
         }
 
         f->off += r;
 
         return r;
 
-    }else if (type == CG_DIR){
+    } else if (type == CG_DIR){
 
         char buf[MAX_CGROUP_FILE_NAME_LENGTH * MAX_CGROUP_DIR_ENTRIES];
 
@@ -484,13 +561,21 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
         strncpy(bufp, "cgroup.stat", strlen("cgroup.stat"));
         bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+        strncpy(bufp, "pid.current", strlen("pid.current"));
+        bufp += MAX_CGROUP_FILE_NAME_LENGTH;
         if (f->cgp != cgroup_root()) {
             strncpy(bufp, "cpu.stat", strlen("cpu.stat"));
             bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+
             if (f->cgp->cpu_controller_enabled) {
                 strncpy(bufp, "cpu.weight", strlen("cpu.weight"));
                 bufp += MAX_CGROUP_FILE_NAME_LENGTH;
                 strncpy(bufp, "cpu.max", strlen("cpu.max"));
+                bufp += MAX_CGROUP_FILE_NAME_LENGTH;
+            }
+
+            if (f->cgp->pid_controller_enabled) {
+                strncpy(bufp, "pid.max", strlen("pid.max"));
                 bufp += MAX_CGROUP_FILE_NAME_LENGTH;
             }
         }
@@ -529,7 +614,9 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
     } else if (filename_const == CGROUP_SUBTREE_CONTROL) {
         char cpucontroller = 0; // change to 1 if need to enable, 2 if need
                                 // to disable, 0 if nothing to change
-        char ch =' ';
+        char pidcontroller = 0;
+        char ch = ' ';
+
         while (*addr != '\0' && n > 0) {
             if (*addr != '+' && *addr != '-')
                 return -1;
@@ -543,6 +630,13 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
                     cpucontroller = 2;
                 addr += len + 1;
                 n -= len + 1;
+            } else if (strcmp(buf, "pid") == 0) {
+                if (*addr == '+')
+                    pidcontroller = 1;
+                if (*addr == '-')
+                    pidcontroller = 2;
+                addr += len + 1;
+                n -= len + 1;
             } else
                 return -1;
         }
@@ -550,7 +644,13 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         if (cpucontroller == 1 && unsafe_enable_cpu_controller(f->cgp) < 0)
             return -1;
         if (cpucontroller == 2 &&
-            unsafe_disable_cpu_controller(f->cgp) < 0)
+                unsafe_disable_cpu_controller(f->cgp) < 0)
+            return -1;
+
+        if (pidcontroller == 1 && unsafe_enable_pid_controller(f->cgp) < 0)
+            return -1;
+        if (pidcontroller == 2 &&
+                unsafe_disable_pid_controller(f->cgp) < 0)
             return -1;
 
         r = n;
@@ -612,6 +712,33 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         // Update max fields.
         f->cgp->cpu_time_limit = max;
         f->cpu.max.max = max;
+
+        r = n;
+    } else if (filename_const == PID_MAX &&
+            f->cgp->pid_controller_enabled) {
+        char max_string[32] = {0};
+        int max = -1;
+        int i = 0;
+
+        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(max_string)) {
+            max_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        max_string[i] = '\0';
+        i = 0;
+
+        // Update max.
+        max = atoi(max_string);
+        if (-1 == max) {
+            return -1;
+        }
+
+        // Update max pids field if the paramter is within allowed values.
+        int test = set_max_procs(f->cgp, max);
+        if (test == 0 || test == -1)
+            return -1;
+        f->pid.max = max;
 
         r = n;
     }
@@ -701,8 +828,12 @@ static int cg_file_size(struct file * f)
     } else if (filename_const == CGROUP_CONTROLLERS) {
         if (f->cgp->cpu_controller_avalible)
             size += 3;
+        if (f->cgp->pid_controller_avalible)
+            size += 3;
     } else if (filename_const == CGROUP_SUBTREE_CONTROL) {
         if (f->cgp->cpu_controller_enabled)
+            size += 3;
+        if (f->cgp->pid_controller_enabled)
             size += 3;
     } else if (filename_const == CGROUP_EVENTS) {
         size += strlen("populated - 0");
@@ -712,10 +843,15 @@ static int cg_file_size(struct file * f)
         size += intlen(f->cgp->max_depth_value);
     } else if (filename_const == CGROUP_STAT) {
         size += strlen("nr_descendants - ") +
-                intlen(f->cgp->nr_descendants) + strlen("\n") +
-                strlen("nr_dying_descendants - ") +
-                intlen(f->cgp->nr_dying_descendants);
-    }
+            intlen(f->cgp->nr_descendants) + strlen("\n") +
+            strlen("nr_dying_descendants - ") +
+            intlen(f->cgp->nr_dying_descendants) + strlen("\n") +
+            strlen("nr_of_procs - ") +
+            intlen(f->cgp->num_of_procs) + strlen("\n");
+    } else if (filename_const == PID_CUR) {
+		size += strlen("num_of_procs - ") +
+			intlen(f->cgp->num_of_procs) + strlen("\n");
+	}
 
     return size;
 }
