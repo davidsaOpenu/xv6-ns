@@ -30,9 +30,10 @@ struct file {
         // cpu
         union {
           struct {
-            char active;
-            int usage_usec;
-            int user_usec;
+              char active;
+              char pid_active;
+              int usage_usec;
+              int user_usec;
             int system_usec;
             int nr_periods;
             int nr_throttled;
@@ -45,6 +46,9 @@ struct file {
             int max;
             int period;
           } max;
+          struct {
+              int max;
+          } pidc;
         } cpu;
       };
     };
