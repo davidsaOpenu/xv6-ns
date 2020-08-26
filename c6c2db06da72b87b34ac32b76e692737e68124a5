@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce2d6290_03432a74",
+        "filename": "file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-08-26T08:26:21Z",
+      "side": 1,
+      "message": "union?",
+      "revId": "c6c2db06da72b87b34ac32b76e692737e68124a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
