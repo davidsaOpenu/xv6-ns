@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "8ef37b97_b3b3f3fb",
+        "filename": "cgfs.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-08-26T08:48:01Z",
+      "side": 1,
+      "message": "worth writing a function to treat this code duplication",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 300,
+        "endChar": 21
+      },
+      "revId": "c6c2db06da72b87b34ac32b76e692737e68124a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbf5fc9b_71f64cba",
+        "filename": "cgfs.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-08-26T08:48:01Z",
+      "side": 1,
+      "message": "looks that worth to suggest a mechanism that avoids duplication here as well",
+      "range": {
+        "startLine": 482,
+        "startChar": 1,
+        "endLine": 520,
+        "endChar": 61
+      },
+      "revId": "c6c2db06da72b87b34ac32b76e692737e68124a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30f12b03_409bcc42",
+        "filename": "cgfs.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-08-26T08:48:01Z",
+      "side": 1,
+      "message": "consider dedup here as well",
+      "range": {
+        "startLine": 626,
+        "startChar": 0,
+        "endLine": 639,
+        "endChar": 29
+      },
+      "revId": "c6c2db06da72b87b34ac32b76e692737e68124a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ce2d6290_03432a74",
         "filename": "file.h",
         "patchSetId": 7
