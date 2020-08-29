@@ -22,6 +22,30 @@
       "revId": "35f86703f5d548900c5c1fb63cced4ecd3a85fb4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f2e2741_f16c3c57",
+        "filename": "cgfs.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-08-29T15:24:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2000b5e0_5edf59f3",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "35f86703f5d548900c5c1fb63cced4ecd3a85fb4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
