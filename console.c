@@ -16,6 +16,7 @@
 #include "proc.h"
 #include "x86.h"
 #include "fcntl.h"
+#include "console.h"
 
 //PAGEBREAK: 50
 #define BACKSPACE 0x100
@@ -66,6 +67,41 @@ printint(int xx, int base, int sign)
     consputc(buf[i]);
 }
 //PAGEBREAK: 50
+
+int dont_write = 0; /* Inidcates how many characters of input to skip from buffering, meaning they wont be saved or printed to screen. */
+
+//This function returns 1 in case a special key is used while using qemu-nox (meaning qemu without graphics).
+int
+testSpecial(int xx, int base, int sign) 
+{
+    static char digits[] = "0123456789abcdef";
+    char buf[16];
+    int i;
+    uint x;
+
+    if (sign && (sign = xx < 0))
+        x = -xx;
+    else
+        x = xx;
+
+    i = 0;
+    do {
+        buf[i++] = digits[x % base];
+    } while ((x /= base) != 0);
+
+    if (sign)
+        buf[i++] = '-';
+
+    /* When special key is used, always this sequence of numbers is returned. */
+    if (buf[1] == 50 && buf[3] == -128) { 
+        /* Special keys return 2 buffers, therefore, we dont want to display both buffers. 
+        If we write here 1, it will return the second buffer. */
+        dont_write = 2; 
+        
+        return 1;
+    }
+    return 0;
+}
 
 // Print to the console. only understands %d, %x, %p, %s.
 void
@@ -192,7 +228,7 @@ consputc(int c)
   cgaputc(c);
 }
 
-#define INPUT_BUF 128
+
 struct {
   char buf[INPUT_BUF];
   uint r;  // Read index
@@ -200,39 +236,211 @@ struct {
   uint e;  // Edit index
 } input;
 
-#define C(x)  ((x)-'@')  // Control-x
+
+struct {
+  char buf[INPUT_BUF]; // History buffer.
+  int length;          // History buffer length.
+} hist[HIST_BUF];
+
+int hist_input = 0; /* History input index. */
+int hist_save = 0; /* Current buffer index inside history. */
+int hist_used = 1; /* How many history slots are used. Start at 1 to prevent errors. */
+int current_index = 0; /* Index which is used to track history input. */
+int special_key_used = 0; /* Was a special key used? */
+int dont_save = 0; /* Indicates not to save history in case it already exsists. */
+int extra_skip = 0; /* Skips one more character from being printed onto the console.
+                    Used in case of some special keys.*/
+char used_char = 0; /*The last character used.
+                    Used in case of some special keys.*/
+char temp_buff[INPUT_BUF]; /* Temporary buffer. */
+int preload = 0; /* Pre-load history, only can occur once. */
 
 void
-consoleintr(int (*getc)(void))
+consoleintr(int(*getc)(void))
 {
   int c, doprocdump = 0;
 
+  //-------Preload History--------------------------------------
+  //If you wish to preload some commands to be available for usage upon system start, save them here.
+  //Remember that hist_used should be the correct amount of commands you saved,
+  //and not the number of commands – 1. 
+  //
+  //Also note history preload can occur only once.
+  if (preload == 0) {
+    strncpy(hist[0].buf, "cgroupstests", 12);
+    hist[0].length = 12;
+    hist_save = 1;
+    hist_used = 2;
+
+    preload = 1;
+  }
+  //-------------------------------------------------------------
+  
   acquire(&cons.lock);
-  while((c = getc()) >= 0){
-    switch(c){
+  while ((c = getc()) >= 0) {
+    switch (c) {
     case C('P'):  // Process listing.
-      // procdump() locks cons.lock indirectly; invoke later
+                  // procdump() locks cons.lock indirectly; invoke later
       doprocdump = 1;
       break;
     case C('U'):  // Kill line.
-      while(input.e != input.w &&
-            input.buf[(input.e-1) % INPUT_BUF] != '\n'){
+      while (input.e != input.w &&
+        input.buf[(input.e - 1) % INPUT_BUF] != '\n') {
         input.e--;
         consputc(BACKSPACE);
       }
       break;
     case C('H'): case '\x7f':  // Backspace
-      if(input.e != input.w){
+      if (input.e != input.w) {
         input.e--;
         consputc(BACKSPACE);
       }
+      /* Mirros backspace effect in history buffer. */
+      if (hist_input > 0) { 
+        hist_input--;
+        if (special_key_used == 1) {
+          current_index = (current_index + 1) % (hist_used - 1);
+          special_key_used = 0;
+        }
+      }
       break;
+
     default:
-      if(c != 0 && input.e-input.r < INPUT_BUF){
+      //-------------This part handles the console special keys when using qemu-----------------------------------------
+      //Note all this part does is convert the input to match the nox case (meaning qemu-nox, in shortened case will be
+      //reffered to as nox)
+      if (c == ARROW_UP) { 
+        dont_write = 1;
+        c = ARROW_UP_NOX; /*Convert to match nox code*/
+      }
+
+      if (c == ARROW_DOWN) { 
+        dont_write = 1;
+        c = ARROW_DOWN_NOX; 
+      }
+      //--------------------------------------------------------------------------------------------------------------------
+
+      //-------------This part handles the console special keys when using qemu-nox-----------------------------------------
+      if (dont_write > 0) { /* In case special key is used, don't type anything after it until output buffer is cleared */
+        dont_write--;
+        if (dont_write == 0) {
+            if (c == ARROW_UP_NOX && hist_used > 1) {
+                special_key_used = 1;
+
+                /* Clear the previous command */
+                while (input.e != input.w && input.buf[(input.e - 1) % INPUT_BUF] != '\n') { 
+                    input.e--;
+                    consputc(BACKSPACE);
+                }
+
+                /* Push history buffer into input buffer */
+                for (int i = 0; i < hist[current_index].length; i++) { 
+                    input.buf[input.e++ % INPUT_BUF] = hist[current_index].buf[i];
+                    consputc(hist[current_index].buf[i]);
+                    hist[hist_save].buf[i] = hist[current_index].buf[i];
+                    temp_buff[i] = hist[current_index].buf[i];
+                }
+
+                /* Need to return length of input to history length, else can only use this history once */
+                hist_input = hist[current_index].length; 
+                current_index = (current_index - 1) % (hist_used - 1);
+                if (current_index == -1)
+                    current_index = (hist_used - 2);
+            }
+
+            else if (c == ARROW_DOWN_NOX && hist_used > 1) { 
+                special_key_used = 1;
+                
+                /* Clear the previous command */
+                while (input.e != input.w && input.buf[(input.e - 1) % INPUT_BUF] != '\n') { 
+                    input.e--;
+                    consputc(BACKSPACE);
+                }
+
+                /* Push history buffer into input buffer */
+                for (int i = 0; i < hist[current_index].length; i++) { 
+                    input.buf[input.e++ % INPUT_BUF] = hist[current_index].buf[i];
+                    consputc(hist[current_index].buf[i]);
+                    hist[hist_save].buf[i] = hist[current_index].buf[i];
+                    temp_buff[i] = hist[current_index].buf[i];
+                }
+
+                /* Need to return length of input to history length, else can only use this history once */
+                hist_input = hist[current_index].length; 
+                current_index = (current_index + 1) % (hist_used - 1);
+                if (current_index == hist_used)
+                    current_index = 0;
+            }
+
+            /* Here we handle the special keys which are extra long. */
+            else if ((c == PAGEUP_NOX || c == PAGEDOWN_NOX || 
+                c == INSERT_NOX || c == DELETE_NOX)
+                && extra_skip == 0)
+            {
+                extra_skip = 1; /* Skip one more character from being displayed. */
+                dont_write = 1; 
+                used_char = c; /* Remember which special character was used. */
+            }
+
+            if (extra_skip == 1) {
+                extra_skip = 0;
+                //------------------------------------------------------------------
+                //Here you can program the following special keys:
+                //Pageup, pagedown, insert, delete.
+                //To do so, use used_char parameter, for example:
+                //if (used_char == INSERT_NOX) {
+                //  /*Which procedure to run*/
+                //}
+                //------------------------------------------------------------------
+            }
+        }
+        break;
+      }
+
+      /*Test whether a special key was used*/
+      if (testSpecial(c, 10, 1) == 1) { 
+        break;
+      }
+      
+      //----------------In this section the output to console occurs-----------------
+      if (c != 0 && input.e - input.r < INPUT_BUF) {
         c = (c == '\r') ? '\n' : c;
         input.buf[input.e++ % INPUT_BUF] = c;
+        //------History handle---------
+        /* Don't save '\n'. */
+        if (c != '\n') { 
+          temp_buff[hist_input] = c;
+          hist_input++;
+        }
+        //-----------------------------
         consputc(c);
-        if(c == '\n' || c == C('D') || input.e == input.r+INPUT_BUF){
+        if (c == '\n' || c == C('D') || input.e == input.r + INPUT_BUF) {
+            //------History handle----------------------------------------
+            /* We don't want to save empty commands. */
+            if (hist_input > 0) {
+                /* Do not save input which is already saved in history. */
+                for (int i = 0; i < HIST_BUF; i++) {
+                    if (strncmp(hist[i].buf, temp_buff, hist[i].length) == 0 && hist_input == hist[i].length) {
+                        dont_save = 1;
+                        break;
+                    }
+                }
+                /* Save the input into history. */
+                if (dont_save == 0) {
+                    /* Save the length of the input. */
+                    hist[hist_save].length = hist_input; 
+                    strncpy(hist[hist_save].buf, temp_buff, hist_input);
+                    /* Advance save input to next history slot. */
+                    hist_save = (hist_save + 1) % HIST_BUF; 
+                    if (hist_used < HIST_BUF) {
+                        hist_used++;
+                    }
+                    current_index = (current_index + 1) % (hist_used - 1);
+                }
+                dont_save = 0;
+                hist_input = 0; /* Reset history input index back to 0. */
+            }
+            //-----------------------------
           input.w = input.e;
           wakeup(&input.r);
         }
@@ -241,9 +449,8 @@ consoleintr(int (*getc)(void))
     }
   }
   release(&cons.lock);
-  if(doprocdump) {
+  if (doprocdump)
     procdump();  // now call procdump() wo. cons.lock held
-  }
 }
 
 int
