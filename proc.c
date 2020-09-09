@@ -516,6 +516,11 @@ scheduler(void)
           if (p->cgroup->set_controller_enabled && p->cgroup->cpu_to_use != c->apicid) {
               continue;
           }
+
+          // If the group is frozen, don't schedule it.
+          if (p->cgroup->frz_controller_enabled && p->cgroup->is_frozen == 1) {
+              continue;
+          }
       }
 
       // Decide whether to schedule process.

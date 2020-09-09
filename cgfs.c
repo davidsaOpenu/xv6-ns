@@ -24,19 +24,20 @@
 #define PID_MAX 11
 #define PID_CUR 12
 #define SET_CPU 13
+#define SET_FRZ 14
 
 #define min(x, y) (x) > (y) ? (y) : (x)
 
 /**
-* This function copies from given buffer into a given address based on the input parameters.
-* The function gets stopped when it encounters a null terminator character in the input buffer.
-* Receives char parameter pointer "src", int parameter "size", char parameter pointer "dest".
-*
-* "src" is the source we are reading from.
-* "size" is an integer indicating how many characters we allowed to copy.
-* "dest" is the buffer which "buf" is being copied into.
-*
-* The function returns the amount of bytes copied to the dest buffer.
+ * This function copies from given buffer into a given address based on the input parameters.
+ * The function gets stopped when it encounters a null terminator character in the input buffer.
+ * Receives char parameter pointer "src", int parameter "size", char parameter pointer "dest".
+ *
+ * "src" is the source we are reading from.
+ * "size" is an integer indicating how many characters we allowed to copy.
+ * "dest" is the buffer which "buf" is being copied into.
+ *
+ * The function returns the amount of bytes copied to the dest buffer.
 */
 static inline int copy_buffer_up_to_end(char* src, int size, char* dest)
 {
@@ -48,16 +49,16 @@ static inline int copy_buffer_up_to_end(char* src, int size, char* dest)
 }
 
 /**
-* This function copies from given buffer into a given address based on the input parameters.
-* The function gets stopped when it encounters a null terminator character in the input buffer,
-* and instead, replace it with a newline characcter.
-* Receives char parameter pointer "src", int parameter "size", char parameter pointer "dest".
-*
-* "src" is the source we are reading from.
-* "size" is an integer indicating how many characters we allowed to copy.
-* "dest" is the buffer which "buf" is being copied into.
-*
-* The function returns the amount of bytes copied to the dest buffer.
+ * This function copies from given buffer into a given address based on the input parameters.
+ * The function gets stopped when it encounters a null terminator character in the input buffer,
+ * and instead, replace it with a newline character.
+ * Receives char parameter pointer "src", int parameter "size", char parameter pointer "dest".
+ *
+ * "src" is the source we are reading from.
+ * "size" is an integer indicating how many characters we allowed to copy.
+ * "dest" is the buffer which "buf" is being copied into.
+ *
+ * The function returns the amount of bytes copied to the dest buffer.
 */
 static inline int copy_buffer_up_to_end_replace_end_with_newline(char* src, int size, char* dest)
 {
@@ -74,16 +75,16 @@ static inline int copy_buffer_up_to_end_replace_end_with_newline(char* src, int 
 }
 
 /**
-* This function receives a character which should be a '+' or a '-'.
-*
-* "input_char" is the '+'/'-' input character the function should receive.
-*
-* The function returns the new controller state based on the input character
-* in the following way:
-* value 1 means to enable controller ('+')
-* value 2 means to disable controller ('-')
-*
-* In case of an invliad parameter, the function returns 0 as an error.
+ * This function receives a character which should be a '+' or a '-'.
+ *
+ * "input_char" is the '+'/'-' input character the function should receive.
+ *
+ * The function returns the new controller state based on the input character
+ * in the following way:
+ * value 1 means to enable controller ('+')
+ * value 2 means to disable controller ('-')
+ *
+ * In case of an invliad parameter, the function returns 0 as an error.
 */
 static inline int return_new_controller_state(char input_char)
 {
@@ -101,12 +102,12 @@ static inline int return_new_controller_state(char input_char)
 }
 
 /**
-* This function copies from a given string into a given buffer based on the input parameters.
-*
-* Receives char parameter pointer to pointer "buffer", char parameter pointer "string", int parameter "size".
-*
-* The function copies from "string" into "buffer" "size" amount of characters.
-* In addition "buffer" index is advanced by "size".
+ * This function copies from a given string into a given buffer based on the input parameters.
+ *
+ * Receives char parameter pointer to pointer "buffer", char parameter pointer "string", int parameter "size".
+ *
+ * The function copies from "string" into "buffer" "size" amount of characters.
+ * In addition "buffer" index is advanced by "size".
 */
 static inline void copy_and_move_buffer(char** buffer, char* string, int size)
 {
@@ -115,12 +116,12 @@ static inline void copy_and_move_buffer(char** buffer, char* string, int size)
 }
 
 /**
-* This function copies from a given string into a given buffer based on the input parameters.
-*
-* Receives char parameter pointer to pointer "buffer", char parameter pointer "string", int parameter "size".
-*
-* The function copies from "string" into "buffer" "size" amount of characters.
-* In addition "buffer" index is advanced by "MAX_CGROUP_FILE_NAME_LENGTH".
+ * This function copies from a given string into a given buffer based on the input parameters.
+ *
+ * Receives char parameter pointer to pointer "buffer", char parameter pointer "string", int parameter "size".
+ *
+ * The function copies from "string" into "buffer" "size" amount of characters.
+ * In addition "buffer" index is advanced by "MAX_CGROUP_FILE_NAME_LENGTH".
 */
 static inline void copy_and_move_buffer_max_len(char** buffer, char* string)
 {
@@ -129,12 +130,12 @@ static inline void copy_and_move_buffer_max_len(char** buffer, char* string)
 }
 
 /**
-* This function copies from a give source into a given destination based on the input parameters.
-*
-* Receives char parameter pointer "destination", char parameter pointer "source", int parameter "var".
-*
-* The function copies from "source" into "destination" "var" amount of characters.
-* In addition "var" index is advanced by length of string "source".
+ * This function copies from a give source into a given destination based on the input parameters.
+ *
+ * Receives char parameter pointer "destination", char parameter pointer "source", int parameter "var".
+ *
+ * The function copies from "source" into "destination" "var" amount of characters.
+ * In addition "var" index is advanced by length of string "source".
 */
 static inline void move_and_add(char* destination, char* source, int* var)
 {
@@ -227,6 +228,8 @@ static int get_file_name_constant(char * filename)
         return PID_CUR;
     else if (strcmp(filename, "set.cpu") == 0)
         return SET_CPU;
+    else if (strcmp(filename, "set.frz") == 0)
+        return SET_FRZ;
 
     return -1;
 }
@@ -252,6 +255,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CPU_MAX:
             case PID_MAX:
             case SET_CPU:
+            case SET_FRZ:
                 writable = 1;
                 break;
 
@@ -313,6 +317,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                     return -1;
                 f->cpu_s.set.active = cgp->set_controller_enabled;
                 f->cpu_s.set.cpu_id = cgp->cpu_to_use;
+                break;
+
+            case SET_FRZ:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->frz.freezer.active = cgp->frz_controller_enabled;
+                f->frz.freezer.frozen = cgp->is_frozen;
                 break;
         }
 
@@ -402,6 +413,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             if (f->cgp->set_controller_avalible) {
                 move_and_add(buf, "set\n", &i);
             }
+            if (f->cgp->frz_controller_avalible) {
+                move_and_add(buf, "frz\n", &i);
+            }
 
             r = copy_buffer_up_to_end(buf + f->off, min(i, n), addr);
         } else if (filename_const == CGROUP_SUBTREE_CONTROL) {
@@ -416,6 +430,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             }
             if (f->cgp->set_controller_enabled) {
                 move_and_add(buf, "set\n", &i);
+            }
+            if (f->cgp->frz_controller_enabled) {
+                move_and_add(buf, "frz\n", &i);
             }
 
             r = copy_buffer_up_to_end(buf + f->off, min(i, n), addr);
@@ -565,6 +582,17 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&cputextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(cputext + f->off, min(cputextp - cputext, n), addr);
+        } else if (filename_const == SET_FRZ) {
+            char frz_buf[11];
+            char frztext[strlen("frozen - ") + itoa(frz_buf, f->frz.freezer.frozen) + 2];
+            char * frztextp = frztext;
+
+            copy_and_move_buffer(&frztextp, "frozen - ", strlen("frozen - "));
+            copy_and_move_buffer(&frztextp, frz_buf, strlen(frz_buf));
+            copy_and_move_buffer(&frztextp, "\n", strlen("\n"));
+
+
+            r = copy_buffer_up_to_end(frztext + f->off, min(frztextp - frztext, n), addr);
         }
 
         f->off += r;
@@ -618,6 +646,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
                 copy_and_move_buffer_max_len(&bufp, "set.cpu");
             }
 
+            if (f->cgp->frz_controller_enabled) {
+                copy_and_move_buffer_max_len(&bufp, "set.frz");
+            }
         }
 
         get_cgroup_names_at_path(bufp, f->cgp->cgroup_dir_path);
@@ -656,6 +687,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
                                 // to disable, 0 if nothing to change
         char pidcontroller = 0;
         char setcontroller = 0;
+        char frzcontroller = 0;
         char ch = ' ';
         int len = 0;
         int total_len = 0;
@@ -678,6 +710,10 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
                 setcontroller = return_new_controller_state(*addr);
                 addr += len + 1;
                 total_len += len + 1;
+            } else if (strcmp(buf, "frz") == 0) {
+                frzcontroller = return_new_controller_state(*addr);
+                addr += len + 1;
+                total_len += len + 1;
             } else
                 return -1;
         }
@@ -698,6 +734,12 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
             return -1;
         if (setcontroller == 2 &&
             unsafe_disable_set_controller(f->cgp) < 0)
+            return -1;
+
+        if (frzcontroller == 1 && unsafe_enable_frz_controller(f->cgp) < 0)
+            return -1;
+        if (frzcontroller == 2 &&
+            unsafe_disable_frz_controller(f->cgp) < 0)
             return -1;
 
         r = n - total_len;
@@ -814,6 +856,34 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         if (test == 0 || test == -1)
             return -1;
         f->cpu_s.set.cpu_id = set;
+
+        r = n;
+    } else if (filename_const == SET_FRZ &&
+        f->cgp->frz_controller_enabled) {
+        char set_string[32] = { 0 };
+        int set_freeze = -1;
+        int i = 0;
+
+        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(set_string)) {
+            set_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        set_string[i] = '\0';
+        i = 0;
+        addr++;
+
+        // Update freeze parameter.
+        set_freeze = atoi(set_string);
+        if (-1 == set_freeze) {
+            return -1;
+        }
+
+        // Update is_frozen field if the paramter is within allowed values.
+        int test = frz_grp(f->cgp, set_freeze);
+        if (test == 0 || test == -1)
+            return -1;
+        f->frz.freezer.frozen = set_freeze;
 
         r = n;
     }

@@ -264,6 +264,8 @@ void cgroup_initialize(struct cgroup * cgroup,
         cgroup->pid_controller_enabled = 1;
         cgroup->set_controller_avalible = 1;
         cgroup->set_controller_enabled = 0;
+        cgroup->frz_controller_avalible = 1;
+        cgroup->frz_controller_enabled = 1;
     }
     else {
         cgroup->parent = parent_cgroup;
@@ -282,8 +284,15 @@ void cgroup_initialize(struct cgroup * cgroup,
         else
             cgroup->pid_controller_avalible = 0;
 
+        /*Cgroup's freezer controller avalible only when it is enabled in the
+         * parent.*/
+        if (parent_cgroup->frz_controller_enabled)
+            cgroup->frz_controller_avalible = 1;
+        else
+            cgroup->frz_controller_avalible = 0;
+
         /*Cgroup's set controller avalible only when it is enabled in the
-        * parent. Notice doesn't apply to root, it is not enabled in root*/
+         * parent. Notice doesn't apply to root, it is not enabled in root*/
         if (parent_cgroup == cgroup_root())
             cgroup->set_controller_avalible = 1;
         else {
@@ -296,6 +305,7 @@ void cgroup_initialize(struct cgroup * cgroup,
         cgroup->pid_controller_enabled = 0;
         cgroup->cpu_controller_enabled = 0;
         cgroup->set_controller_enabled = 0;
+        cgroup->frz_controller_enabled = 0;
         cgroup->depth = cgroup->parent->depth + 1;
         unsafe_set_cgroup_dir_path(cgroup, path);
     }
@@ -307,10 +317,12 @@ void cgroup_initialize(struct cgroup * cgroup,
     set_max_depth_value(cgroup, MAX_DEP_DEF);
     set_nr_descendants(cgroup, 0);
     set_nr_dying_descendants(cgroup, 0);
-    //Without any changes, set the maximum number of processes to max in system
+    // Without any changes, set the maximum number of processes to max in system
     set_max_procs(cgroup, NPROC);
-    //Without any changes, set the default cpu id to be used as 0
+    // Without any changes, set the default cpu id to be used as 0
     set_cpu_id(cgroup, 0);
+    // By default a group is not frozen
+    frz_grp(cgroup, 0);
 
     cgroup->cpu_account_frame = 0;
     cgroup->cpu_percent = 0;
@@ -572,13 +584,13 @@ int cg_sys_open(char * path, int omode)
 {
     struct cgroup *cgp;
 
-    if((cgp = get_cgroup_by_path(path)))
+    if ((cgp = get_cgroup_by_path(path)))
         return cg_open(CG_DIR, 0, cgp, omode);
 
     char dir_path[MAX_PATH_LENGTH];
     char file_name[MAX_PATH_LENGTH];
 
-    if(get_dir_name(path, dir_path) == 0 && get_base_name(path, file_name) == 0 && (cgp = get_cgroup_by_path(dir_path)))
+    if (get_dir_name(path, dir_path) == 0 && get_base_name(path, file_name) == 0 && (cgp = get_cgroup_by_path(dir_path)))
         return cg_open(CG_FILE, file_name, cgp, omode);
 
     return -1;
@@ -790,6 +802,94 @@ int disable_set_controller(struct cgroup * cgroup)
 {
     acquire(&cgtable.lock);
     int res = unsafe_disable_set_controller(cgroup);
+    release(&cgtable.lock);
+    return res;
+}
+
+int frz_grp(struct cgroup * cgroup, int frz) {
+    // If no cgroup found, return error.
+    if (cgroup == 0)
+        return -1;
+
+    // Freeze/unfreeze cgroup based on input.
+    if (frz == 1 || frz == 0) {
+        cgroup->is_frozen = frz;
+        return 1;
+    }
+
+    return 0;
+}
+
+int unsafe_enable_frz_controller(struct cgroup *cgroup) {
+    // If cgroup has processes in it, controllers can't be enabled.
+    if (cgroup == 0 || cgroup->populated == 1) {
+        return -1;
+    }
+
+    // If controller is enabled do nothing.
+    if (cgroup->frz_controller_enabled) {
+        return 0;
+    }
+
+    if (cgroup->frz_controller_avalible) {
+        // Set freezer controller to enabled.
+        cgroup->frz_controller_enabled = 1;
+        // Set frezer controller to avalible in all child cgroups.
+        for (int i = 1;
+            i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
+            i++)
+            if (cgtable.cgroups[i].parent == cgroup)
+                cgtable.cgroups[i].frz_controller_avalible = 1;
+    }
+
+    return 0;
+}
+
+int unsafe_disable_frz_controller(struct cgroup *cgroup) {
+    if (cgroup == 0) {
+        return -1;
+    }
+
+    // If controller is disabled do nothing.
+    if (cgroup->frz_controller_enabled == 0) {
+        return 0;
+    }
+
+    // Check that all child cgroups have freezer controller disabled. (cannot
+    // disable controller when children have it enabled)
+    for (int i = 1;
+        i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
+        i++)
+        if (cgtable.cgroups[i].parent == cgroup &&
+            cgtable.cgroups[i].frz_controller_enabled) {
+            return -1;
+        }
+
+    // Set freezer controller to disabled.
+    cgroup->frz_controller_enabled = 0;
+
+    // Set freezer controller to unavalible in all child cgroups.
+    for (int i = 1;
+        i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
+        i++)
+        if (cgtable.cgroups[i].parent == cgroup)
+            cgtable.cgroups[i].frz_controller_avalible = 0;
+
+    return 0;
+}
+
+int enable_frz_controller(struct cgroup * cgroup)
+{
+    acquire(&cgtable.lock);
+    int res = unsafe_enable_frz_controller(cgroup);
+    release(&cgtable.lock);
+    return res;
+}
+
+int disable_frz_controller(struct cgroup * cgroup)
+{
+    acquire(&cgtable.lock);
+    int res = unsafe_disable_frz_controller(cgroup);
     release(&cgtable.lock);
     return res;
 }
