@@ -24,7 +24,7 @@ main(void)
   mknod("tty2", 4, 4);
 
   for(;;){
-    printf(1, "init: starting sh\n");
+    printf(1, "init: starting sh\ntype 'help' for instructions on usage\n");
     pid = fork();
     if(pid < 0){
       printf(1, "init: fork failed\n");
