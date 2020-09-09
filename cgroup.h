@@ -43,6 +43,11 @@ struct cgroup
     char set_controller_enabled;  /* Is 1 if cpu set controller is enabled,
                                      otherwise 0.*/
 
+    char frz_controller_avalible; /* Is 1 if freezer controller may be enabled,
+                                     otherwise 0.*/
+    char frz_controller_enabled;  /* Is 1 if freezer controller is enabled,
+                                     otherwise 0.*/
+
     char populated; /* Is 1 if subtree has at least one process in it,
                        otherise 0.*/
 
@@ -60,7 +65,9 @@ struct cgroup
     int max_num_of_procs; /*The maximum number of processes that are allowed in the cgroup.
                             Used by pid controller.*/
 
-    uchar cpu_to_use; /*Which cpu id to use for cpu set controller*/
+    uchar cpu_to_use; /*Which cpu id to use for cpu set controller.*/
+
+    int is_frozen; /*Indicates whether cgroup is frozen. */
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -320,10 +327,10 @@ int cg_sys_open(char * path, int omode);
 
 
 /**
- *This function sets the maximum number of processes.
- *Receives cgroup pointer parameter "cgroup" and integer "limit".
- *Sets the number of maximum allowed processes in the cgroup to be "limit".
- *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ * This function sets the maximum number of processes.
+ * Receives cgroup pointer parameter "cgroup" and integer "limit".
+ * Sets the number of maximum allowed processes in the cgroup to be "limit".
+ * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
  */
 int set_max_procs(struct cgroup * cgp, int limit);
 
@@ -383,4 +390,35 @@ int enable_set_controller(struct cgroup * cgroup);
 int unsafe_disable_set_controller(struct cgroup *cgroup);
 int disable_set_controller(struct cgroup * cgroup);
 
+/**
+ * This function freezes/unfreezes a cgroup.
+ * Receives cgroup pointer parameter "cgroup" and integer "frz".
+ * If frz=1 then freezes the group, otherwise, if 0 then unfreezes. All other values result in no action.
+ * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ */
+int frz_grp(struct cgroup * cgroup, int frz);
+
+/**
+ * These functions enables the freezer controller of a cgroup.
+ * Unsafe and safe versions of function (unsafe does not acquire cgroup table lock and safe does).
+ * Receives cgroup pointer parameter "cgroup".
+ * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
+ * Return values:
+ * - 0 on success.
+ * - -1 on failure.
+ */
+int unsafe_enable_frz_controller(struct cgroup *cgroup);
+int enable_frz_controller(struct cgroup * cgroup);
+
+/**
+ * These functions disable the freezer controller of a cgroup.
+ * Unsafe and safe versions of function (unsafe does not acquire cgroup table lock and safe does).
+ * Receives cgroup pointer parameter "cgroup".
+ * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
+ * Return values:
+ * - 0 on success.
+ * - -1 on failure.
+ */
+int unsafe_disable_frz_controller(struct cgroup *cgroup);
+int disable_frz_controller(struct cgroup * cgroup);
 #endif
