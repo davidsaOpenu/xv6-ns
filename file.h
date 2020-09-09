@@ -58,8 +58,14 @@ struct file {
           struct {
             char active;
             int cpu_id;
-            } set;
+          } set;
         } cpu_s;
+        // freezer
+        union {
+          struct {
+            int frozen;
+          } freezer;
+        } frz;
       };
     };
   };
