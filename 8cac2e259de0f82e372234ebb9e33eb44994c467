@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8c4777b_9b1f4b9a",
+        "filename": "cgfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-09-16T08:34:51Z",
+      "side": 1,
+      "message": "is it according to v1?\n\n  - cpuset.cpus: list of CPUs in that cpuset\n\nhttps://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt",
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3657924_2b076d6c",
+        "filename": "file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-09-16T08:34:51Z",
+      "side": 1,
+      "message": "what is the reason to use union here?",
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d3cbcb5_d25273ef",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-09-16T08:34:51Z",
+      "side": 1,
+      "message": "how this code is related freezer?",
+      "range": {
+        "startLine": 512,
+        "startChar": 21,
+        "endLine": 512,
+        "endChar": 28
+      },
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
