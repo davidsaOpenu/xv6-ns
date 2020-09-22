@@ -246,3 +246,8 @@ sys_getcpu(void) {
     sti();
     return id;
 }
+
+int
+sys_getmem(void) {
+  return myproc()->sz;
+}
