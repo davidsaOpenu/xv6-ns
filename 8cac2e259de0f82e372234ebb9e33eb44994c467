@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3bdba5b2_2b023cf1",
+        "filename": "cgfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-09-22T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8c4777b_9b1f4b9a",
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3657924_2b076d6c",
         "filename": "file.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2020-09-16T08:34:51Z",
       "side": 1,
       "message": "what is the reason to use union here?",
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a727d939_18130464",
+        "filename": "file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-09-22T14:54:12Z",
+      "side": 1,
+      "message": "This way, future modifications will be much easier if needed (see cpu union).",
+      "parentUuid": "d3657924_2b076d6c",
       "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -56,6 +92,30 @@
       "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35e7212f_4321a2e4",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-09-22T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d3cbcb5_d25273ef",
+      "range": {
+        "startLine": 512,
+        "startChar": 21,
+        "endLine": 512,
+        "endChar": 28
+      },
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
