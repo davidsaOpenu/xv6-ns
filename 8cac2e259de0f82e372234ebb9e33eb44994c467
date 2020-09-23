@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3fba3006_d46f709a",
+        "filename": "cgfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-09-23T08:53:10Z",
+      "side": 1,
+      "message": "ok. found that same syntax is valid for for v2 as well: https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html",
+      "parentUuid": "3bdba5b2_2b023cf1",
+      "revId": "8cac2e259de0f82e372234ebb9e33eb44994c467",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3657924_2b076d6c",
         "filename": "file.h",
         "patchSetId": 1
