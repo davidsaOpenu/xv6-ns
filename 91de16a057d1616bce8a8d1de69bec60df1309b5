@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62eb3657_1b6cb9cf",
+        "filename": "test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-10-01T08:45:09Z",
+      "side": 1,
+      "message": "magic number",
+      "revId": "91de16a057d1616bce8a8d1de69bec60df1309b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eab1d794_889c12df",
+        "filename": "test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2020-10-01T08:45:09Z",
+      "side": 1,
+      "message": "no need to add 2 here as well?",
+      "revId": "91de16a057d1616bce8a8d1de69bec60df1309b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
