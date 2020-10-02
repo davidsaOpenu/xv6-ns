@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f538fb8d_5fa44b88",
+        "filename": "test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-10-02T19:43:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62eb3657_1b6cb9cf",
+      "revId": "91de16a057d1616bce8a8d1de69bec60df1309b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eab1d794_889c12df",
         "filename": "test.h",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "91de16a057d1616bce8a8d1de69bec60df1309b5",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1adf47c_11ff7e5c",
+        "filename": "test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1018088
+      },
+      "writtenOn": "2020-10-02T19:43:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eab1d794_889c12df",
+      "revId": "91de16a057d1616bce8a8d1de69bec60df1309b5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
