@@ -118,12 +118,12 @@ struct superblock*
 getsuperblock(uint dev)
 {
   if (IS_LOOP_DEVICE(dev)) {
-    dev = LOOP_DEVICE_TO_DEV(dev);
+    dev = DEV_TO_LOOP_DEVICE(dev);
     if (dev >= NLOOPDEVS) {
-      return 0;
+      panic("could not find superblock for device: device number to high");
     }
     if (dev_holder.loopdevs[dev].ref == 0) {
-      return 0;
+      panic("could not find superblock for device: device ref count is 0");
     } else {
       return &dev_holder.loopdevs[dev].sb;
     }
@@ -131,7 +131,6 @@ getsuperblock(uint dev)
     return &dev_holder.idesb[dev];
   } else {
     panic("could not find superblock for device");
-    return 0;
   }
 }
 
