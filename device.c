@@ -118,11 +118,12 @@ struct superblock*
 getsuperblock(uint dev)
 {
   if (IS_LOOP_DEVICE(dev)) {
-    dev = LOOP_DEVICE_TO_DEV(dev);
+    dev = DEV_TO_LOOP_DEVICE(dev);
     if (dev >= NLOOPDEVS) {
-      return 0;
+      panic("getsuperblock error: device number too high");
     }
     if (dev_holder.loopdevs[dev].ref == 0) {
+      panic("getsuperblock error: device has 0 references");
       return 0;
     } else {
       return &dev_holder.loopdevs[dev].sb;
