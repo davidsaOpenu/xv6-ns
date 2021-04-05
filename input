@@ -1,0 +1,4 @@
+ls
+mkdir test
+mount internal_fs_a test
+ls
