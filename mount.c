@@ -39,5 +39,5 @@ int main(int argc, const char * const argv[])
         exit(1);
     }
 
-    exit(mount(0, path, fstype));
+    exit(mount(fstype, path, 0));
 }

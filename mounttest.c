@@ -130,7 +130,12 @@ mounttest(void) {
   if (mounta() != 0) {
     return 1;
   }
-  
+
+  return 0;
+}
+
+static int
+umounttest(void) {
   if (umounta() != 0) {
     return 1;
   }
@@ -140,17 +145,9 @@ mounttest(void) {
 
 static int
 statroottest(void) {
-  if (mounta() != 0) {
-    return 1;
-  }
-
   struct stat st;
   fstat_file("a", &st);
   if (st.type != T_DIR || st.ino != 1 || st.size != BSIZE) {
-    return 1;
-  }
-
-  if (umounta() != 0) {
     return 1;
   }
 
@@ -463,12 +460,30 @@ namespacefiletest(void) {
   }
 }
 
+static int
+lstest(void) {
+  char *args[] = {"ls", "/", 0};
+  int pid = fork();
+
+  if (pid < 0) {
+    return 1;
+  }
+
+  if (pid == 0) {
+    exec(args[0], args);
+    return 1;
+  }
+
+  return child_exit_status(pid);
+}
+
 int
 main(int argc, char *argv[])
 {
   printf(stderr, "Running all mounttest\n");
   run_test(mounttest, "mounttest");
   run_test(statroottest, "statroottest");
+  run_test(umounttest, "umounttest");
   run_test(invalidpathtest, "invalidpathtest");
   run_test(doublemounttest, "doublemounttest");
   run_test(samedirectorytest, "samedirectorytest");
@@ -480,6 +495,7 @@ main(int argc, char *argv[])
   run_test(errorondeletedevicetest, "errorondeletedevicetest");
   run_test(namespacetest, "namespacetest");
   run_test(namespacefiletest, "namespacefiletest");
+  run_test(lstest, "lstest");
 
   unlink("a");
   unlink("b");

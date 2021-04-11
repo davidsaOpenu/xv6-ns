@@ -118,7 +118,7 @@ struct superblock*
 getsuperblock(uint dev)
 {
   if (IS_LOOP_DEVICE(dev)) {
-    dev = LOOP_DEVICE_TO_DEV(dev);
+    dev = DEV_TO_LOOP_DEVICE(dev);
     if (dev >= NLOOPDEVS) {
       return 0;
     }
