@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06ddf315_19fa58b8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:55:34Z",
+      "side": 1,
+      "message": "I\u0027m referring to this:\nhttps://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/514369/1/mount.c\nWithout this fix the mount command always fails to mount files with names different from \"internal_fs_{a|b|c}\" because the order of arguments is incorrect. Does it warrant a separate patch?",
+      "parentUuid": "821a4077_3ef089ce",
+      "range": {
+        "startLine": 13,
+        "startChar": 26,
+        "endLine": 13,
+        "endChar": 48
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ed8fa34b_d3fee71b",
         "filename": "mounttest.c",
         "patchSetId": 1
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb885218_8cd6e6a8",
+        "filename": "mounttest.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:55:34Z",
+      "side": 1,
+      "message": "Without \u0027ls\u0027 the test has a strange behavior: it fails the first time as expected, but succeeds the second time. The \u0027ls\u0027 command forces the kernel to panic the second time (probably because it reads many files and overwrites buffers) so the test is more reliable.",
+      "parentUuid": "ed8fa34b_d3fee71b",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 464,
+        "endChar": 6
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f58051d2_ca7a7ad7",
         "filename": "mounttest.c",
         "patchSetId": 1
@@ -60,6 +108,30 @@
       "writtenOn": "2021-04-30T15:53:37Z",
       "side": 1,
       "message": "looks like the change turns those 3 tests to be dependent in order of execution.",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 486,
+        "endChar": 37
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b925b0e_fadbc05f",
+        "filename": "mounttest.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:55:34Z",
+      "side": 1,
+      "message": "Indeed. Each test does a fork(), and when those 3 actions are performed in the same test the problem is not detected (probably related to buffers). They fail as needed when separate. Should I write them in a single function as before, and make the forks inside that function?",
+      "parentUuid": "f58051d2_ca7a7ad7",
       "range": {
         "startLine": 484,
         "startChar": 0,
