@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "843451ee_cee3c9d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-04-30T16:03:32Z",
+      "side": 1,
+      "message": "thanks for working on this. please abandon one either this one or https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/513869. Add \nCo-Authored-By: name \u003cname@example.com\u003e in a commit message of the remained one\n",
+      "revId": "fc39086dd2a14ccb4d8d35fb35698e5745f8c9a8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
