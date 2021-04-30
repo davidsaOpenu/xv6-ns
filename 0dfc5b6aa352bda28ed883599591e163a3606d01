@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43866180_8c8e47f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:35:15Z",
+      "side": 1,
+      "message": "Alon filed the bug and wrote the test:\nhttps://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/514367\nShould I merge his test to my patch?",
+      "parentUuid": "5f2f17f3_714861b4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 74
+      },
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "08edc012_d3e73594",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-30T15:39:23Z",
       "side": 1,
       "message": "different bugs, different patches \n\nand https://chris.beams.io/posts/git-commit/ for a better commit message",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 77
+      },
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27d7ed3c_6ada7bc8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:35:15Z",
+      "side": 1,
+      "message": "I\u0027ll remove that fix from this patch. Sorry for the messy message.",
+      "parentUuid": "08edc012_d3e73594",
       "range": {
         "startLine": 12,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a1afe52_4c660792",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:35:15Z",
+      "side": 1,
+      "message": "It\u0027s the message ID of Alon\u0027s bug report (last part of the link):\nhttps://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/514367\nIs this the wrong number to use?",
+      "parentUuid": "bf61013f_37faf771",
+      "range": {
+        "startLine": 15,
+        "startChar": 13,
+        "endLine": 15,
+        "endChar": 19
+      },
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a971bde0_2576cd9c",
@@ -83,6 +155,23 @@
       "writtenOn": "2021-04-30T15:39:23Z",
       "side": 1,
       "message": "thanks for working on this ",
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41365901_16fd64ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-04-30T16:35:15Z",
+      "side": 1,
+      "message": "Thanks for the review!",
       "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
