@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "821a4077_3ef089ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-04-30T15:53:37Z",
+      "side": 1,
+      "message": "deserves a separate patch? can you please bring an example/s?",
+      "range": {
+        "startLine": 13,
+        "startChar": 26,
+        "endLine": 13,
+        "endChar": 48
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed8fa34b_d3fee71b",
+        "filename": "mounttest.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-04-30T15:53:37Z",
+      "side": 1,
+      "message": "is this test related to the patch? \nif it is then a mount of a local fs seems to be lacking",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 464,
+        "endChar": 6
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f58051d2_ca7a7ad7",
+        "filename": "mounttest.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-04-30T15:53:37Z",
+      "side": 1,
+      "message": "looks like the change turns those 3 tests to be dependent in order of execution.",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 486,
+        "endChar": 37
+      },
+      "revId": "69e78bd37afe49695dd6ccd62dc6e8cda43e80cc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
