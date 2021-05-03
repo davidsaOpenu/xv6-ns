@@ -2,6 +2,7 @@
 #include "types.h"
 #include "user.h"
 #include "test.h"
+#include "param.h"
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
@@ -371,6 +372,26 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+}
+
+TEST(test_cgroup_dir)
+{
+  // test that all the files in the TEST_1 dir are cg files as expected.
+  char *path = TEST_1;
+  int fd = open(path, 0);
+  char cg_file_name[MAX_CGROUP_FILE_NAME_LENGTH];
+
+  while(read(fd, cg_file_name, sizeof(cg_file_name)) == MAX_CGROUP_FILE_NAME_LENGTH && cg_file_name[0] != ' '){
+    int i = MAX_CGROUP_FILE_NAME_LENGTH - 1;
+    while (cg_file_name[i] == ' ')
+      i--;
+    cg_file_name[i+1] = 0;
+    // assert that cg_file_name is one of the cg files
+    ASSERT_FALSE(strcmp(cg_file_name, "cgroup.procs") && strcmp(cg_file_name, "cgroup.subtree_control") && strcmp(cg_file_name, "cgroup.max.descendants")
+    && strcmp(cg_file_name, "cgroup.max.depth") && strcmp(cg_file_name, "cgroup.controllers") && strcmp(cg_file_name, "cpu.stat")
+    && strcmp(cg_file_name, "cgroup.freeze") && strcmp(cg_file_name, "memory.current") && strcmp(cg_file_name, "cgroup.events")
+    && strcmp(cg_file_name, "cgroup.stat") && strcmp(cg_file_name, ".") && strcmp(cg_file_name, ".."));
+   }
 }
 
 int test_enable_and_disable_controller(int controller_type)
@@ -1023,6 +1044,7 @@ int main(int argc, char * argv[])
     run_test(test_creating_cgroups);
     run_test(test_opening_and_closing_cgroup_files);
     run_test_break_msg(test_reading_cgroup_files);
+    run_test(test_cgroup_dir);
     run_test(test_moving_process);
     run_test(test_enable_and_disable_all_controllers);
     run_test(test_limiting_pids);
