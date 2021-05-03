@@ -345,7 +345,7 @@ proc cgroupstests {argv} {
     send "cgroupstests\n"
     log_file -noappend [lindex $argv 0]
     expect {
-       "$ "
+       "[    PASS   ]"
     }
 }
 
