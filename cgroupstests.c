@@ -2,6 +2,7 @@
 #include "types.h"
 #include "user.h"
 #include "test.h"
+#include "param.h"
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
@@ -1023,6 +1024,7 @@ int main(int argc, char * argv[])
     run_test(test_creating_cgroups);
     run_test(test_opening_and_closing_cgroup_files);
     run_test_break_msg(test_reading_cgroup_files);
+    run_test(test_cgroup_dir);
     run_test(test_moving_process);
     run_test(test_enable_and_disable_all_controllers);
     run_test(test_limiting_pids);
