@@ -208,8 +208,8 @@ static int get_file_name_constant(char * filename)
         return CGROUP_PROCS;
     else if (strcmp(filename, "cgroup.subtree_control") == 0)
         return CGROUP_SUBTREE_CONTROL;
-//    else if (strcmp(filename, "cgroup.max.descendants") == 0)
-//        return CGROUP_MAX_DESCENDANTS;
+    else if (strcmp(filename, "cgroup.max.descendants") == 0)
+        return CGROUP_MAX_DESCENDANTS;
     else if (strcmp(filename, "cgroup.max.depth") == 0)
         return CGROUP_MAX_DEPTH;
     else if (strcmp(filename, "cgroup.controllers") == 0)
@@ -464,12 +464,12 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
             r = copy_buffer_up_to_end(eventstext + f->off, min(sizeof(eventstext), n), addr);
 
-        } /*else if (filename_const == CGROUP_MAX_DESCENDANTS) {
+        } else if (filename_const == CGROUP_MAX_DESCENDANTS) {
             char buf[MAX_DECS_SIZE];
             itoa(buf, f->cgp->max_descendants_value);
             copy_buffer_up_to_end_replace_end_with_newline(buf, min(sizeof(buf), n), addr);
 
-        }*/ else if (filename_const == CGROUP_MAX_DEPTH) {
+        } else if (filename_const == CGROUP_MAX_DEPTH) {
             char buf[MAX_DEPTH_SIZE];
             memset(buf,'\0',MAX_DEPTH_SIZE);
             itoa(buf, f->cgp->max_depth_value);
@@ -492,7 +492,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, "nr_descendants - ", strlen("nr_descendants - "));
             copy_and_move_buffer(&stattextp, nr_descendants_buf, strlen(nr_descendants_buf));
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
-            copy_and_move_buffer(&stattextp, "nr_dying_descandants - ", strlen("nr_dying_descandants - "));
+            copy_and_move_buffer(&stattextp, "nr_dying_descendants - ", strlen("nr_dying_descendants - "));
             copy_and_move_buffer(&stattextp, nr_dying_descendants_buf, strlen(nr_dying_descendants_buf));
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
@@ -668,7 +668,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer_max_len(&bufp, "cgroup.freeze");
         }
 
-//        copy_and_move_buffer_max_len(&bufp, "cgroup.max.descandants");
+        copy_and_move_buffer_max_len(&bufp, "cgroup.max.descendants");
         copy_and_move_buffer_max_len(&bufp, "cgroup.max.depth");
         copy_and_move_buffer_max_len(&bufp, "cgroup.stat");
 //        copy_and_move_buffer_max_len(&bufp, "cgroup.current");
@@ -789,12 +789,12 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
           return -1;
 
         r = n - total_len;
-    } /*else if (filename_const == CGROUP_MAX_DESCENDANTS) {
+    } else if (filename_const == CGROUP_MAX_DESCENDANTS) {
         if (atoi(addr) < 0 || strlen(addr) > 2)
             return -1;
         f->cgp->max_descendants_value = atoi(addr);
         r = n;
-    } */ else if (filename_const == CGROUP_MAX_DEPTH) {
+    }  else if (filename_const == CGROUP_MAX_DEPTH) {
         if (atoi(addr) < 0 || strlen(addr) > 2)
             return -1;
         f->cgp->max_depth_value = atoi(addr);
@@ -1054,9 +1054,9 @@ static int cg_file_size(struct file * f)
             size += 3;
     } else if (filename_const == CGROUP_EVENTS) {
         size += strlen("populated - 0");
-    } /*else if (filename_const == CGROUP_MAX_DESCENDANTS) {
+    } else if (filename_const == CGROUP_MAX_DESCENDANTS) {
         size += intlen(f->cgp->max_descendants_value);
-    } */else if (filename_const == CGROUP_MAX_DEPTH) {
+    } else if (filename_const == CGROUP_MAX_DEPTH) {
         size += intlen(f->cgp->max_depth_value);
     } else if (filename_const == CGROUP_STAT) {
         size += strlen("nr_descendants - ") +
