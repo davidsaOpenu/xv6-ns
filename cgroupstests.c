@@ -2,6 +2,7 @@
 #include "types.h"
 #include "user.h"
 #include "test.h"
+#include "param.h"
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
@@ -371,6 +372,39 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+}
+
+TEST(test_cgroup_dir)
+{
+  // test that all the files in the TEST_1 dir are cg files as expected.
+  char *path = TEST_1;
+  int fd = open(path, 0);
+  char cg_file_name[MAX_CGROUP_FILE_NAME_LENGTH];
+  char buf[512], *p;
+  
+  strcpy(buf, path);
+  p = buf + strlen(buf);
+  *p++ = '/';
+  while(read(fd, cg_file_name, sizeof(cg_file_name)) == MAX_CGROUP_FILE_NAME_LENGTH && cg_file_name[0] != ' '){
+    memmove(p, cg_file_name, MAX_CGROUP_FILE_NAME_LENGTH);
+    p[MAX_CGROUP_FILE_NAME_LENGTH] = 0;
+    int i = MAX_CGROUP_FILE_NAME_LENGTH - 1;
+    while (p[i] == ' ')
+      i--;
+    p[i + 1] = 0;
+    cg_file_name[i+1] = 0;
+    if(strcmp(cg_file_name, "cgroup.procs") != 0 && strcmp(cg_file_name, "cgroup.subtree_control") != 0 && strcmp(cg_file_name, "cgroup.max.descendants") != 0
+    && strcmp(cg_file_name, "cgroup.max.depth") != 0 && strcmp(cg_file_name, "cgroup.controllers") != 0 && strcmp(cg_file_name, "cpu.stat") != 0 
+    && strcmp(cg_file_name, "cgroup.freeze") != 0 && strcmp(cg_file_name, "memory.current") != 0  && strcmp(cg_file_name, "cgroup.events") != 0 
+    && strcmp(cg_file_name, "cgroup.stat") != 0 && strcmp(cg_file_name, ".") != 0 && strcmp(cg_file_name, "..") != 0) {  
+      for(int i=0; i < strlen(__FUNCTION__) + strlen("[RUNNING] ") + REMOVE_2_ADDITIONAL_CHARS; i++)\
+        printf(1, "\b");\
+      printf(1, "[FAILED] %s - expected file %s in dir %s to be a cg file (%s:%d)\n", name, cg_file_name, path, __FILE__, __LINE__);
+      failed =1;
+      return;
+    }
+    p[i + 1] = ' ';
+   }
 }
 
 int test_enable_and_disable_controller(int controller_type)
@@ -1023,6 +1057,7 @@ int main(int argc, char * argv[])
     run_test(test_creating_cgroups);
     run_test(test_opening_and_closing_cgroup_files);
     run_test_break_msg(test_reading_cgroup_files);
+    run_test(test_cgroup_dir);
     run_test(test_moving_process);
     run_test(test_enable_and_disable_all_controllers);
     run_test(test_limiting_pids);
