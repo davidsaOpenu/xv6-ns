@@ -22,6 +22,7 @@
 #define CGFS_SET_FRZ "cgroup.freeze"
 #define CGFS_MEM_CUR "memory.current"
 #define CGFS_MEM_MAX "memory.max"
+#define CGFS_MEM_MIN "memory.min"
 
 /**
  * This function opens a cgroup filesystem file or directory.
@@ -51,6 +52,7 @@
  *    15)   "memory.current"
  *    16)   "memory.max"
  *    17)    cgroup directories
+ *    18)    "memory.min"
  */
 int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int omode);
 
@@ -82,6 +84,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
  *    15)   "memory.current"
  *    16)   "memory.max"
  *    17)    cgroup directories
+ *    18)    "memory.min"
  */
 int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n);
 
@@ -104,6 +107,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n);
  *    7)    "cpuset.cpus"
  *    8)    "cgroup.freeze"
  *    9)    "memory.max"
+ *   10)    "memory.min"
  */
 int unsafe_cg_write(struct file * f, char * addr, int n);
 

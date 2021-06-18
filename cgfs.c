@@ -27,6 +27,7 @@
 #define SET_FRZ 14
 #define MEM_CUR 15
 #define MEM_MAX 16
+#define MEM_MIN 17
 
 #define min(x, y) (x) > (y) ? (y) : (x)
 
@@ -236,7 +237,8 @@ static int get_file_name_constant(char * filename)
       return MEM_CUR;
     else if (strcmp(filename, CGFS_MEM_MAX) == 0)
       return MEM_MAX;
-
+    else if (strcmp(filename, "memory.min") == 0)
+        return MEM_MIN;
     return -1;
 }
 
@@ -263,6 +265,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case SET_CPU:
             case SET_FRZ:
             case MEM_MAX:
+            case MEM_MIN:
                 writable = 1;
                 break;
 
@@ -339,6 +342,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
               f->mem.max.active = cgp->mem_controller_enabled;
               f->mem.max.max = cgp->max_mem;
               break;
+
+            case MEM_MIN:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->mem.min.active = cgp->mem_controller_enabled;
+                f->mem.min.min = cgp->min_mem;
+                break;
         }
 
         f->type = FD_CG;
@@ -635,6 +645,15 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(maxtext + f->off, min(maxtextp - maxtext, n), addr);
+        } else if (filename_const == MEM_MIN) {
+            char mem_min_buf[10] = {0};
+            char min_mem_text[utoa(mem_min_buf, f->mem.min.min) + 2];
+            char* pmin_mem_text = min_mem_text;
+
+            copy_and_move_buffer(&pmin_mem_text, mem_min_buf, strlen(mem_min_buf));
+            copy_and_move_buffer(&pmin_mem_text, "\n", strlen("\n"));
+
+            r = copy_buffer_up_to_end(min_mem_text + f->off, min(pmin_mem_text - min_mem_text, n), addr);
         }
 
         f->off += r;
@@ -693,6 +712,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
             if (f->cgp->mem_controller_enabled) {
               copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MAX);
+              copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MIN);
             }
         }
 
@@ -713,11 +733,14 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
 int unsafe_cg_write(struct file * f, char * addr, int n)
 {
-    int r = 0;
-    int filename_const = get_file_name_constant(f->cgfilename);
+    if (addr == 0 || f == 0)
+        return -1;
 
     if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0)
         return -1;
+
+    int r = 0;
+    int filename_const = get_file_name_constant(f->cgfilename);
 
     if (filename_const == CGROUP_PROCS) {
         char buf[n + 1];
@@ -810,7 +833,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         //sh.c doesn't treat space inside for example: "1000 20000" as a single argument
         //so we will use special format, this also allows to parse zeroes inside a value
 
-        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(max_string)) {
+        while (*addr != ',' &&  *addr != '\0' && i < sizeof(max_string)) {
             max_string[i] = *addr;
             i++;
             addr++;
@@ -855,7 +878,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         int max = -1;
         int i = 0;
 
-        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(max_string)) {
+        while (*addr != ',' &&  *addr != '\0' && i < sizeof(max_string)) {
             max_string[i] = *addr;
             i++;
             addr++;
@@ -882,7 +905,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         int set = -1;
         int i = 0;
 
-        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(set_string)) {
+        while (*addr != ',' &&  *addr != '\0' && i < sizeof(set_string)) {
             set_string[i] = *addr;
             i++;
             addr++;
@@ -909,7 +932,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         int set_freeze = -1;
         int i = 0;
 
-        while (*addr && *addr != ',' &&  *addr != '\0' && i < sizeof(set_string)) {
+        while (*addr != ',' &&  *addr != '\0' && i < sizeof(set_string)) {
             set_string[i] = *addr;
             i++;
             addr++;
@@ -937,7 +960,7 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         unsigned int max = -1;
         int i = 0;
 
-        while (*addr && *addr != ',' && *addr != '\0' && i < sizeof(max_string)) {
+        while (*addr != ',' && *addr != '\0' && i < sizeof(max_string)) {
             max_string[i] = *addr;
             i++;
             addr++;
@@ -956,6 +979,33 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         if (test == 0 || test == -1)
             return -1;
         f->mem.max.max = max;
+
+        r = n;
+    } else if (filename_const == MEM_MIN && f->cgp->mem_controller_enabled) {
+        char min_string[32] = { 0 };
+        unsigned int min = -1;
+        unsigned int i = 0;
+
+        while (*addr != ',' && *addr != '\0' && i < sizeof(min_string)) {
+            min_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        min_string[i] = '\0';
+
+        // Update min
+        min = atoi(min_string);
+        if (min == -1) {
+            return -1;
+        }
+
+        // Update min memory field if the paramter is within allowed values
+        int test = set_min_mem(f->cgp, min);
+        if (test == 0 || test == -1)
+            return -1;
+        f->mem.min.min = min;
+
+        unsafe_handle_cgroup_mem_min_alloc(f->cgp);
 
         r = n;
     }

@@ -198,20 +198,23 @@ userinit(void)
   release(&ptable.lock);
 }
 
-// Grow current process's memory by n bytes.
-// Return 0 on success, -1 on failure.
-int
-growproc(int n)
+// Grows a given process memory by n bytes
+// Returns 0 on success, -1 on failure.
+int grow_proc_mem(struct proc *curproc, int n)
 {
   uint sz;
-  struct proc* curproc = myproc();
-
   // In case trying to grow process's memory over memory limit, and
   // given memory controller is enabled, return failure
   if (n > 0) {
     if (curproc->cgroup->mem_controller_enabled &&
-      (curproc->cgroup->current_mem + n) > curproc->cgroup->max_mem)
+          (curproc->cgroup->current_mem + n) > curproc->cgroup->max_mem) {
       return -1;
+    }
+  } else {
+    if (curproc->cgroup->mem_controller_enabled &&
+          (curproc->cgroup->current_mem + n) < curproc->cgroup->min_mem) {
+      return -1;
+    }
   }
 
   sz = curproc->sz;
@@ -233,6 +236,17 @@ growproc(int n)
 
   switchuvm(curproc);
   return 0;
+}
+
+// Grows current process's memory by n bytes
+// Returns 0 on success, -1 on failure.
+int
+growproc(int n)
+{
+  struct proc* curproc = myproc();
+  int ret = grow_proc_mem(curproc, n);
+
+  return ret;
 }
 
 // Create a new process copying p as the parent.
@@ -331,10 +345,13 @@ fork(void)
 }
 /*Kill the given process p, and set its parent to given process reaper*/
 void kill_proc(struct proc* p, struct proc* reaper) {
-   p->killed = 1;
-   if (p->state == SLEEPING)
+  p->killed = 1;
+  if (p->state == SLEEPING)
     p->state = RUNNABLE;
-   p->parent = reaper;
+  p->parent = reaper;
+  cgroup_erase(p->cgroup, p);
+  if (p->cgroup->mem_controller_avalible && p->cgroup->current_mem < p->cgroup->min_mem)
+    handle_mem_min_alloc(p->cgroup);
 }
 
 /*Kill all the processes inside the namespace of a given process, called parent
