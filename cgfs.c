@@ -28,6 +28,7 @@
 #define MEM_CUR 15
 #define MEM_MAX 16
 #define MEM_MIN 17
+#define MEM_FAILCNT 18
 
 #define min(x, y) (x) > (y) ? (y) : (x)
 
@@ -239,6 +240,8 @@ static int get_file_name_constant(char * filename)
       return MEM_MAX;
     else if (strcmp(filename, "memory.min") == 0)
         return MEM_MIN;
+    else if (strcmp(filename, "memory.failcnt") == 0)
+        return MEM_FAILCNT;
     return -1;
 }
 
@@ -275,6 +278,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CPU_STAT:
             case PID_CUR:
             case MEM_CUR:
+            case MEM_FAILCNT:
                 writable = 0;
                 break;
 
@@ -348,6 +352,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                     return -1;
                 f->mem.min.active = cgp->mem_controller_enabled;
                 f->mem.min.min = cgp->min_mem;
+                break;
+
+            case MEM_FAILCNT:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->mem.failcnt.active = cgp->mem_controller_enabled;
+                f->mem.failcnt.cnt = cgp->mem_fail_cnt;
                 break;
         }
 
@@ -654,6 +665,15 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&pmin_mem_text, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(min_mem_text + f->off, min(pmin_mem_text - min_mem_text, n), addr);
+        } else if (filename_const == MEM_FAILCNT) {
+            char mem_failcnt_buf[10] = {0};
+            char mem_failcnt_text[utoa(mem_failcnt_buf, f->mem.failcnt.cnt) + 2];
+            char* pmem_failcnt_text = mem_failcnt_text;
+
+            copy_and_move_buffer(&pmem_failcnt_text, mem_failcnt_buf, strlen(mem_failcnt_buf));
+            copy_and_move_buffer(&pmem_failcnt_text, "\n", strlen("\n"));
+
+            r = copy_buffer_up_to_end(mem_failcnt_text + f->off, min(pmem_failcnt_text - mem_failcnt_text, n), addr);
         }
 
         f->off += r;
@@ -713,6 +733,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             if (f->cgp->mem_controller_enabled) {
               copy_and_move_buffer_max_len(&bufp, "memory.max");
               copy_and_move_buffer_max_len(&bufp, "memory.min");
+              copy_and_move_buffer_max_len(&bufp, "memory.failcnt");
             }
         }
 
@@ -1121,6 +1142,8 @@ static int cg_file_size(struct file * f)
     } else if (filename_const == MEM_CUR) {
         size += strlen("cur_mem_in_bytes - ") +
             intlen(f->cgp->current_mem) + strlen("\n");
+    } else if (filename_const == MEM_FAILCNT) {
+        size += intlen(f->cgp->mem_fail_cnt) + strlen("\n");
     }
 
     return size;

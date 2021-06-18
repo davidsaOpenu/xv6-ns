@@ -73,6 +73,7 @@ struct cgroup
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
     unsigned int min_mem; /* The minimum memory allocated to a group */
+    unsigned int mem_fail_cnt; /* Counts how many maximum memory threshold reached */
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
