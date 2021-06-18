@@ -72,6 +72,7 @@ struct cgroup
     unsigned int current_mem; /*The current amount of memory used by the group.*/
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
+    unsigned int min_mem; /* The minimum memory allocated to a group */
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -409,6 +410,29 @@ int frz_grp(struct cgroup * cgroup, int frz);
  *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
  */
 int set_max_mem(struct cgroup* cgp, unsigned int limit);
+
+/**
+ * @brief Memory minimum usage limit
+ *
+ * This is the main mechanism to control memory usage of a cgroup.
+ * It defines the minimum usage of a cgroup memory.
+ *
+ * @param cgroup pointer to cgroup
+ * @param limit the minimum value which represents the memory that is allocated to cgroup
+ * @return Returns 1 upon successes, 0 if no action taken, -1 upon failure
+ */
+int set_min_mem(struct cgroup* cgroup, unsigned int limit);
+
+/**
+ *  @brief When memory minimum is greater than current usage we need to grow procs memory
+ *
+ * Unsafe and safe versions of function (unsafe does not acquire cgroup table lock and safe does).
+ * Receives cgroup pointer parameter "cgroup".
+ * @{
+ */
+void handle_mem_min_alloc(struct cgroup* cgroup);
+void unsafe_handle_cgroup_mem_min_alloc(struct cgroup* cgroup);
+/** @} */
 
 /**
  * These functions enables the memory controller of a cgroup.

@@ -352,6 +352,7 @@ TEST(test_opening_and_closing_cgroup_files)
     ASSERT_TRUE(open_close_file(TEST_1_SET_FRZ));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
+    ASSERT_TRUE(open_close_file(TEST_1_MEM_MIN));
 }
 
 TEST(test_reading_cgroup_files)
@@ -372,6 +373,7 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+    ASSERT_TRUE(read_file(TEST_1_MEM_MIN, 1));
 }
 
 TEST(test_cgroup_dir)
@@ -381,7 +383,7 @@ TEST(test_cgroup_dir)
   int fd = open(path, 0);
   char cg_file_name[MAX_CGROUP_FILE_NAME_LENGTH];
   char buf[512], *p;
-  
+
   strcpy(buf, path);
   p = buf + strlen(buf);
   *p++ = '/';
@@ -394,9 +396,9 @@ TEST(test_cgroup_dir)
     p[i + 1] = 0;
     cg_file_name[i+1] = 0;
     if(strcmp(cg_file_name, "cgroup.procs") != 0 && strcmp(cg_file_name, "cgroup.subtree_control") != 0 && strcmp(cg_file_name, "cgroup.max.descendants") != 0
-    && strcmp(cg_file_name, "cgroup.max.depth") != 0 && strcmp(cg_file_name, "cgroup.controllers") != 0 && strcmp(cg_file_name, "cpu.stat") != 0 
-    && strcmp(cg_file_name, "cgroup.freeze") != 0 && strcmp(cg_file_name, "memory.current") != 0  && strcmp(cg_file_name, "cgroup.events") != 0 
-    && strcmp(cg_file_name, "cgroup.stat") != 0 && strcmp(cg_file_name, ".") != 0 && strcmp(cg_file_name, "..") != 0) {  
+    && strcmp(cg_file_name, "cgroup.max.depth") != 0 && strcmp(cg_file_name, "cgroup.controllers") != 0 && strcmp(cg_file_name, "cpu.stat") != 0
+    && strcmp(cg_file_name, "cgroup.freeze") != 0 && strcmp(cg_file_name, "memory.current") != 0  && strcmp(cg_file_name, "cgroup.events") != 0
+    && strcmp(cg_file_name, "cgroup.stat") != 0 && strcmp(cg_file_name, ".") != 0 && strcmp(cg_file_name, "..") != 0) {
       for(int i=0; i < strlen(__FUNCTION__) + strlen("[RUNNING] ") + REMOVE_2_ADDITIONAL_CHARS; i++)\
         printf(1, "\b");\
       printf(1, "[FAILED] %s - expected file %s in dir %s to be a cg file (%s:%d)\n", name, cg_file_name, path, __FILE__, __LINE__);
@@ -910,26 +912,32 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
 TEST(test_limiting_mem)
 {
   // Buffer for saving current memory written in limit
-  char saved_mem[12];
+  char saved_mem_max[12], saved_mem_min[12];
 
   // Enable memory controller
   ASSERT_TRUE(enable_controller(MEM_CNT));
 
   // Copy the current saved memory and remove newline at the end
-  strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
-  saved_mem[strlen(saved_mem) - 1] = '\0';
+  strcpy(saved_mem_max, read_file(TEST_1_MEM_MAX, 0));
+  saved_mem_max[strlen(saved_mem_max) - 1] = '\0';
+  strcpy(saved_mem_min, read_file(TEST_1_MEM_MIN, 0));
+  saved_mem_min[strlen(saved_mem_min) - 1] = '\0';
 
   // Update memory limit
   ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "50"));
 
   // Check changes
   ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+  ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
 
   // Restore memory limit to original
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem_max));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, saved_mem_min));
 
   // Check changes
-  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem_max, strlen(saved_mem_max)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), saved_mem_min, strlen(saved_mem_min)));
 
   // Disable memory controller
   ASSERT_TRUE(disable_controller(MEM_CNT));
@@ -1048,6 +1056,86 @@ TEST(test_cant_grow_over_mem_limit)
   ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
+TEST(test_cant_shrink_over_mem_min_limit)
+{
+  // Save current process memory size.
+  char proc_mem[10];
+  itoa(proc_mem, getmem());
+  // Buffer to read contents from memory file.
+  char saved_mem[10];
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, proc_mem));
+
+  strcat(proc_mem, "\n");
+
+  // Read the contents of limit file and convert it for comparison.
+  strcpy(saved_mem, read_file(TEST_1_MEM_MIN, 0));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(saved_mem, proc_mem));
+
+  // Move the current process to "/cgroup/test1" cgroup.
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  // Attempt to shrink process memory, notice this operation should fail and return -1.
+  ASSERT_UINT_EQ((int)sbrk(-10), -1);
+
+  // Return the process to root cgroup.
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  // Check that the process we returned is really in root cgroup.
+  ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_proc_mem_grows_to_match_mem_min_limit)
+{
+  // Save current process memory size.
+  char proc_mem[10], min_proc_mem[10];
+  itoa(proc_mem, getmem());
+  itoa(min_proc_mem, getmem() + 50);
+  // Buffer to read contents from memory file.
+  char saved_mem[10];
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, min_proc_mem));
+
+  strcat(min_proc_mem, "\n");
+
+  // Read the contents of limit file and convert it for comparison.
+  strcpy(saved_mem, read_file(TEST_1_MEM_MIN, 0));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(saved_mem, min_proc_mem));
+
+  // Move the current process to "/cgroup/test1" cgroup.
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  // Get process memory, it should've grown to memory minimum value
+  itoa(proc_mem, getmem());
+
+  // Test that the memory.min equals to this process memory
+  ASSERT_FALSE(strcmp(min_proc_mem, proc_mem));
+
+  // Return the process to root cgroup.
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  // Check that the process we returned is really in root cgroup.
+  ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
 TEST(test_cpu_stat)
 {
 
@@ -1056,9 +1144,9 @@ TEST(test_cpu_stat)
     char buf3[265];
     strcpy(buf1, read_file(TEST_1_CPU_STAT,0));
 
-    // Verify that the scpu time is 0 
+    // Verify that the scpu time is 0
     ASSERT_FALSE(strcmp(buf1,"usage_usec - 0\nuser_usec - 0\nsystem_usec - 0\n"));
-    
+
     // Fork here since the process should not be running after we move it inside the cgroup.
     int pid = fork();
     int pidToMove = 0;
@@ -1082,7 +1170,7 @@ TEST(test_cpu_stat)
 
         // Save sum into temp file.
         temp_write(sum);
-        
+
         // Go to sleep to ensure we cen return the child to root cgroup
         sleep(25);
         exit(0);
@@ -1101,20 +1189,20 @@ TEST(test_cpu_stat)
 
         // Check that the process we moved is really in "/cgroup/test1" cgroup.
         ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, pidToMove));
-        
+
         // Go to sleep to ensure the child process had a chance to be scheduled.
         sleep(15);
 
         // Verify that the child process have ran
         sum = temp_read(0);
         ASSERT_UINT_EQ(sum, 10);
-        
+
         // Return the child to root cgroup.
         ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, pidToMove));
 
         // Check that the child we returned is really in root cgroup.
         ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, pidToMove));
-        
+
         //read cpu.stat into a seconde buffer
         strcpy(buf2,read_file(TEST_1_CPU_STAT,0));
 
@@ -1122,7 +1210,7 @@ TEST(test_cpu_stat)
         ASSERT_TRUE(strcmp(buf1, buf2));
 
         sleep(10);
-        
+
         //read cpu.stat into a third buffer
         strcpy(buf3,read_file(TEST_1_CPU_STAT,0));
 
@@ -1171,7 +1259,7 @@ int main(int argc, char * argv[])
     run_test(test_setting_max_descendants_and_max_depth);
     run_test(test_deleting_cgroups);
     run_test(test_umount_cgroup_fs);
-    
+
     printf(1, "[===========]\n");
     if (failed) {
         printf(1, "[  FAILED   ]\n");
@@ -1182,4 +1270,3 @@ int main(int argc, char * argv[])
 
     exit(0);
 }
-
