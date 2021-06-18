@@ -72,6 +72,10 @@ struct file {
             char active;
             unsigned int max;
           } max;
+          struct {
+            char active;
+            unsigned int min;
+          } min;
         } mem;
       };
     };
