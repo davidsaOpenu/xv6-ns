@@ -208,6 +208,7 @@ int grow_proc_mem(struct proc *curproc, int n)
   if (n > 0) {
     if (curproc->cgroup->mem_controller_enabled &&
           (curproc->cgroup->current_mem + n) > curproc->cgroup->max_mem) {
+      curproc->cgroup->mem_fail_cnt++;
       return -1;
     }
   } else {
@@ -273,8 +274,10 @@ fork(void)
   // In case trying to fork a new process and the cgroup reached its memory limit,
   // given memory controller is enabled, return failure
   if (curproc->cgroup->mem_controller_enabled &&
-    (curproc->cgroup->current_mem + curproc->sz) > curproc->cgroup->max_mem)
-    return -1;
+    (curproc->cgroup->current_mem + curproc->sz) > curproc->cgroup->max_mem) {
+      curproc->cgroup->mem_fail_cnt++;
+      return -1;
+    }
 
   // Allocate process.
   if ((np = allocproc()) == 0) {

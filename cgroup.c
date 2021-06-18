@@ -387,9 +387,10 @@ int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc)
         return -1;
 
     // If the process memory in addition to existing memory is over the limit and memory controller is enabled, return error.
-    if (cgroup->mem_controller_enabled == 1 &&
-      (cgroup->current_mem + proc->sz) > cgroup->max_mem)
-      return -1;
+    if (cgroup->mem_controller_enabled == 1 && (cgroup->current_mem + proc->sz) > cgroup->max_mem) {
+        cgroup->mem_fail_cnt++;
+        return -1;
+    }
 
     // Whether a free slot was found.
     int found = 0;
