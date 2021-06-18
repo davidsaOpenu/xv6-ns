@@ -73,6 +73,7 @@ struct cgroup
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
     unsigned int min_mem; /* The minimum memory allocated to a group */
+    unsigned int mem_fail_cnt; /* Counts how many maximum memory threshold reached */
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -457,5 +458,24 @@ int enable_mem_controller(struct cgroup* cgroup);
  */
 int unsafe_disable_mem_controller(struct cgroup* cgroup);
 int disable_mem_controller(struct cgroup* cgroup);
+
+/**
+ * @brief Increments memory controller fail counter
+ *
+ * This failcnt(== failure count) shows the number of times that a usage counter
+ * hit its limit. When a memory cgroup hits a limit, failcnt increases.
+ *
+ * @param cgroup pointer to cgroup
+ * @return Returns 1 upon success, -1 upon failure
+ */
+inline int cgroup_incr_mem_failcnt(struct cgroup* cgroup) {
+  // If no cgroup found, return error
+  if (cgroup == 0)
+    return -1;
+
+  cgroup->mem_fail_cnt++;
+  return 1;
+}
+
 
 #endif

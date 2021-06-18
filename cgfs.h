@@ -23,6 +23,7 @@
 #define CGFS_MEM_CUR "memory.current"
 #define CGFS_MEM_MAX "memory.max"
 #define CGFS_MEM_MIN "memory.min"
+#define CGFS_MEM_FAILCNT "memory.failcnt"
 
 /**
  * This function opens a cgroup filesystem file or directory.
@@ -53,6 +54,7 @@
  *    16)   "memory.max"
  *    17)    cgroup directories
  *    18)    "memory.min"
+ *    19)    "memory.failcnt"
  */
 int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int omode);
 
@@ -85,6 +87,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
  *    16)   "memory.max"
  *    17)    cgroup directories
  *    18)    "memory.min"
+ *    19)    "memory.failcnt"
  */
 int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n);
 
