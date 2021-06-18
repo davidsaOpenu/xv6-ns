@@ -352,6 +352,7 @@ TEST(test_opening_and_closing_cgroup_files)
     ASSERT_TRUE(open_close_file(TEST_1_SET_FRZ));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
+    ASSERT_TRUE(open_close_file(TEST_1_MEM_MIN));
 }
 
 TEST(test_reading_cgroup_files)
@@ -372,6 +373,7 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+    ASSERT_TRUE(read_file(TEST_1_MEM_MIN, 1));
 }
 
 TEST(test_cgroup_dir)
@@ -897,26 +899,32 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
 TEST(test_limiting_mem)
 {
   // Buffer for saving current memory written in limit
-  char saved_mem[12];
+  char saved_mem_max[12], saved_mem_min[12];
 
   // Enable memory controller
   ASSERT_TRUE(enable_controller(MEM_CNT));
 
   // Copy the current saved memory and remove newline at the end
-  strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
-  saved_mem[strlen(saved_mem) - 1] = '\0';
+  strcpy(saved_mem_max, read_file(TEST_1_MEM_MAX, 0));
+  saved_mem_max[strlen(saved_mem_max) - 1] = '\0';
+  strcpy(saved_mem_min, read_file(TEST_1_MEM_MIN, 0));
+  saved_mem_min[strlen(saved_mem_min) - 1] = '\0';
 
   // Update memory limit
   ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "50"));
 
   // Check changes
   ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+  ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
 
   // Restore memory limit to original
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem_max));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, saved_mem_min));
 
   // Check changes
-  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem_max, strlen(saved_mem_max)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), saved_mem_min, strlen(saved_mem_min)));
 
   // Disable memory controller
   ASSERT_TRUE(disable_controller(MEM_CNT));
@@ -1035,6 +1043,321 @@ TEST(test_cant_grow_over_mem_limit)
   ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
+TEST(test_cant_shrink_over_mem_min_limit)
+{
+  // Save current process memory size.
+  char proc_mem[10];
+  itoa(proc_mem, getmem());
+  // Buffer to read contents from memory file.
+  char saved_mem[10];
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, proc_mem));
+
+  strcat(proc_mem, "\n");
+
+  // Read the contents of limit file and convert it for comparison.
+  strcpy(saved_mem, read_file(TEST_1_MEM_MIN, 0));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(saved_mem, proc_mem));
+
+  // Move the current process to "/cgroup/test1" cgroup.
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  // Attempt to shrink process memory, notice this operation should fail and return -1.
+  ASSERT_UINT_EQ((int)sbrk(-10), -1);
+
+  // Return the process to root cgroup.
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  // Check that the process we returned is really in root cgroup.
+  ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_proc_mem_grows_to_match_mem_min_limit)
+{
+  // Save current process memory size.
+  char proc_mem[10], min_proc_mem[10];
+  int proc_mem_before_move = getmem();
+
+  itoa(proc_mem, proc_mem_before_move);
+  itoa(min_proc_mem, proc_mem_before_move + 10000);
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, min_proc_mem));
+
+  // Move the current process to "/cgroup/test1" cgroup.
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  // Get process memory, it should've grown to memory minimum value
+  itoa(proc_mem, getmem());
+
+  // Test that the memory.min equals to this process memory
+  ASSERT_FALSE(strcmp(min_proc_mem, proc_mem));
+
+  // Return the process to root cgroup.
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  // Check that the process we returned is really in root cgroup.
+  ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+
+  // shrink back the process memory
+  sbrk(proc_mem_before_move - getmem());
+  ASSERT_TRUE(getmem() == proc_mem_before_move)
+}
+
+TEST(test_procs_grow_to_match_mem_min)
+{
+  // Have two processes in a cgroup
+  // set mem.min to be greater than mem.current
+  // move child process back to root
+
+  // Save current process memory size.
+  char min_proc_mem[8];
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  int pid = fork();
+  int child_pid = 0;
+  int wstatus;
+  int num_processes = 2;
+
+  // Child
+  if (pid == 0) {
+    child_pid = getpid();
+
+    // Save the pid of child in temp file.
+    temp_write(child_pid);
+
+    // Go to sleep to ensure we can return the child to root cgroup
+    sleep(50);
+    exit(0);
+  } else {
+    sleep(5);
+
+    // Read the child pid from temp file.
+    child_pid = temp_read(0);
+    int parent_pid = getpid();
+    int parent_initial_mem = getmem();
+
+    // Move the child process to "/cgroup/test1" cgroup.
+    ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, child_pid));
+    // Check that the process we moved is really in "/cgroup/test1" cgroup.
+    ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, child_pid));
+
+    // Move the child process to "/cgroup/test1" cgroup.
+    ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, parent_pid));
+    // Check that the process we moved is really in "/cgroup/test1" cgroup.
+    ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, parent_pid));
+
+    // Current memory of 2 processes in a cgroup
+    int cur_memory_before = atoi(read_file(TEST_1_MEM_CURRENT, 0));
+    // Set minimum bar high
+    int min_mem = cur_memory_before * 4;
+
+    itoa(min_proc_mem, min_mem);
+
+    // Update memory min limit
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, min_proc_mem));
+
+    int cur_memory_after = atoi(read_file(TEST_1_MEM_CURRENT, 0));
+
+    ASSERT_TRUE(cur_memory_after > cur_memory_before);
+    ASSERT_TRUE(cur_memory_after >= min_mem);
+    ASSERT_TRUE((min_mem / num_processes) == getmem());
+
+    // Return the child to root cgroup.
+    ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, child_pid));
+
+    // Check that the child we returned is really in root cgroup.
+    ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, child_pid));
+
+    cur_memory_after = atoi(read_file(TEST_1_MEM_CURRENT, 0));
+
+    ASSERT_TRUE(getmem() >= min_mem);
+    ASSERT_TRUE(getmem() > parent_initial_mem);
+
+    // Return the parent to root cgroup.
+    ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, parent_pid));
+    // Check that the parent we returned is really in root cgroup.
+    ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, parent_pid));
+
+    // Wait for child to exit.
+    wait(&wstatus);
+    ASSERT_TRUE(wstatus);
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+
+    // Remove the temp file.
+    ASSERT_TRUE(temp_delete());
+
+    // shrink back the process memory
+    sbrk(parent_initial_mem - getmem());
+    ASSERT_TRUE(getmem() == parent_initial_mem);
+  }
+}
+
+TEST(test_mem_min_eq_mem_max)
+{
+  // Move a process to cgroup with memory min and max equal limit value
+
+  // Save current process memory size.
+  char proc_min_max_mem_str[8];
+  int proc_id = getpid();
+  int proc_mem_before_move = getmem();
+  int proc_min_max_mem = proc_mem_before_move + 5000;
+
+  itoa(proc_min_max_mem_str, proc_min_max_mem);
+
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, proc_min_max_mem_str));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, proc_min_max_mem_str));
+
+  // Move the process to "/cgroup/test1" cgroup.
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, proc_id));
+  // Check that the process we moved is really in "/cgroup/test1" cgroup.
+  ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, proc_id));
+
+  ASSERT_TRUE(proc_mem_before_move < getmem());
+  ASSERT_TRUE(proc_min_max_mem == getmem());
+
+  // Return the process to root cgroup.
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, proc_id));
+  // Check that the process we returned is really in root cgroup.
+  ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, proc_id));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+
+  // shrink back the process memory
+  sbrk(proc_mem_before_move - proc_min_max_mem);
+  ASSERT_TRUE(getmem() == proc_mem_before_move);
+}
+
+
+TEST(test_mem_min_greater_than_mem_max)
+{
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+
+  // Update memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "150"));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_cpu_stat)
+{
+
+    char buf1[265];
+    char buf2[265];
+    char buf3[265];
+    strcpy(buf1, read_file(TEST_1_CPU_STAT,0));
+
+    // Verify that the scpu time is 0
+    ASSERT_FALSE(strcmp(buf1,"usage_usec - 0\nuser_usec - 0\nsystem_usec - 0\n"));
+
+    // Fork here since the process should not be running after we move it inside the cgroup.
+    int pid = fork();
+    int pidToMove = 0;
+    int sum = 0;
+    int wstatus;
+
+    // Child
+    if (pid == 0) {
+        pidToMove = getpid();
+
+        // Save the pid of child in temp file.
+        temp_write(pidToMove);
+
+        // Go to sleep for long period of time.
+        sleep(10);
+
+        // At this point, the child process should already be inside the cgroup.
+        for (int i = 0; i < 10; i++) {
+            sum += 1;
+        }
+
+        // Save sum into temp file.
+        temp_write(sum);
+
+        // Go to sleep to ensure we cen return the child to root cgroup
+        sleep(25);
+        exit(0);
+    }
+    // Father
+    else {
+        sleep(5);
+
+        // Read the child pid from temp file.
+        pidToMove = temp_read(0);
+
+        // Update the temp file for further reading, since next sum will be read from it.
+        ASSERT_TRUE(temp_write(0));
+
+        // Move the child process to "/cgroup/test1" cgroup.
+        ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, pidToMove));
+
+        // Check that the process we moved is really in "/cgroup/test1" cgroup.
+        ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, pidToMove));
+
+        // Go to sleep to ensure the child process had a chance to be scheduled.
+        sleep(15);
+
+        // Verify that the child process have ran
+        sum = temp_read(0);
+        ASSERT_UINT_EQ(sum, 10);
+
+        // Return the child to root cgroup.
+        ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, pidToMove));
+
+        // Check that the child we returned is really in root cgroup.
+        ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, pidToMove));
+
+        //read cpu.stat into a seconde buffer
+        strcpy(buf2,read_file(TEST_1_CPU_STAT,0));
+
+        // Verify that the cpu time has changed because of the child's runing
+        ASSERT_TRUE(strcmp(buf1, buf2));
+
+        sleep(10);
+
+        //read cpu.stat into a third buffer
+        strcpy(buf3,read_file(TEST_1_CPU_STAT,0));
+
+        // Verify that the cpu time has no changed since the child removed
+        ASSERT_FALSE(strcmp(buf2,buf3));
+
+        // Wait for child to exit.
+        wait(&wstatus);
+        ASSERT_TRUE(wstatus);
+
+        // Remove the temp file.
+        ASSERT_TRUE(temp_delete());
+
+    }
+}
+
 int main(int argc, char * argv[])
 {
     // comment out for debug messages
@@ -1062,6 +1385,11 @@ int main(int argc, char * argv[])
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
     run_test(test_cant_grow_over_mem_limit);
+    run_test(test_cant_shrink_over_mem_min_limit);
+    run_test(test_proc_mem_grows_to_match_mem_min_limit);
+    run_test(test_mem_min_eq_mem_max);
+    run_test(test_mem_min_greater_than_mem_max);
+    run_test(test_procs_grow_to_match_mem_min);
     run_test(test_limiting_cpu_max_and_period);
     run_test(test_setting_max_descendants_and_max_depth);
     run_test(test_deleting_cgroups);
