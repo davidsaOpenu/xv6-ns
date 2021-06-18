@@ -30,6 +30,7 @@
 #define MEM_MAX 16
 #define MEM_MIN 17
 #define MEM_STAT 18
+#define MEM_FAILCNT 19
 
 // TODO: refactor - move to defs.h
 #define min(x, y) (x) > (y) ? (y) : (x)
@@ -250,7 +251,8 @@ static int get_file_name_constant(char * filename)
         return MEM_MIN;
     else if (strcmp(filename, CGFS_MEM_STAT) == 0)
       return MEM_STAT;
-
+    else if (strcmp(filename, CGFS_MEM_FAILCNT) == 0)
+        return MEM_FAILCNT;
     return -1;
 }
 
@@ -278,6 +280,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case SET_FRZ:
             case MEM_MAX:
             case MEM_MIN:
+            case MEM_FAILCNT:
                 writable = 1;
                 break;
 
@@ -371,6 +374,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                 f->mem.stat.file_dirty_aggregated = cgp->mem_stat_file_dirty_aggregated;
                 f->mem.stat.pgfault = cgp->mem_stat_pgfault;
                 f->mem.stat.pgmajfault = cgp->mem_stat_pgmajfault;
+                break;
+
+            case MEM_FAILCNT:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->mem.failcnt.active = cgp->mem_controller_enabled;
+                f->mem.failcnt.cnt = cgp->mem_fail_cnt;
                 break;
         }
 
@@ -710,6 +720,17 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
+        } else if (filename_const == MEM_FAILCNT) {
+            char mem_failcnt_buf[10] = {0};
+            char* mem_failcnt_text = buf;
+            char* pmem_failcnt_text = mem_failcnt_text;
+
+            utoa(mem_failcnt_buf, f->mem.failcnt.cnt);
+
+            copy_and_move_buffer(&pmem_failcnt_text, mem_failcnt_buf, strlen(mem_failcnt_buf));
+            copy_and_move_buffer(&pmem_failcnt_text, "\n", strlen("\n"));
+
+            r = copy_buffer_up_to_end(mem_failcnt_text + f->off, min(pmem_failcnt_text - mem_failcnt_text, n), addr);
         }
 
         f->off += r;
@@ -769,6 +790,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             if (f->cgp->mem_controller_enabled) {
               copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MAX);
               copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MIN);
+              copy_and_move_buffer_max_len(&bufp, CGFS_MEM_FAILCNT);
             }
         }
 
@@ -1059,6 +1081,29 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
             return -1;
         f->mem.min.min = min;
         r = n;
+    } else if (filename_const == MEM_FAILCNT && f->cgp->mem_controller_enabled) {
+        char failcnt_string[32] = { 0 };
+        unsigned int failcnt = -1;
+        unsigned int i = 0;
+
+        while (*addr != ',' && *addr != '\0' && i < sizeof(failcnt_string)) {
+            failcnt_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        failcnt_string[i] = '\0';
+
+        // Update failcnt
+        failcnt = atoi(failcnt_string);
+        if (failcnt != 0) {
+            return -1;
+        }
+
+        // Update failcnt memory field if the paramter is of zero
+        f->mem.failcnt.cnt = failcnt;
+        f->cgp->mem_fail_cnt = failcnt;
+
+        r = n;
     }
     return r;
 }
@@ -1171,6 +1216,8 @@ static int cg_file_size(struct file * f)
     } else if (filename_const == MEM_CUR) {
         size += strlen("cur_mem_in_bytes - ") +
             intlen(f->cgp->current_mem) + strlen("\n");
+    } else if (filename_const == MEM_FAILCNT) {
+        size += intlen(f->cgp->mem_fail_cnt) + strlen("\n");
     }
 
     return size;

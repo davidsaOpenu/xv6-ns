@@ -83,6 +83,10 @@ struct file {
               char active;
               unsigned int min;
           } min;
+          struct {
+            char active;
+            unsigned int cnt;
+          } failcnt;
         } mem;
       };
     };
