@@ -136,6 +136,24 @@ struct cgroup * cgroup_root(void)
     return &cgtable.cgroups[0];
 }
 
+/**
+ * @brief Checks if parent cgroup is ancestor of child
+ *
+ * @param parent cgroup parent to check if ancestor of a child
+ * @param child cgroup child, to test if it is a descendant of parent
+ * @return 1 upon parent is ancestor of a child, else returns 0
+ */
+static int is_cgroup_ancestor(struct cgroup *parent, struct cgroup *child)
+{
+    struct cgroup *root = cgroup_root();
+    while(child != root) {
+        if (child == parent)
+            return 1;
+        child = child->parent;
+    }
+    return 0;
+}
+
 struct cgroup * cgroup_create(char * path)
 {
     char fpath[MAX_PATH_LENGTH];
@@ -251,6 +269,13 @@ int cgroup_delete(char * path, char * type)
     return 0;
 }
 
+static void cgroup_mem_ctrl_init(struct cgroup *cgroup)
+{
+    // By default a group has limit of KERNBASE memory.
+    set_max_mem(cgroup, KERNBASE);
+    set_min_mem(cgroup, 0);
+}
+
 void cgroup_initialize(struct cgroup * cgroup,
                        char * path,
                        struct cgroup * parent_cgroup)
@@ -326,8 +351,8 @@ void cgroup_initialize(struct cgroup * cgroup,
     set_cpu_id(cgroup, 0);
     // By default a group is not frozen
     frz_grp(cgroup, 0);
-    // By default a group has limit of KERNBASE memory.
-    set_max_mem(cgroup, KERNBASE);
+
+    cgroup_mem_ctrl_init(cgroup);
 
     cgroup->cpu_account_frame = 0;
     cgroup->cpu_percent = 0;
@@ -401,14 +426,21 @@ int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc)
     // Set the cgroup of the current process.
     proc->cgroup = cgroup;
 
+    struct cgroup *temp_cgroup = cgroup;
+
     // Update current number of processes in cgroup subtree for all
     // ancestors.
-    while (cgroup != 0) {
-        cgroup->num_of_procs++;
-        cgroup->populated = 1;
-        cgroup->current_mem += proc->sz;
-        cgroup = cgroup->parent;
+    while (temp_cgroup != 0) {
+        temp_cgroup->num_of_procs++;
+        temp_cgroup->populated = 1;
+        temp_cgroup->current_mem += proc->sz;
+        temp_cgroup = temp_cgroup->parent;
     }
+
+    if (cgroup->mem_controller_enabled == 1 && cgroup->current_mem < cgroup->min_mem) {
+        grow_proc_mem(proc, cgroup->min_mem - cgroup->current_mem);
+    }
+
     return 0;
 }
 
@@ -846,6 +878,20 @@ int set_max_mem(struct cgroup* cgroup, unsigned int limit) {
   return 0;
 }
 
+int set_min_mem(struct cgroup* cgroup, unsigned int limit) {
+  // If no cgroup found, return error
+  if (cgroup == 0)
+    return -1;
+
+  // Set the limit if it is within allowed parameters
+  if (limit >= 0 && limit <= cgroup->max_mem) {
+    cgroup->min_mem = limit;
+    return 1;
+  }
+
+  return 0;
+}
+
 int unsafe_enable_mem_controller(struct cgroup* cgroup) {
   // If cgroup has processes in it, controllers can't be enabled.
   if (cgroup == 0 || cgroup->populated == 1) {
@@ -893,15 +939,60 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
 
   // Set memory controller to disabled.
   cgroup->mem_controller_enabled = 0;
+  cgroup_mem_ctrl_init(cgroup);
 
   // Set memory controller to unavalible in all child cgroups.
-  for (int i = 1;
-    i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
-    i++)
-    if (cgtable.cgroups[i].parent == cgroup)
+  for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++) {
+    if (cgtable.cgroups[i].parent == cgroup) {
       cgtable.cgroups[i].mem_controller_avalible = 0;
+      cgroup_mem_ctrl_init(&cgtable.cgroups[i]);
+    }
+  }
 
   return 0;
+}
+
+static void handle_cgroup_mem_min_grow_procs(struct cgroup* cgroup, uint mem_incr)
+{
+    short proc_idx;
+
+    for (proc_idx = 0; proc_idx < cgroup->num_of_procs; proc_idx++) {
+        if (cgroup->proc[proc_idx] != 0) {
+            grow_proc_mem(cgroup->proc[proc_idx], mem_incr);
+        }
+    }
+}
+
+static void handle_cgroup_mem_min_incr(struct cgroup* cgroup, uint mem_incr)
+{
+    short cgroup_idx;
+
+    if (cgroup->depth > 0) {
+        for (cgroup_idx = 1; cgroup_idx < NPROC; cgroup_idx++) {
+            if (is_cgroup_ancestor(cgroup, &cgtable.cgroups[cgroup_idx])) {
+                handle_cgroup_mem_min_grow_procs(&cgtable.cgroups[cgroup_idx], mem_incr);
+            }
+        }
+    }
+
+    handle_cgroup_mem_min_grow_procs(cgroup, mem_incr);
+}
+
+void unsafe_handle_cgroup_mem_min_alloc(struct cgroup* cgroup)
+{
+    if (cgroup != 0 && cgroup->mem_controller_enabled && cgroup->current_mem < cgroup->min_mem) {
+        if (cgroup->populated) {
+            unsigned int mem_diff = cgroup->min_mem - cgroup->current_mem;
+
+            if ((mem_diff % cgroup->num_of_procs) != 0) {
+                mem_diff += cgroup->num_of_procs - (mem_diff % cgroup->num_of_procs);
+            }
+
+            unsigned int mem_incr = mem_diff / cgroup->num_of_procs;
+
+            handle_cgroup_mem_min_incr(cgroup, mem_incr);
+        }
+    }
 }
 
 int enable_mem_controller(struct cgroup* cgroup)
@@ -918,4 +1009,11 @@ int disable_mem_controller(struct cgroup* cgroup)
   int res = unsafe_disable_mem_controller(cgroup);
   release(&cgtable.lock);
   return res;
+}
+
+void handle_mem_min_alloc(struct cgroup* cgroup)
+{
+    acquire(&cgtable.lock);
+    unsafe_handle_cgroup_mem_min_alloc(cgroup);
+    release(&cgtable.lock);
 }
