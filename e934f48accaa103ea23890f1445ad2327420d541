@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "243f709f_6a7751c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-06-23T13:29:48Z",
+      "side": 1,
+      "message": "thanks for working on this. Although the change in mounttest.c seems unrelated, but let\u0027s leave the change. \nJust please add rp runtests.exp something like this:\n\n\n# - xv6 mntns test with ls\n# @argv - file name for logging\nproc mounttest_with_ls {argv} {\n\n    send \"mkdir newDir\\n\"\n    sleep 2\n\n    expect {\n       \"$ \"\n    }\n\n    send \"mount internal_fs_a newDir\\n\"\n    sleep 2\n\n    expect {\n       \"$ \"\n    }\n\n    send \"ls newDir\\n\"\n    sleep 2\n\n    expect {\n       \"$ \"\n    }\n}\n",
+      "revId": "e934f48accaa103ea23890f1445ad2327420d541",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
