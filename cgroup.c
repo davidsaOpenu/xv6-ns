@@ -306,6 +306,7 @@ void cgroup_initialize(struct cgroup * cgroup,
 
         cgroup->pid_controller_enabled = 0;
         cgroup->cpu_controller_enabled = 0;
+        cgroup->cpu_weight = DEFAULT_CGROUP_CPU_WEIGHT;
         cgroup->set_controller_enabled = 0;
         cgroup->mem_controller_enabled = 0;
         cgroup->depth = cgroup->parent->depth + 1;
