@@ -79,6 +79,54 @@
       },
       "revId": "0834bd4e622079dfc8d2f5d8c87f315495463db4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a223d92_aa1dbec5",
+        "filename": "device.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-06-25T15:41:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a813d195_7e7fb68c",
+      "range": {
+        "startLine": 121,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 7
+      },
+      "revId": "0834bd4e622079dfc8d2f5d8c87f315495463db4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17cbbc93_0fe107b6",
+        "filename": "device.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-06-25T15:41:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6708ed84_fb10bf45",
+      "range": {
+        "startLine": 121,
+        "startChar": 10,
+        "endLine": 121,
+        "endChar": 28
+      },
+      "revId": "0834bd4e622079dfc8d2f5d8c87f315495463db4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
