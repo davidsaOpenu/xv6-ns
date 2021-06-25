@@ -29,6 +29,7 @@
 #define MEM_MAX 16
 
 #define min(x, y) (x) > (y) ? (y) : (x)
+#define abs(x) (x) > 0 ? (x) : (0)
 
 /**
  * This function copies from given buffer into a given address based on the input parameters.
@@ -303,7 +304,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CPU_WEIGHT:
                 if (cgp == cgroup_root())
                     return -1;
-                f->cpu.weight.weight = 0;
+                f->cpu.weight.weight = cgp->cpu_weight;
                 break;
 
             case CPU_MAX:
@@ -544,35 +545,33 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             r = copy_buffer_up_to_end(stattext + f->off, min(stattextp - stattext, n), addr);
 
         } else if (filename_const == CPU_WEIGHT) {
-            char weight_buf[11] = {0};
-            char weighttext[strlen("weight - ") +
-                itoa(weight_buf, f->cpu.weight.weight) + 2];
-            char * weighttextp = weighttext;
-
+            char tmp_num_buff[20] = {0};
+            char weighttext[100] = {};
+            char *weighttextp = weighttext;
             copy_and_move_buffer(&weighttextp, "weight - ", strlen("weight - "));
-            copy_and_move_buffer(&weighttextp, weight_buf, strlen(weight_buf));
+            int num_str_length = utoa(tmp_num_buff, f->cpu.weight.weight);
+            copy_and_move_buffer(&weighttextp, tmp_num_buff, num_str_length);
             copy_and_move_buffer(&weighttextp, "\n", strlen("\n"));
 
-            r = copy_buffer_up_to_end(weighttext + f->off, min(sizeof(weighttext), n), addr);
-
-        } else if (filename_const == CPU_MAX) {
-            char max_buf[11] = {0};
-            char period_buf[11] = {0};
-            char maxtext[strlen("max - ") + utoa(max_buf, f->cpu.max.max) +
-                strlen("\n") + strlen("period - ") +
-                itoa(period_buf, f->cpu.max.period) + 2];
-            char * maxtextp = maxtext;
-
+            r = copy_buffer_up_to_end(weighttext + f->off, min(abs(weighttextp - weighttext - f->off), n), addr);
+        }
+        else if (filename_const == CPU_MAX)
+        {
+            char tmp_num_buff[20] = {0};
+            char maxtext[100] = {};
+            char *maxtextp = maxtext;
             copy_and_move_buffer(&maxtextp, "max - ", strlen("max - "));
-            copy_and_move_buffer(&maxtextp, max_buf, strlen(max_buf));
-            copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
-            copy_and_move_buffer(&maxtextp, "period - ", strlen("period - "));
-            copy_and_move_buffer(&maxtextp, period_buf, strlen(period_buf));
+            int num_str_length = utoa(tmp_num_buff, f->cpu.max.max);
+            copy_and_move_buffer(&maxtextp, tmp_num_buff, num_str_length);
+            copy_and_move_buffer(&maxtextp, "\nperiod - ", strlen("\nperiod - "));
+            num_str_length = utoa(tmp_num_buff, f->cpu.max.period);
+            copy_and_move_buffer(&maxtextp, tmp_num_buff, num_str_length);
             copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
 
-            r = copy_buffer_up_to_end(maxtext + f->off, min(maxtextp - maxtext, n), addr);
-
-        } else if (filename_const == PID_MAX) {
+            r = copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
+        }
+        else if (filename_const == PID_MAX)
+        {
             char max_buf[11] = {0};
             char maxtext[strlen("max - ") + itoa(max_buf, f->pid.max.max) + 2];
             char * maxtextp = maxtext;
@@ -582,8 +581,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(maxtext + f->off, min(maxtextp - maxtext, n), addr);
-
-        } else if (filename_const == PID_CUR) {
+        }
+        else if (filename_const == PID_CUR)
+        {
             char nr_of_procs_buf[MAX_DECS_SIZE] = {0};
             itoa(nr_of_procs_buf, f->cgp->num_of_procs);
 
@@ -596,7 +596,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(stattext + f->off, min(sizeof(stattext), n), addr);
-        } else if (filename_const == SET_CPU) {
+        }
+        else if (filename_const == SET_CPU)
+        {
             char cpu_buf[11] = {0};
             char cputext[strlen("use_cpu - ") + itoa(cpu_buf, f->cpu_s.set.cpu_id) + 2];
             char * cputextp = cputext;
@@ -606,7 +608,8 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&cputextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(cputext + f->off, min(cputextp - cputext, n), addr);
-        } else if (filename_const == SET_FRZ) {
+        } else if (filename_const == SET_FRZ)
+        {
             char frz_buf[11] = {0};
             char frztext[itoa(frz_buf, f->frz.freezer.frozen) + 2];
             char * frztextp = frztext;
@@ -615,7 +618,8 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&frztextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(frztext + f->off, min(frztextp - frztext, n), addr);
-        } else if (filename_const == MEM_CUR) {
+        }
+        else if (filename_const == MEM_CUR) {
             char cur_mem_buf[10] = {0};
             utoa(cur_mem_buf, f->cgp->current_mem);
 
@@ -626,7 +630,9 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(stattext + f->off, min(sizeof(stattext), n), addr);
-        } else if (filename_const == MEM_MAX) {
+        }
+        else if (filename_const == MEM_MAX)
+        {
             char max_buf[10] = {0};
             char maxtext[utoa(max_buf, f->mem.max.max) + 2];
             char* maxtextp = maxtext;
@@ -849,8 +855,22 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         f->cpu.max.max = max;
 
         r = n;
+    } else if (filename_const == CPU_WEIGHT &&
+               f->cgp->cpu_controller_enabled) {
+        int weight = atoi(addr);
+        if (weight == -1)
+            return -1;
+
+        // Update cpu weight field if the paramter is within allowed values
+        int test = set_cpu_weight(f->cgp, weight);
+        if (test == 0 || test == -1) {
+            return -1;
+        }
+        f->cpu.weight.weight = weight;
+
+        r = n;
     } else if (filename_const == PID_MAX &&
-            f->cgp->pid_controller_enabled) {
+               f->cgp->pid_controller_enabled) {
         char max_string[32] = {0};
         int max = -1;
         int i = 0;
