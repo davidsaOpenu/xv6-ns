@@ -29,8 +29,6 @@
 #define MEM_CUR 15
 #define MEM_MAX 16
 
-#define min(x, y) (x) > (y) ? (y) : (x)
-#define abs(x) (x) > 0 ? (x) : (0)
 
 // Is static to save space in the stack
 static char buf[MAX_BUF];
@@ -308,7 +306,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case CPU_WEIGHT:
                 if (cgp == cgroup_root())
                     return -1;
-                f->cpu.weight.weight = 0;
+                f->cpu.weight.weight = cgp->cpu_weight;
                 break;
 
             case CPU_MAX:
@@ -844,8 +842,22 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
         f->cpu.max.max = max;
 
         r = n;
+    } else if (filename_const == CPU_WEIGHT &&
+               f->cgp->cpu_controller_enabled) {
+        int weight = atoi(addr);
+        if (weight == -1)
+            return -1;
+
+        // Update cpu weight field if the paramter is within allowed values
+        int test = set_cpu_weight(f->cgp, weight);
+        if (test == 0 || test == -1) {
+            return -1;
+        }
+        f->cpu.weight.weight = weight;
+
+        r = n;
     } else if (filename_const == PID_MAX &&
-            f->cgp->pid_controller_enabled) {
+               f->cgp->pid_controller_enabled) {
         char max_string[32] = {0};
         int max = -1;
         int i = 0;
