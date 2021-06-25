@@ -22,7 +22,6 @@
 #include "file.h"
 #include "mount.h"
 
-#define min(a, b) ((a) < (b) ? (a) : (b))
 static void itrunc(struct inode*);
 
 // Read the super block.
