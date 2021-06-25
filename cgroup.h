@@ -10,6 +10,10 @@
 
 #define MAX_CONTROLLER_NAME_LENGTH 16  // Max length allowed for controller names
 
+#define MAX_CGROUP_CPU_WEIGHT 10000
+#define MIN_CGROUP_CPU_WEIGHT 1
+#define DEFAULT_CGROUP_CPU_WEIGHT 100
+
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
 
 /**
@@ -25,7 +29,6 @@ struct cgroup
     struct proc * proc[NPROC]; /* Array of all processes in the cgroup.*/
     int num_of_procs;          /* Number of processes in the cgroup subtree
                                   (including processes in this cgroup).*/
-
     struct cgroup * parent; /* The parent cgroup.*/
 
     char cpu_controller_avalible; /* Is 1 if cpu controller may be enabled,
@@ -73,16 +76,32 @@ struct cgroup
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
 
+    /* All references to a cgroup cpu time include all processes in the cgroup (including processes in sub cgroups) */
+    /* How much cpu time the cgroup has ever used */
     unsigned long long cpu_time;
+    /* How much cpu time the cgroup used in the current period frame */
     unsigned int cpu_period_time;
+    /* What is the precent of cpu time the cgroup used in the current
+     period frame */
     unsigned int cpu_percent;
+    /* The period to calculate cpu limiting by (cpu.max.period) */
     unsigned int cpu_account_period;
+    /* How much cpu can the cgroup use in a single 
+    period frame (cpu.max.max) */
     unsigned int cpu_time_limit;
+    /* The "perion frame" number. Increases by one when a new frame starts */
     unsigned int cpu_account_frame;
+    /* The total number of perionds the cgroup used */
     unsigned int cpu_nr_periods;
+    /* The total number of times the cgroup was throttled */
     unsigned int cpu_nr_throttled;
+     /* The total number of unisecods the cgroup was throttled */
     unsigned int cpu_throttled_usec;
+    /* Has the cgroup been throttled in this period */
     char cpu_is_throttled_period;
+    /* Prioretize the cgroup cpu time in relation to other cgroups 
+    and processes (cpu.weight.weight) */
+    unsigned int cpu_weight;
 };
 
 /**
@@ -165,6 +184,23 @@ int cgroup_insert(struct cgroup * cgroup, struct proc * proc);
  * Return value is void.
  */
 void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
+
+/**
+ * This function calculate the sum of weights of a given cgroup's children cgroups and active processes.
+ * This funcion is unsafe which means it does not acquire cgroup table lock.
+ * Receives cgroup pointer parameter "cgroup".
+ * "cgroup" is pointer to the cgroup of which we sum the children weights.
+ * Return value is the sum of weights of the cgroup's children.
+ */
+int unsafe_get_sum_children_weights(struct cgroup* cgroup);
+
+/**
+ * This function sets the cpu weight of the cgroup.
+ * Receives cgroup pointer parameter "cgroup" and integer "weight".
+ * Sets the cpu weight of the cgroup cpu controller to be "weight".
+ * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ */
+int set_cpu_weight(struct cgroup* cgp, unsigned int weight);
 
 /**
  * These functions enable the cpu controller of a cgroup.
