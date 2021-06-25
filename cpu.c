@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 
     while (1) {
         printf(1, "cpu time: %d, cpu percent: %d\n",
-               ioctl(-1, IOCTL_GET_PROCESS_CPU_TIME),
-               ioctl(-1, IOCTL_GET_PROCESS_CPU_PERCENT));
+               ioctl(0, IOCTL_GET_PROCESS_CPU_TIME, 0),
+               ioctl(0, IOCTL_GET_PROCESS_CPU_PERCENT, 0));
         if (microseconds) {
             usleep(microseconds);
         }
