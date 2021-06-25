@@ -136,12 +136,31 @@ sys_ioctl(void)
   int request = -1;
   int command;
 
-  int i,ret;
+  int i,ret, result;
   struct file *f;
   struct inode* ip;
 
-  if(argfd(0, &fd, &f) < 0 || argint(1, &request) < 0 || argint(2, &command) < 0)
+  if (argfd(0, &fd, &f) < 0 || argint(1, &request) < 0 || argint(2, &command) < 0)
     return -1;
+
+  if (request ==  IOCTL_GET_PROCESS_CPU_PERCENT) {
+    proc_lock();
+    result = myproc()->cpu_percent;
+    proc_unlock();
+    return result;
+  }
+  if (request == IOCTL_GET_PROCESS_CPU_TIME) {
+    proc_lock();
+    result = myproc()->cpu_time;
+    proc_unlock();
+    return result;
+  }
+  if (request == IOCTL_GET_TIME) {  // NEED TO DELLETE - temp for debugging
+    proc_lock();
+    result = steady_clock_now();
+    proc_unlock();
+    return result;
+  }
 
   if(!(command  & DEV_CONNECT) &&
      !(command & DEV_DISCONNECT) &&
@@ -168,19 +187,7 @@ sys_ioctl(void)
      return -1;
   }
 
-  int result;
   switch (request) {
-  case IOCTL_GET_PROCESS_CPU_PERCENT:
-    proc_lock();
-    result = myproc()->cpu_percent;
-    proc_unlock();
-    return result;
-  case IOCTL_GET_PROCESS_CPU_TIME:
-    proc_lock();
-    result = myproc()->cpu_time;
-    proc_unlock();
-    return result;
-
   case TTYSETS:
     if((command & DEV_DISCONNECT)){
         devsw[ip->major].flags &=  ~(DEV_CONNECT);
