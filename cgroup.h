@@ -82,6 +82,7 @@ struct cgroup
     unsigned int cpu_nr_periods;
     unsigned int cpu_nr_throttled;
     unsigned int cpu_throttled_usec;
+    unsigned int cpu_weight; /* in the range [1, 10000] with the default at 100 */
     char cpu_is_throttled_period;
 };
 
