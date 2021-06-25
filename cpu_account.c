@@ -1,5 +1,6 @@
 #include "cpu_account.h"
 #include "steady_clock.h"
+#include "cgfs.h"
 
 void cpu_account_initialize(struct cpu_account * cpu)
 {
@@ -45,6 +46,7 @@ int cpu_account_schedule_process_decision(struct cpu_account * cpu,
     // Lock cgroup table.
     cgroup_lock();
 
+    // Update the cpu cgroup values of all the cgroup ansestors of this process and throttle the process if needed
     while (cgroup) {
         // The cgroup cpu account frame.
         cgroup_cpu_account_frame =
@@ -88,10 +90,51 @@ int cpu_account_schedule_process_decision(struct cpu_account * cpu,
         // Advance to parent and continue.
         cgroup = cgroup->parent;
     }
-
+    if (schedule) {
+        schedule = cpu_account_schedule_process_decision_by_weights(cpu, p);
+    }
     // Unlock the cgroup lock and return the result.
     cgroup_unlock();
     return schedule;
+}
+
+int cpu_account_schedule_process_decision_by_weights(struct cpu_account * cpu, struct proc * p) {
+    unsigned int expected_cpu_precent = 100;
+    struct cgroup *parent_cgroup = p->cgroup;
+    int debug = 1;
+    if (debug) {
+        cprintf("in cpu_account_schedule_process_decision_by_weight");
+        cprintf(" ");
+        cprintf("%d --p->cpu_percent\n",p->cpu_percent);
+    }
+    
+    int my_weight = DEFAULT_CGROUP_CPU_WEIGHT;
+    while (parent_cgroup != 0) { // loop until the very first genaration
+        int total_generation_weight = unsafe_get_sum_children_weights(parent_cgroup);
+        expected_cpu_precent =  expected_cpu_precent * my_weight / total_generation_weight;
+
+        if (debug) {
+            cprintf("%d -expected_cpu_precen",expected_cpu_precent);
+            cprintf(" ");
+            cprintf("%d -my_weigh",my_weight);
+            cprintf(" ");
+            cprintf("%d -total_generation_weigh",total_generation_weight);
+            cprintf("\n");
+        }
+        my_weight = parent_cgroup->cpu_weight;
+        parent_cgroup = parent_cgroup->parent;
+    }
+        
+    
+    //cprintf("cpu_account_schedule_process_decision_by_weights - p->cpu_percent: %d, expected_cpu_precent: %d\n", p->cpu_percent, expected_cpu_precent);
+    if (expected_cpu_precent < p->cpu_percent) {
+        if (debug) {
+            cprintf("returning 0");
+            cprintf("\n");
+        }
+        return 0;
+    }
+    return 1;
 }
 
 void cpu_account_before_process_schedule(struct cpu_account * cpu,
@@ -108,6 +151,7 @@ void cpu_account_after_process_schedule(struct cpu_account * cpu,
 
     // Update now.
     cpu->now = steady_clock_now();
+    cpu->cpu_account_frame = cpu->now / cpu->cpu_account_period;
 
     // Update process cpu time.
     cpu->process_cpu_time = cpu->now - cpu->process_cpu_time;
@@ -150,4 +194,7 @@ void cpu_account_before_hlt(struct cpu_account * cpu)
 
 void cpu_account_after_hlt(struct cpu_account * cpu)
 {
+    // Update now.
+    cpu->now = steady_clock_now();
+    cpu->cpu_account_frame = cpu->now / cpu->cpu_account_period;
 }
