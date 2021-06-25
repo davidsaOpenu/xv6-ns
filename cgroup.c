@@ -334,6 +334,7 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->cpu_time = 0;
     cgroup->cpu_period_time = 0;
     cgroup->cpu_time_limit = ~0;
+    cgroup->cpu_weight = DEFAULT_CGROUP_CPU_WEIGHT;
     cgroup->cpu_account_period = CGROUP_ACCOUNT_PERIOD_100MS;
     cgroup->cpu_nr_periods = 0;
     cgroup->cpu_nr_throttled = 0;
@@ -419,6 +420,55 @@ void cgroup_erase(struct cgroup * cgroup, struct proc * proc)
     release(&cgtable.lock);
 }
 
+int set_cpu_weight(struct cgroup* cgroup, unsigned int weight) {
+  // If no cgroup found, return error.
+  if (cgroup == 0)
+    return -1;
+
+  // Set the weight if it is within allowed parameters.
+  if (weight >= MIN_CGROUP_CPU_WEIGHT && weight <= MAX_CGROUP_CPU_WEIGHT) {
+    cgroup->cpu_weight = weight;
+    return 1;
+  }
+
+  return 0;
+}
+
+int unsafe_get_sum_children_weights(struct cgroup* cgroup) {
+    int total_weight = 0;
+    int num_children_procces = 0;
+    //cprintf("#####In unsafe_get_sum_children_weights for cgroup %s\n", cgroup->cgroup_dir_path);
+    for (int i = 0; i < sizeof(cgroup->proc) / sizeof(cgroup->proc[0]); i++) {
+        if (cgroup->proc[i] != 0 && cgroup->proc[i]->state == RUNNABLE) {
+            num_children_procces++;
+        }
+    }
+    for (int i = 1; i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]); i++) {
+        // The weight of an unpopulated cgroup is insignificant
+        if (cgtable.cgroups[i].parent == cgroup && cgtable.cgroups[i].populated) {
+            // for (int j = 0; j < sizeof(cgtable.cgroups[i].proc) / sizeof(cgtable.cgroups[i].proc[0]); j++) {
+            //     // Only count cgroups with RUNNABLE processes
+            //     if (cgtable.cgroups[i].proc[j] != 0 && cgtable.cgroups[i].proc[j]->state == RUNNABLE) {
+            //         total_weight += cgtable.cgroups[i].cpu_weight;
+            //         break;
+            //     }
+            // }
+            total_weight += cgtable.cgroups[i].cpu_weight;
+            // if (cgroup == cgroup_root()) {
+            //     cprintf("%d", cgtable.cgroups[i].cpu_weight );
+            // }
+        }
+    }
+    // if (cgroup == cgroup_root()) {
+    //     cprintf("-%d\n", cgroup->num_of_direct_procs);
+    // }
+
+    // each procces is treated as if it was hosted in a separate cgroup with the default weight
+    total_weight += num_children_procces * DEFAULT_CGROUP_CPU_WEIGHT;
+
+    return total_weight;
+}
+
 int unsafe_enable_cpu_controller(struct cgroup * cgroup)
 {
     // If cgroup has processes in it, controllers can't be enabled.
@@ -436,6 +486,7 @@ int unsafe_enable_cpu_controller(struct cgroup * cgroup)
 
         // Set cpu controller to enabled.
         cgroup->cpu_controller_enabled = 1;
+        cgroup->cpu_weight = DEFAULT_CGROUP_CPU_WEIGHT;
         // Set cpu controller to avalible in all child cgroups.
         for (int i = 1;
              i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
