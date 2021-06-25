@@ -508,6 +508,8 @@ scheduler(void)
   // Initialize the cpu account.
   cpu_account_initialize(&cpu);
 
+  cpu.cpu_id = c->apicid;
+
   for(;;){
     // The amount of processes that have been scheduled in this run.
     unsigned int scheduled = 0;
@@ -523,6 +525,11 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      // If process is unused, continue.
+      if (p->state == UNUSED) {
+        continue;
+      }
+
       // Update proc information.
       cpu_account_schedule_proc_update(&cpu, p);
 
@@ -566,7 +573,7 @@ scheduler(void)
 
       // Before process schedule callback.
       cpu_account_before_process_schedule(&cpu, p);
-
+      cprintf("cpu %d switching to %d\n\n", c->apicid, get_pid_for_ns(p, p->nsproxy->pid_ns));
       // Switch to process.
       swtch(&(c->scheduler), p->context);
 
@@ -589,6 +596,7 @@ scheduler(void)
 
     // No processes were scheduled, go to sleep.
     cpu_account_before_hlt(&cpu);
+    cprintf("cpu %d hlting\n", c->apicid);
     hlt();
     cpu_account_after_hlt(&cpu);
   }
