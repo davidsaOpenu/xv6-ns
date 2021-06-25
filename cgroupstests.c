@@ -453,6 +453,30 @@ TEST(test_limiting_cpu_max_and_period)
     ASSERT_TRUE(disable_controller(CPU_CNT));
 }
 
+TEST(test_limiting_cpu_weight)
+{
+  // Enable cpu controller
+  ASSERT_TRUE(enable_controller(CPU_CNT));
+
+  // Check default weight
+  ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_WEIGHT, 0), "weight - 100\n"));
+
+  // Update weight
+  ASSERT_TRUE(write_file(TEST_1_CPU_WEIGHT, "5000"));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_WEIGHT, 0), "weight - 5000\n"));
+
+  // Update weight over max
+  ASSERT_TRUE(write_file(TEST_1_CPU_WEIGHT, "9999999"));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_WEIGHT, 0), "weight - 5000\n"));
+
+  // Disable cpu controller
+  ASSERT_TRUE(disable_controller(CPU_CNT));
+}
+
 TEST(test_limiting_pids)
 {
     // Enable pid controller
@@ -1063,6 +1087,7 @@ int main(int argc, char * argv[])
     run_test(test_cant_fork_over_mem_limit);
     run_test(test_cant_grow_over_mem_limit);
     run_test(test_limiting_cpu_max_and_period);
+    run_test(test_limiting_cpu_weight);
     run_test(test_setting_max_descendants_and_max_depth);
     run_test(test_deleting_cgroups);
     run_test(test_umount_cgroup_fs);
