@@ -73,16 +73,18 @@ struct cgroup
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
 
-    unsigned long long cpu_time;
-    unsigned int cpu_period_time;
-    unsigned int cpu_percent;
-    unsigned int cpu_account_period;
-    unsigned int cpu_time_limit;
-    unsigned int cpu_account_frame;
-    unsigned int cpu_nr_periods;
-    unsigned int cpu_nr_throttled;
-    unsigned int cpu_throttled_usec;
-    char cpu_is_throttled_period;
+    /* All references to a cgroup cpu time include all processes in the cgroup (including processes in sub cgroups) */
+    unsigned long long cpu_time;     /* How much cpu time the cgroup has ever used */
+    unsigned int cpu_period_time;    /* How much cpu time the cgroup used in the current period frame */
+    unsigned int cpu_percent;        /* What is the precent of cpu time the cgroup used in the current period frame */
+    unsigned int cpu_account_period; /* The period to calculate cpu limiting by (cpu.max.period) */
+    unsigned int cpu_time_limit;     /* How much cpu can the cgroup use in a single period frame (cpu.max.max) */
+    unsigned int cpu_account_frame;  /* The "perion frame" number. Increases by one when a new frame starts */
+    unsigned int cpu_nr_periods;     /* The total number of perionds the cgroup used */
+    unsigned int cpu_nr_throttled;   /* The total number of times the cgroup was throttled */
+    unsigned int cpu_throttled_usec; /* The total number of unisecods the cgroup was throttled */
+    char cpu_is_throttled_period;    /* Has the cgroup been throttled in this period */
+    unsigned int cpu_weight;         /* Prioretize the cgroup cpu time in relation to other cgroups and processes (cpu.weight.weight) */
 };
 
 /**
@@ -165,6 +167,14 @@ int cgroup_insert(struct cgroup * cgroup, struct proc * proc);
  * Return value is void.
  */
 void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
+
+/**
+ * This function sets the cpu weight of the cgroup.
+ * Receives cgroup pointer parameter "cgroup" and integer "weight".
+ * Sets the cpu wigjt of the cgroup cpu controller to be "weight".
+ * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ */
+int set_cpy_weight(struct cgroup* cgp, unsigned int weight);
 
 /**
  * These functions enable the cpu controller of a cgroup.
