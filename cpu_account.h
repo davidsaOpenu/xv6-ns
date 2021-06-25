@@ -9,6 +9,8 @@ struct cpu_account
     unsigned int cpu_account_period;
     unsigned int cpu_account_frame;
     unsigned int process_cpu_time;
+    unsigned int curr_frame_toal_process_cpu_time;
+    unsigned int cpu_id;
     struct cgroup * cgroup;
 
 };
@@ -37,6 +39,13 @@ void cpu_account_schedule_proc_update(struct cpu_account * cpu, struct proc * p)
  * Returns zero for cannot schedule or nonzero in case can schecule.
  */
 int cpu_account_schedule_process_decision(struct cpu_account * cpu, struct proc * p);
+
+/**
+ * Make a decision whether the given process can be scheduled.
+ * The decision is made according to the cpu weights of the cgroups.
+ * Returns zero for cannot schedule or nonzero in case can schecule.
+ */
+int cpu_account_schedule_process_decision_by_weights(struct cpu_account * cpu, struct proc * p);
 
 /**
  * Event callback function to let the cpu account mechanism know that a process is
