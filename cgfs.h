@@ -6,6 +6,7 @@
 #include "cgroup.h"
 #include "stat.h"
 
+
 #define CGFS_PROCS "cgroup.procs"
 #define CGFS_SUBTREE_CONTROL "cgroup.subtree_control"
 #define CGFS_MAX_DESCENDANTS "cgroup.max.descendants"
@@ -22,6 +23,11 @@
 #define CGFS_SET_FRZ "cgroup.freeze"
 #define CGFS_MEM_CUR "memory.current"
 #define CGFS_MEM_MAX "memory.max"
+
+#define MAX_CGROUP_CPU_WEIGHT 10000
+#define MIN_CGROUP_CPU_WEIGHT 1
+#define DEFAULT_CGROUP_CPU_WEIGHT 100
+
 
 /**
  * This function opens a cgroup filesystem file or directory.

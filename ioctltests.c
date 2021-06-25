@@ -233,6 +233,9 @@ int main() {
   if(ioctl_console_test() < 0)
     exit(1);
 
+  if(ioctl_console_test() < 0)
+    exit(1);
+
   //ioctl SCENARIO TESTS
   if(ioctl_attach_detach_test() < 0)
     exit(1);

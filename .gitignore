@@ -15,3 +15,5 @@ kernelmemfs
 mkfs
 .gdbinit
 internal_fs_*
+.vscode/
+windows-debugging/

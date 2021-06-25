@@ -253,3 +253,8 @@ int             intlen(int n);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+// Simple path macros
+#define min(x, y) (x) > (y) ? (y) : (x)
+#define max(x, y) (x) > (y) ? (x) : (y)
+#define abs(x) (x) > 0 ? (x) : (0)
