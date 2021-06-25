@@ -6,6 +6,10 @@
 #include "cgroup.h"
 #include "stat.h"
 
+#define MAX_CGROUP_CPU_WEIGHT 10000
+#define MIN_CGROUP_CPU_WEIGHT 1
+#define DEFAULT_CGROUP_CPU_WEIGHT 100
+
 /**
  * This function opens a cgroup filesystem file or directory.
  * Receives cg_file_type parameter "type", string parameter "filename", cgroup struct pointer parameter "cgp", int parameter "omode".

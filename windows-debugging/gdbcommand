@@ -1,0 +1,11 @@
+set disassembly-flavor intel
+
+define zstartw
+  source /home/yzan/git/xv6-ns/windows-debugging/load-symbols
+	directory /home/yzan/git/xv6-ns/windows-debugging
+	set substitute-path /mnt/c C:
+	set substitute-path /mnt/d D:
+	set substitute-path /mnt/e E:
+	load-symbols $eip "/home/yzan/git/xv6-ns/kernel"
+	set *(char *)&gdb_attached = 1
+end

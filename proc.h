@@ -94,6 +94,8 @@ void proc_lock();
  */
 void proc_unlock();
 
+int get_pid_for_ns(struct proc* proc, struct pid_ns* pid_ns);
+
 // Process memory is laid out contiguously, low addresses first:
 //   text
 //   original data and bss
