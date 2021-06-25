@@ -306,6 +306,7 @@ void cgroup_initialize(struct cgroup * cgroup,
 
         cgroup->pid_controller_enabled = 0;
         cgroup->cpu_controller_enabled = 0;
+        cgroup->cpu_weight = DEFAULT_CGROUP_CPU_WEIGHT;
         cgroup->set_controller_enabled = 0;
         cgroup->mem_controller_enabled = 0;
         cgroup->depth = cgroup->parent->depth + 1;
@@ -417,6 +418,20 @@ void cgroup_erase(struct cgroup * cgroup, struct proc * proc)
     acquire(&cgtable.lock);
     unsafe_cgroup_erase(cgroup, proc);
     release(&cgtable.lock);
+}
+
+int set_cpu_weight(struct cgroup* cgroup, unsigned int weight) {
+  // If no cgroup found, return error.
+  if (cgroup == 0)
+    return -1;
+
+  // Set the weight if it is within allowed parameters.
+  if (weight >= MIN_CGROUP_CPU_WEIGHT && weight <= MAX_CGROUP_CPU_WEIGHT) {
+    cgroup->cpu_weight = weight;
+    return 1;
+  }
+
+  return 0;
 }
 
 int unsafe_enable_cpu_controller(struct cgroup * cgroup)

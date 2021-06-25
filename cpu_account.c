@@ -45,6 +45,7 @@ int cpu_account_schedule_process_decision(struct cpu_account * cpu,
     // Lock cgroup table.
     cgroup_lock();
 
+    // Update the cpu cgroup values of all the cgroup ansestors of this process and throttle the process if needed
     while (cgroup) {
         // The cgroup cpu account frame.
         cgroup_cpu_account_frame =
