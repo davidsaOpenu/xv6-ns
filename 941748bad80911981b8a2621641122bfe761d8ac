@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac596a1a_c8317493",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-06-27T13:15:43Z",
+      "side": 1,
+      "message": "Igal, Alon is https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/514367 testing this change? If it, let\u0027s squash those changes. Thanks",
+      "revId": "941748bad80911981b8a2621641122bfe761d8ac",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
