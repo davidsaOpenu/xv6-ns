@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2753dfe_ff4e28a3",
+        "filename": "mounttest.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-06-27T13:26:16Z",
+      "side": 1,
+      "message": "is this change really reproducing the failure in case of \"ls\"? \n\nLike https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/513869/7/runtests.exp",
+      "revId": "df5895bc8d6058b12ac49cd4b80e184f4208b479",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
