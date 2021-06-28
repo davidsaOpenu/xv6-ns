@@ -62,7 +62,7 @@ static struct mount_ns* allocmount_ns()
   }
   release(&mountnstable.lock);
 
-  // out of mount_ns objects"
+  cprintf("out of mount_ns objects");
   return (void*)0;
 }
 
