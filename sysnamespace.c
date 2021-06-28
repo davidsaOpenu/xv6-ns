@@ -11,6 +11,10 @@
 #include "file.h"
 #include "mount.h"
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_unshare(void) {
     int nstype;
