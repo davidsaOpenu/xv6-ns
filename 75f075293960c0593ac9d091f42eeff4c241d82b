@@ -16,6 +16,23 @@
       "message": "I dont ",
       "revId": "75f075293960c0593ac9d091f42eeff4c241d82b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c06bbfae_266c0e18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-28T16:48:45Z",
+      "side": 1,
+      "message": "david, I don\u0027t think there is a place for read_file() in the test. read_file() only reads the first 256 bytes of the file and that\u0027s not enough for out use, it\u0027s also easy to read only MAX_CGROUP_FILE_NAME_LENGTH bytes at a time because that\u0027s the length of an entry in the dir.",
+      "revId": "75f075293960c0593ac9d091f42eeff4c241d82b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
