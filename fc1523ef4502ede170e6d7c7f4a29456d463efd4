@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95ff181c_4fae3a6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-28T20:23:04Z",
+      "side": 1,
+      "message": "Look good to me.",
+      "revId": "fc1523ef4502ede170e6d7c7f4a29456d463efd4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec075568_61677bb5",
+        "filename": "cgroupstests.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-28T20:23:04Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we use strncpy() here? I think there is a possible overflow.",
+      "revId": "fc1523ef4502ede170e6d7c7f4a29456d463efd4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
