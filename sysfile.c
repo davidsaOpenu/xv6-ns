@@ -119,7 +119,7 @@ sys_write(void)
 
 /*
 Return Value:
-  On success, returns the file descriptor. Returns -1 on failure.
+  On success, returns 0. Returns -1 on failure.
 */
 int
 sys_close(void)
@@ -228,7 +228,7 @@ isdirempty(struct inode *dp)
 
 /*
 Return Value:
-  On success, returns the file descriptor. Returns -1 on failure.
+  On success, returns 0. Returns -1 on failure.
 */
 //PAGEBREAK!
 int
@@ -427,7 +427,7 @@ sys_open(void)
 
 /*
 Return Value:
-  On success, returns the file descriptor. Returns -1 on failure.
+  On success, returns 0. Returns -1 on failure.
 */
 int
 sys_mkdir(void)
@@ -530,7 +530,7 @@ sys_chdir(void)
 
 /*
 Return Value:
-  On sucess, no value is returned. returns -1 on error.
+  When exec succeeds, it does not return to the calling program. returns -1 on error.
 */
 int
 sys_exec(void)

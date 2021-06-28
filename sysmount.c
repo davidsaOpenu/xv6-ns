@@ -175,7 +175,7 @@ sys_umount(void)
 
 /*
 Return Value:
-  On success, returns 0. Returns -1 on failure.
+  always returns 0.
 */
 int
 sys_printmounts(void)
@@ -186,7 +186,7 @@ sys_printmounts(void)
 
 /*
 Return Value:
-  On success, returns 0. Returns -1 on failure.
+  always returns 0.
 */
 int
 sys_printdevices(void)
