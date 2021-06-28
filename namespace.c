@@ -122,7 +122,11 @@ unshare(int nstype)
                 return -1;
               }
 
-              myproc()->child_pid_ns = pid_ns_new(myproc()->nsproxy->pid_ns);
+              struct pid_ns* pid_ns = pid_ns_new(myproc()->nsproxy->pid_ns);
+              if (pid_ns == 0)
+                return -1;
+
+              myproc()->child_pid_ns = pid_ns;
               return 0;
             }
         default:
