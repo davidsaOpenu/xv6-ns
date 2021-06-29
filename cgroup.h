@@ -174,7 +174,7 @@ void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
  * Sets the cpu wigjt of the cgroup cpu controller to be "weight".
  * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
  */
-int set_cpy_weight(struct cgroup* cgp, unsigned int weight);
+int set_cpu_weight(struct cgroup* cgp, unsigned int weight);
 
 /**
  * These functions enable the cpu controller of a cgroup.

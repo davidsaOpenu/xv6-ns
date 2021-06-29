@@ -450,7 +450,7 @@ TEST(test_limiting_cpu_weight)
   ASSERT_TRUE(write_file(TEST_1_CPU_WEIGHT, "9999999"));
 
   // Check changes
-  ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_WEIGHT, 0), "weight - 10000\n"));
+  ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_WEIGHT, 0), "weight - 5000\n"));
 
   // Disable cpu controller
   ASSERT_TRUE(disable_controller(CPU_CNT));
