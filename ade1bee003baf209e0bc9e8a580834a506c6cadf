@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af4d4a78_db7c585b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "ty for working on this",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0184be78_2e3b138a",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "why do we prefer to add memory only to the new proc instead of distributing it?\nI think it can create a situation that just after a change to the memory and new process will get all the difference between the current memory and the new min.",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "107bd6ac_6a4d3aa7",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 971,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "I think it\u0027s better to use sizeof",
+      "range": {
+        "startLine": 971,
+        "startChar": 42,
+        "endLine": 971,
+        "endChar": 47
+      },
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbb768b0_db100654",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "Won\u0027t this operation succeed because the min memory is the amount of memory there was before this process was moved to the cgroup? So the current memory will be equal to min + this process memory, and because this process memory is probably grater then 10 then the operation succeed.",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef79a40f_d1ff351f",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "Grows a *given* process not the current one.",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a65533a_f19844aa",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-06-30T18:29:43Z",
+      "side": 1,
+      "message": "\"// Grows current process\u0027s memory by n bytes\n// Returns 0 on success, -1 on failure.\"\n(your own corrections, Grows, deleted dot and Returns)",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
