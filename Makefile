@@ -118,6 +118,7 @@ CFLAGS += -DXV6_WAIT_FOR_DEBUGGER=0
 endif
 
 OFLAGS = -O2
+CFLAGS += -DSTORAGE_DEVICE_SIZE=50 -DOBJECTS_TABLE_SIZE=200
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 ############################
 
