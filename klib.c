@@ -1,3 +1,4 @@
+#define MAX_NUM_LEN 16
 
 /*
  * Get int representation of number in string.
@@ -27,7 +28,7 @@ int itoa(char * buf, int n)
         i /= 10;
     }
 
-    char revbuf[length];
+    char revbuf[MAX_NUM_LEN];
 
     if (n == 0) {
         *buf++ = '0';
@@ -58,7 +59,7 @@ int utoa(char * buf, unsigned int n)
         m /= 10;
     }
 
-    char revbuf[length];
+    char revbuf[MAX_NUM_LEN];
 
     for (i = 0; n > 0 && i < length; i++) {
         revbuf[i] = (n % 10) + '0';
