@@ -4,6 +4,8 @@
 #include "user.h"
 #include "x86.h"
 
+#define MAX_NUM_LEN 16
+
 char*
 strcpy(char *s, const char *t)
 {
@@ -126,7 +128,7 @@ int itoa(char * buf, int n)
         i /= 10;
     }
 
-    char revbuf[length];
+    char revbuf[MAX_NUM_LEN];
 
     if (n == 0) {
         *buf++ = '0';
