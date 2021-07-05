@@ -48,6 +48,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68970d46_0d1ab713",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-07-05T18:25:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43866180_8c8e47f5",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 74
+      },
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08edc012_d3e73594",
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "It\u0027s the message ID of Alon\u0027s bug report (last part of the link):\nhttps://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/514367\nIs this the wrong number to use?",
       "parentUuid": "bf61013f_37faf771",
+      "range": {
+        "startLine": 15,
+        "startChar": 13,
+        "endLine": 15,
+        "endChar": 19
+      },
+      "revId": "0dfc5b6aa352bda28ed883599591e163a3606d01",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7a639fb_0f406dce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-07-05T18:25:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a1afe52_4c660792",
       "range": {
         "startLine": 15,
         "startChar": 13,
