@@ -50,6 +50,24 @@
       "message": "I mean, what is the purpose of this test given we have a test_reading_cgroup_files?",
       "revId": "75f075293960c0593ac9d091f42eeff4c241d82b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0b5bfca_0d904c5c",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-07-09T09:01:39Z",
+      "side": 1,
+      "message": "The difference is that test_reading_cgroup_files checks that each file we want is in the cgroup dir and readable but test_cgroup_dir will check that each file in the dir is a file we actually want. \nIf there is a bug and a file named A is added to cgroup dirs, when it isn\u0027t suppose to. test_reading_cgroup_files wont catch the bug while test_cgroup_dir will.",
+      "parentUuid": "abd4c20f_f6cce9a1",
+      "revId": "75f075293960c0593ac9d091f42eeff4c241d82b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
