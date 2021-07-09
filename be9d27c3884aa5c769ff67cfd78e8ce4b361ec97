@@ -50,6 +50,40 @@
       "message": "memory reclamation part is supposed to be invoked from here?",
       "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a824ac25_8f90053e",
+        "filename": "proc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-09T14:40:44Z",
+      "side": 1,
+      "message": "3 different places with mem_fail_cnt++. consider inline function instead",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5426c033_382bb0a2",
+        "filename": "proc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-09T14:40:44Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
