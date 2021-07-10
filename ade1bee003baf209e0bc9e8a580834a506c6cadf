@@ -35,6 +35,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "330e81c9_b829b167",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ae940b26_88b8c618",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0184be78_2e3b138a",
@@ -52,6 +70,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "298a5c8b_30dbf3c4",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "0184be78_2e3b138a",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "107bd6ac_6a4d3aa7",
@@ -65,6 +101,30 @@
       "writtenOn": "2021-06-30T18:29:43Z",
       "side": 1,
       "message": "I think it\u0027s better to use sizeof",
+      "range": {
+        "startLine": 971,
+        "startChar": 42,
+        "endLine": 971,
+        "endChar": 47
+      },
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b28a7ba_f38c87fc",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 971,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "disagree, this define is the definition of number of processes and it is used by current coding style in this and in proc.c files.",
+      "parentUuid": "107bd6ac_6a4d3aa7",
       "range": {
         "startLine": 971,
         "startChar": 42,
@@ -94,6 +154,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ea66c089_9f292554",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "This test flow as follows:\n1. Create a process\n2. Get how much this process uses memory\n3. Assign this memory value as mem.min in cgroup\n4. Try to shrink this process\u0027s memory and expect a failure.\n\nCurrent memory should be equal to minimum in this test case which equals to memory used by this process.\nAlso note that this operation should not succeed, test (ASSERT line) expects a failure otherwise this test(ASSERT line) would fail which is not.",
+      "parentUuid": "bbb768b0_db100654",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ef79a40f_d1ff351f",
         "filename": "proc.c",
         "patchSetId": 1
@@ -105,6 +183,24 @@
       "writtenOn": "2021-06-30T18:29:43Z",
       "side": 1,
       "message": "Grows a *given* process not the current one.",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52dce8a4_9eca701a",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef79a40f_d1ff351f",
       "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -122,6 +218,24 @@
       "writtenOn": "2021-06-30T18:29:43Z",
       "side": 1,
       "message": "\"// Grows current process\u0027s memory by n bytes\n// Returns 0 on success, -1 on failure.\"\n(your own corrections, Grows, deleted dot and Returns)",
+      "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2968b897_d70cebb9",
+        "filename": "proc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-10T10:27:31Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3a65533a_f19844aa",
       "revId": "ade1bee003baf209e0bc9e8a580834a506c6cadf",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
