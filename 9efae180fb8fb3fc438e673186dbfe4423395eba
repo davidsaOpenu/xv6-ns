@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8dae5c6a_1678626a",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-07-11T19:54:01Z",
+      "side": 0,
+      "message": "same",
+      "parentUuid": "36b87e6c_271df8d7",
+      "range": {
+        "startLine": 100,
+        "startChar": 9,
+        "endLine": 100,
+        "endChar": 32
+      },
+      "revId": "9efae180fb8fb3fc438e673186dbfe4423395eba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9b0e0c54_72d82d3a",
         "filename": "main.c",
         "patchSetId": 1
@@ -37,6 +61,24 @@
       "writtenOn": "2021-07-11T14:59:39Z",
       "side": 0,
       "message": "introduced by https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/458518",
+      "revId": "9efae180fb8fb3fc438e673186dbfe4423395eba",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1fb0a7a_541f090f",
+        "filename": "main.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-07-11T19:54:01Z",
+      "side": 0,
+      "message": "He says to run:\n\"make debug\u003dtrue qemu-nox-gdb\"\nwhich starts qemu in paused state waiting for the debugger, so there is no need in\nbusy waiting. Can someone verify this change doesn\u0027t break VS debugging?\n\nIf it does break, I recommend using a separate compilation flag, and rename this variable to vs_attached, as gdb automatically unpauses qemu and doesn\u0027t need this loop.",
+      "parentUuid": "9b0e0c54_72d82d3a",
       "revId": "9efae180fb8fb3fc438e673186dbfe4423395eba",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
