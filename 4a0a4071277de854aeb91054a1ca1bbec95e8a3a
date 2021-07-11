@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70a2187e_b000dfaa",
+        "filename": "ulib.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-11T14:59:39Z",
+      "side": 1,
+      "message": "great. having VLA in the kerenl code is a bad idea but maybe worth considering a dynamic allocation rather then a fixed sized revbuf in order to avoid a limitattion?\nor to rewrite the function to use buf in place and to relay that it is sufficiently \nbig?",
+      "revId": "4a0a4071277de854aeb91054a1ca1bbec95e8a3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
