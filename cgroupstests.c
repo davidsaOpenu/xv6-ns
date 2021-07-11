@@ -805,7 +805,7 @@ TEST(test_mem_current) {
   char saved_mem[10];
 
   // Move the current process to "/cgroup/test1" cgroup.
-  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+  ASSERT_FALSE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
 
   // Check that the process we moved is really in "/cgroup/test1" cgroup.
   ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, getpid()));
@@ -1053,10 +1053,10 @@ int main(int argc, char * argv[])
     run_test_break_msg(test_kernel_freem_mem);
 
     if (failed) {
-        printf(1, "[  FAILED   ]\n");
+        printf(1, "[   FAILED   ]\n");
         exit(1);
     } else {
-        printf(1, "[    PASS   ]\n");
+        printf(1, "[    PASS    ]\n");
         exit(0);
     }
 }

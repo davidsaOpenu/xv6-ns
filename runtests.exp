@@ -345,7 +345,8 @@ proc cgroupstests {argv} {
     send "cgroupstests\n"
     log_file -noappend [lindex $argv 0]
     expect {
-       "$ "
+      "*    PASS    *"  {puts "PASSED"}
+      "*FAILED*" {exit 1}
     }
 }
 
@@ -441,11 +442,18 @@ set running [pouch_list_test $argv]
 set running [pouch_disconnect_outside_container_test $argv]
 set running [pouch_info_container_test $argv]
 set running [pouch_cgroup_limit_test $argv]
-set running [usertests $argv]
 
 set running [pidns_tests $argv]
 set running [mounttest $argv]
 set running [mounttest_with_ls $argv]
+
+##########################################
+# THIS TEST MUST BE THE LAST TEST TO RUN #
+##########################################
+                                         #
+set running [usertests $argv]            #
+##########################################
+
 
 log_file
 # just in case
