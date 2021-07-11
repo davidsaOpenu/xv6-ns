@@ -35,6 +35,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "39f3624d_80320990",
+        "filename": "cgfs.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-11T16:07:59Z",
+      "side": 1,
+      "message": "Done and added a test for it",
+      "parentUuid": "93dadfb2_2d92aeda",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd93ff82_700df5ee",
@@ -48,6 +66,24 @@
       "writtenOn": "2021-07-09T14:34:45Z",
       "side": 1,
       "message": "memory reclamation part is supposed to be invoked from here?",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80847d06_a7fa7f4e",
+        "filename": "cgroup.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-11T16:07:59Z",
+      "side": 1,
+      "message": "Currently the implementation is simple, counts how many times the memory max limit reached. About reclamation it is possible to call the API from inline function as you suggested in other comments.",
+      "parentUuid": "bd93ff82_700df5ee",
       "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -69,6 +105,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4233fb5b_07ca7ad7",
+        "filename": "proc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-11T16:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a824ac25_8f90053e",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5426c033_382bb0a2",
@@ -82,6 +136,24 @@
       "writtenOn": "2021-07-09T14:40:44Z",
       "side": 1,
       "message": "and here",
+      "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46ba603d_7b073ff8",
+        "filename": "proc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-11T16:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5426c033_382bb0a2",
       "revId": "be9d27c3884aa5c769ff67cfd78e8ce4b361ec97",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
