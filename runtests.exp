@@ -82,6 +82,15 @@ proc destroy_container {argv id expect_str} {
     }
 }
 
+proc test_result_verif {} {
+   expect {
+      "$*" {}
+      "ALL TESTS PASSED" {}
+      -nocase "failed" { exit 1 }
+    }
+}
+
+
 #-------------------------------------------------------------------------
 #-TESTS-------------------------------------------------------------------
 #-------------------------------------------------------------------------
@@ -215,9 +224,7 @@ proc pouch_list_test {argv} {
 
     send "pouch list all\n"
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
     log_file -noappend [lindex $argv 0]
     set running [disconnect_container $argv]
 }
@@ -255,9 +262,7 @@ proc pouch_cgroup_already_exists {argv} {
     set timeout 3
     send "mkdir /cgroup/c5\n"
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
     set timeout 3
     set running [start_container $argv "5" "Pouch: c5 starting"]
     log_file -noappend [lindex $argv 0]
@@ -288,9 +293,7 @@ proc pouch_disconnect_outside_container_test {argv} {
     send "pouch disconnect\n"
     set timeout 3
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
 }
 
 
@@ -306,9 +309,7 @@ proc pouch_info_container_test {argv} {
     send "pouch info\n"
     set timeout 3
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
     sleep 2
     send "pouch info c6\n"
     set timeout 3
@@ -326,16 +327,10 @@ proc usertests {argv} {
     set timeout -1
     #clean expect buffer
     expect *
-    expect {
-        "$ "
-    }
     send "usertests\n"
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
 }
-
 
 # - xv6 cgroup tests
 # @argv - file name for logging
@@ -344,9 +339,7 @@ proc cgroupstests {argv} {
     set timeout -1
     send "cgroupstests\n"
     log_file -noappend [lindex $argv 0]
-    expect {
-       "$ "
-    }
+    test_result_verif
 }
 
 # - xv6 pidns tests
@@ -379,29 +372,19 @@ proc mounttest_with_ls {argv} {
 
     send "mkdir test_dir_mount_test\n"
     sleep 2
-    expect {
-       "$ "
-    }
+    test_result_verif
     send "mount internal_fs_a test_dir_mount_test\n"
     sleep 2
-    expect {
-       "$ "
-    }
+    test_result_verif
     send "ls test_dir_mount_test\n"
     sleep 2
-    expect {
-       "$ "
-    }
+    test_result_verif
     send "umount test_dir_mount_test\n"
     sleep 2
-    expect {
-       "$ "
-    }
+    test_result_verif
     send "rm test_dir_mount_test\n"
     sleep 2
-    expect {
-       "$ "
-    }
+    test_result_verif
 }
 
 #-------------------------------------------------------------------------
@@ -419,7 +402,7 @@ set qemu_command $expect_out(buffer)
 # TODO: use the resut of dry run as an agument fot spawn ($expect_out(buffer) is not working for some reason)
 # actual run
 spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
-expect "$ "
+test_result_verif
 
 #uncomment for expect debugging
 #exp_internal 1
@@ -441,11 +424,18 @@ set running [pouch_list_test $argv]
 set running [pouch_disconnect_outside_container_test $argv]
 set running [pouch_info_container_test $argv]
 set running [pouch_cgroup_limit_test $argv]
-set running [usertests $argv]
 
 set running [pidns_tests $argv]
 set running [mounttest $argv]
 set running [mounttest_with_ls $argv]
+
+##########################################
+# THIS TEST MUST BE THE LAST TEST TO RUN #
+##########################################
+
+set running [usertests $argv]
+##########################################
+
 
 log_file
 # just in case
