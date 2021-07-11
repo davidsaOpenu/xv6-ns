@@ -136,7 +136,7 @@ sys_ioctl(void)
   int request = -1;
   int command;
 
-  int i,ret;
+  int ret;
   struct file *f;
   struct inode* ip;
 
@@ -184,18 +184,25 @@ sys_ioctl(void)
   case TTYSETS:
     if((command & DEV_DISCONNECT)){
         devsw[ip->major].flags &=  ~(DEV_CONNECT);
+        acquire(&devsw[CONSOLE].lk);
         devsw[CONSOLE].flags |=  DEV_CONNECT;
+        release(&devsw[CONSOLE].lk);
+        wakeup(&devsw[CONSOLE]);
         consoleclear();
         cprintf("Console connected\n");
      }
 
      if((command & DEV_CONNECT)){
+       devsw[CONSOLE].flags &= ~(DEV_CONNECT);
+       acquire(&devsw[ip->major].lk);
        devsw[ip->major].flags |= DEV_CONNECT;
-       for(i = CONSOLE; i < CONSOLE + 1 + NTTY; i++){
+       release(&devsw[ip->major].lk);
+       wakeup(&devsw[ip->major]);
+       /*for(i = CONSOLE; i < CONSOLE + 1 + NTTY; i++){
            if(ip->major != i){
               devsw[i].flags &= ~(DEV_CONNECT);
            }
-       }
+       }*/
        consoleclear();
        cprintf("\ntty%d connected\n",ip->major-(CONSOLE+1));
      }

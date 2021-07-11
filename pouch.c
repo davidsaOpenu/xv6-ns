@@ -405,7 +405,6 @@ static int pouch_fork(char* container_name){
              exit(1);
            }
 
-           printf(stderr,"Entering container\n");
            exec("sh", argv);
         }else{
            printf(stderr,"Error connecting tty\n");

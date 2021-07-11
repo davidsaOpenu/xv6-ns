@@ -284,13 +284,27 @@ consoleread(struct inode *ip, char *dst, int n)
   return target - n;
 }
 
+int conslock(struct inode *ip){
+  short dev = ip->major;
+  int killed = 0;
+  acquire(&devsw[dev].lk);
+  iunlock(ip);
+  while(!(devsw[dev].flags & DEV_CONNECT)){
+    sleep(&devsw[dev], &devsw[dev].lk);
+    if((killed = myproc()->killed))
+      break;
+  }
+  ilock(ip);
+  release(&devsw[dev].lk);
+  return killed ? 0 : 1;
+}
+
 int
 ttyread(struct inode *ip, char *dst, int n)
 {
-  if(devsw[ip->major].flags & DEV_CONNECT){
-    return consoleread(ip,dst,n);
-  }
-  return -1;
+  if(!conslock(ip))
+    return -1;
+  return consoleread(ip,dst,n);
 }
 
 int
@@ -311,11 +325,9 @@ consolewrite(struct inode *ip, char *buf, int n)
 int
 ttywrite(struct inode *ip, char *buf, int n)
 {
-  if(devsw[ip->major].flags & DEV_CONNECT){
-    return consolewrite(ip,buf,n);
-  }
-  //2DO: should return -1 when write to tty fails - filewrite panics.
-  return n;
+  if(!conslock(ip))
+    return -1;
+  return consolewrite(ip,buf,n);
 }
 
 void
@@ -325,6 +337,7 @@ consoleinit(void)
 
   devsw[CONSOLE].write = ttywrite;
   devsw[CONSOLE].read = ttyread;
+  initlock(&devsw[CONSOLE].lk, "devsw[CONSOLE]");
   devsw[CONSOLE].flags = DEV_CONNECT;
 
   cons.locking = 1;
@@ -339,6 +352,7 @@ ttyinit(void)
   for(i = CONSOLE+1; i <= CONSOLE+NTTY; i++){
      devsw[i].write = ttywrite;
      devsw[i].read = ttyread;
+     initlock(&devsw[i].lk, "devsw[i]");
      devsw[i].flags = 0;
      ioapicenable(IRQ_KBD, 0);
   }
