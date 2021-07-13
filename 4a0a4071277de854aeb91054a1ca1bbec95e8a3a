@@ -69,6 +69,24 @@
       "parentUuid": "70a2187e_b000dfaa",
       "revId": "4a0a4071277de854aeb91054a1ca1bbec95e8a3a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d1a8fcd_0e3b9c96",
+        "filename": "ulib.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-07-13T15:38:07Z",
+      "side": 1,
+      "message": "we do have malloc in umalloc.c",
+      "parentUuid": "a2a509e4_4ab24c01",
+      "revId": "4a0a4071277de854aeb91054a1ca1bbec95e8a3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
