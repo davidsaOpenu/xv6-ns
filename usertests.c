@@ -130,7 +130,7 @@ opentest(void)
   close(fd);
   fd = open("doesnotexist", 0);
   if(fd >= 0){
-    printf(stdout, "open doesnotexist succeeded!\n");
+    printf(stdout, "open doesnotexist failed!\n");
     exit(1);
   }
   printf(stdout, "open test ok\n");
@@ -743,18 +743,18 @@ linktest(void)
   close(fd);
 
   if(link("lf2", "lf2") >= 0){
-    printf(1, "link lf2 lf2 succeeded! oops\n");
+    printf(1, "link lf2 lf2 failed! oops\n");
     exit(1);
   }
 
   unlink("lf2");
   if(link("lf2", "lf1") >= 0){
-    printf(1, "link non-existant succeeded! oops\n");
+    printf(1, "link non-existant failed! oops\n");
     exit(1);
   }
 
   if(link(".", "lf1") >= 0){
-    printf(1, "link . lf1 succeeded! oops\n");
+    printf(1, "link . lf1 failed! oops\n");
     exit(1);
   }
 
@@ -954,7 +954,7 @@ subdir(void)
   close(fd);
 
   if(unlink("dd") >= 0){
-    printf(1, "unlink dd (non-empty dir) succeeded!\n");
+    printf(1, "unlink dd (non-empty dir) failed!\n");
     exit(1);
   }
 
@@ -993,7 +993,7 @@ subdir(void)
     exit(1);
   }
   if(open("dd/dd/ff", O_RDONLY) >= 0){
-    printf(1, "open (unlinked) dd/dd/ff succeeded\n");
+    printf(1, "open (unlinked) dd/dd/ff failed\n");
     exit(1);
   }
 
@@ -1026,68 +1026,68 @@ subdir(void)
   close(fd);
 
   if(open("dd/dd/ff", O_RDONLY) >= 0){
-    printf(1, "open (unlinked) dd/dd/ff succeeded!\n");
+    printf(1, "open (unlinked) dd/dd/ff failed!\n");
     exit(1);
   }
 
   if(open("dd/ff/ff", O_CREATE|O_RDWR) >= 0){
-    printf(1, "create dd/ff/ff succeeded!\n");
+    printf(1, "create dd/ff/ff failed!\n");
     exit(1);
   }
   if(open("dd/xx/ff", O_CREATE|O_RDWR) >= 0){
-    printf(1, "create dd/xx/ff succeeded!\n");
+    printf(1, "create dd/xx/ff failed!\n");
     exit(1);
   }
   if(open("dd", O_CREATE) >= 0){
-    printf(1, "create dd succeeded!\n");
+    printf(1, "create dd failed!\n");
     exit(1);
   }
   if(open("dd", O_RDWR) >= 0){
-    printf(1, "open dd rdwr succeeded!\n");
+    printf(1, "open dd rdwr failed!\n");
     exit(1);
   }
   if(open("dd", O_WRONLY) >= 0){
-    printf(1, "open dd wronly succeeded!\n");
+    printf(1, "open dd wronly failed!\n");
     exit(1);
   }
   if(link("dd/ff/ff", "dd/dd/xx") == 0){
-    printf(1, "link dd/ff/ff dd/dd/xx succeeded!\n");
+    printf(1, "link dd/ff/ff dd/dd/xx failed!\n");
     exit(1);
   }
   if(link("dd/xx/ff", "dd/dd/xx") == 0){
-    printf(1, "link dd/xx/ff dd/dd/xx succeeded!\n");
+    printf(1, "link dd/xx/ff dd/dd/xx failed!\n");
     exit(1);
   }
   if(link("dd/ff", "dd/dd/ffff") == 0){
-    printf(1, "link dd/ff dd/dd/ffff succeeded!\n");
+    printf(1, "link dd/ff dd/dd/ffff failed!\n");
     exit(1);
   }
   if(mkdir("dd/ff/ff") == 0){
-    printf(1, "mkdir dd/ff/ff succeeded!\n");
+    printf(1, "mkdir dd/ff/ff failed!\n");
     exit(1);
   }
   if(mkdir("dd/xx/ff") == 0){
-    printf(1, "mkdir dd/xx/ff succeeded!\n");
+    printf(1, "mkdir dd/xx/ff failed!\n");
     exit(1);
   }
   if(mkdir("dd/dd/ffff") == 0){
-    printf(1, "mkdir dd/dd/ffff succeeded!\n");
+    printf(1, "mkdir dd/dd/ffff failed!\n");
     exit(1);
   }
   if(unlink("dd/xx/ff") == 0){
-    printf(1, "unlink dd/xx/ff succeeded!\n");
+    printf(1, "unlink dd/xx/ff failed!\n");
     exit(1);
   }
   if(unlink("dd/ff/ff") == 0){
-    printf(1, "unlink dd/ff/ff succeeded!\n");
+    printf(1, "unlink dd/ff/ff failed!\n");
     exit(1);
   }
   if(chdir("dd/ff") == 0){
-    printf(1, "chdir dd/ff succeeded!\n");
+    printf(1, "chdir dd/ff failed!\n");
     exit(1);
   }
   if(chdir("dd/xx") == 0){
-    printf(1, "chdir dd/xx succeeded!\n");
+    printf(1, "chdir dd/xx failed!\n");
     exit(1);
   }
 
@@ -1100,7 +1100,7 @@ subdir(void)
     exit(1);
   }
   if(unlink("dd") == 0){
-    printf(1, "unlink non-empty dd succeeded!\n");
+    printf(1, "unlink non-empty dd failed!\n");
     exit(1);
   }
   if(unlink("dd/dd") < 0){
@@ -1254,24 +1254,32 @@ rmdot(void)
     printf(1, "chdir dots failed\n");
     exit(1);
   }
-  if(unlink(".") == 0){
-    printf(1, "rm . worked!\n");
+  if(unlink(".") != 0){
+    printf(1, "rm . failed - this is good!\n");
+  } else {
+    printf(1, "rm . successful - this is error!\n");
     exit(1);
   }
-  if(unlink("..") == 0){
-    printf(1, "rm .. worked!\n");
+  if(unlink("..") != 0){
+    printf(1, "rm .. failed - this is good!\n");
+  } else {
+    printf(1, "rm .. successful - this is error!\n");
     exit(1);
   }
   if(chdir("/") != 0){
     printf(1, "chdir / failed\n");
     exit(1);
   }
-  if(unlink("dots/.") == 0){
-    printf(1, "unlink dots/. worked!\n");
+  if(unlink("dots/.") != 0){
+    printf(1, "unlink dots/. failed - this is good!\n");
+  } else {
+    printf(1, "unlink dots/. successful - this is error!\n");
     exit(1);
   }
-  if(unlink("dots/..") == 0){
-    printf(1, "unlink dots/.. worked!\n");
+  if(unlink("dots/..") != 0){
+    printf(1, "unlink dots/.. failed - this is good!\n");
+  } else {
+    printf(1, "unlink dots/.. successful - this is error!\n");
     exit(1);
   }
   if(unlink("dots") != 0){
@@ -1827,7 +1835,8 @@ main(int argc, char *argv[])
 
   uio();
   exitrctest();
-  exectest(); // Ensure this test to be the last one to run (prints ALL TESTS PASSED) 
 
+
+  exectest(); // Ensure this test to be the last one to run (prints ALL TESTS PASSED)
   exit(0);
 }

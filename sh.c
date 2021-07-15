@@ -3,6 +3,7 @@
 #include "types.h"
 #include "user.h"
 #include "fcntl.h"
+#include "wstatus.h"
 
 // Parsed command representation
 #define EXEC  1
@@ -52,6 +53,23 @@ struct backcmd {
 int fork1(void);  // Fork but panics on failure.
 void panic(char*);
 struct cmd *parsecmd(char*);
+static int dollar_question_var; // keeps the value of last cmd's return value
+
+
+static void dollar_question_no_error(void)
+{
+  dollar_question_var = 0;
+}
+
+static void dollar_question_set_error(int err)
+{
+  dollar_question_var = err;
+}
+
+static void dollar_question_update_wait_exit_status(void)
+{
+  dollar_question_var = WEXITSTATUS(dollar_question_var);
+}
 
 // Execute cmd.  Never returns.
 void
@@ -161,13 +179,20 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
-int 
+int
 runinternal(char* buf){
+    if(buf[0] == '$' && buf[1] == '?'){
+      printf(1, "%d\n", dollar_question_var);
+      return 0;
+    }
+
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       // Chdir must be called by the parent, not the child.
       buf[strlen(buf)-1] = 0;  // chop \n
-      if(chdir(buf+3) < 0)
+      if(chdir(buf+3) < 0) {
         printf(2, "cannot cd %s\n", buf+3);
+        dollar_question_set_error(-2);
+      }
       return 0;
     }
 
@@ -252,12 +277,15 @@ main(void)
 
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
-    if(runinternal(buf) == 0)
+    if(runinternal(buf) == 0) {
+      dollar_question_no_error();
       continue;
+    }
 
     if(fork1() == 0)
       runcmd(parsecmd(buf));
-    wait(0);
+    wait(&dollar_question_var);
+    dollar_question_update_wait_exit_status();
   }
   exit(0);
 }
