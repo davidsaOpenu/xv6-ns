@@ -655,7 +655,7 @@ main(int argc, char *argv[])
              exit(1);
          }else if(cmd == LIST){
              print_help_inside_cnt();
-             exit(1);
+             exit(0);
          }
      }else{
          //command execution
