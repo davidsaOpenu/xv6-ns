@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69ab54f1_1c45eb3a",
+        "filename": "usertests.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-19T10:11:39Z",
+      "side": 0,
+      "message": "guess we have to remove exit instead",
+      "revId": "967ae9c3d8cc3d5a5ab12a497cbb52920ed8771e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
