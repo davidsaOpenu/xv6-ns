@@ -1121,7 +1121,6 @@ int main(int argc, char * argv[])
     run_test(test_creating_cgroups);
     run_test(test_opening_and_closing_cgroup_files);
     run_test_break_msg(test_reading_cgroup_files);
-    run_test(test_cgroup_dir);
     run_test(test_moving_process);
     run_test(test_enable_and_disable_all_controllers);
     run_test(test_limiting_pids);
@@ -1144,14 +1143,13 @@ int main(int argc, char * argv[])
     run_test(test_setting_max_descendants_and_max_depth);
     run_test(test_deleting_cgroups);
     run_test(test_umount_cgroup_fs);
-    
-    printf(1, "[===========]\n");
+    run_test_break_msg(test_kernel_freem_mem);
+
     if (failed) {
         printf(1, "[  FAILED   ]\n");
+        exit(1);
     } else {
         printf(1, "[    PASS   ]\n");
+        exit(0);
     }
-    printf(1, "[===========]\n");
-
-    exit(0);
 }
