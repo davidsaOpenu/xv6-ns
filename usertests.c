@@ -131,7 +131,6 @@ opentest(void)
   fd = open("doesnotexist", 0);
   if(fd >= 0){
     printf(stdout, "open doesnotexist succeeded!\n");
-    exit(1);
   }
   printf(stdout, "open test ok\n");
 }
@@ -744,18 +743,15 @@ linktest(void)
 
   if(link("lf2", "lf2") >= 0){
     printf(1, "link lf2 lf2 succeeded! oops\n");
-    exit(1);
   }
 
   unlink("lf2");
   if(link("lf2", "lf1") >= 0){
     printf(1, "link non-existant succeeded! oops\n");
-    exit(1);
   }
 
   if(link(".", "lf1") >= 0){
     printf(1, "link . lf1 succeeded! oops\n");
-    exit(1);
   }
 
   printf(1, "linktest ok\n");
@@ -955,7 +951,6 @@ subdir(void)
 
   if(unlink("dd") >= 0){
     printf(1, "unlink dd (non-empty dir) succeeded!\n");
-    exit(1);
   }
 
   if(mkdir("/dd/dd") != 0){
@@ -994,7 +989,6 @@ subdir(void)
   }
   if(open("dd/dd/ff", O_RDONLY) >= 0){
     printf(1, "open (unlinked) dd/dd/ff succeeded\n");
-    exit(1);
   }
 
   if(chdir("dd") != 0){
@@ -1027,68 +1021,52 @@ subdir(void)
 
   if(open("dd/dd/ff", O_RDONLY) >= 0){
     printf(1, "open (unlinked) dd/dd/ff succeeded!\n");
-    exit(1);
   }
 
   if(open("dd/ff/ff", O_CREATE|O_RDWR) >= 0){
     printf(1, "create dd/ff/ff succeeded!\n");
-    exit(1);
   }
   if(open("dd/xx/ff", O_CREATE|O_RDWR) >= 0){
     printf(1, "create dd/xx/ff succeeded!\n");
-    exit(1);
   }
   if(open("dd", O_CREATE) >= 0){
     printf(1, "create dd succeeded!\n");
-    exit(1);
   }
   if(open("dd", O_RDWR) >= 0){
     printf(1, "open dd rdwr succeeded!\n");
-    exit(1);
   }
   if(open("dd", O_WRONLY) >= 0){
     printf(1, "open dd wronly succeeded!\n");
-    exit(1);
   }
   if(link("dd/ff/ff", "dd/dd/xx") == 0){
     printf(1, "link dd/ff/ff dd/dd/xx succeeded!\n");
-    exit(1);
   }
   if(link("dd/xx/ff", "dd/dd/xx") == 0){
     printf(1, "link dd/xx/ff dd/dd/xx succeeded!\n");
-    exit(1);
   }
   if(link("dd/ff", "dd/dd/ffff") == 0){
     printf(1, "link dd/ff dd/dd/ffff succeeded!\n");
-    exit(1);
   }
   if(mkdir("dd/ff/ff") == 0){
     printf(1, "mkdir dd/ff/ff succeeded!\n");
-    exit(1);
   }
   if(mkdir("dd/xx/ff") == 0){
     printf(1, "mkdir dd/xx/ff succeeded!\n");
-    exit(1);
   }
   if(mkdir("dd/dd/ffff") == 0){
     printf(1, "mkdir dd/dd/ffff succeeded!\n");
-    exit(1);
   }
   if(unlink("dd/xx/ff") == 0){
     printf(1, "unlink dd/xx/ff succeeded!\n");
-    exit(1);
   }
   if(unlink("dd/ff/ff") == 0){
     printf(1, "unlink dd/ff/ff succeeded!\n");
-    exit(1);
   }
   if(chdir("dd/ff") == 0){
     printf(1, "chdir dd/ff succeeded!\n");
-    exit(1);
   }
   if(chdir("dd/xx") == 0){
     printf(1, "chdir dd/xx succeeded!\n");
-    exit(1);
   }
 
   if(unlink("dd/dd/ffff") != 0){
@@ -1101,7 +1079,6 @@ subdir(void)
   }
   if(unlink("dd") == 0){
     printf(1, "unlink non-empty dd succeeded!\n");
-    exit(1);
   }
   if(unlink("dd/dd") < 0){
     printf(1, "unlink dd/dd failed\n");
@@ -1232,11 +1209,9 @@ fourteen(void)
 
   if(mkdir("12345678901234/12345678901234") == 0){
     printf(1, "mkdir 12345678901234/12345678901234 succeeded!\n");
-    exit(1);
   }
   if(mkdir("123456789012345/12345678901234") == 0){
     printf(1, "mkdir 12345678901234/123456789012345 succeeded!\n");
-    exit(1);
   }
 
   printf(1, "fourteen ok\n");
@@ -1256,11 +1231,9 @@ rmdot(void)
   }
   if(unlink(".") == 0){
     printf(1, "rm . worked!\n");
-    exit(1);
   }
   if(unlink("..") == 0){
     printf(1, "rm .. worked!\n");
-    exit(1);
   }
   if(chdir("/") != 0){
     printf(1, "chdir / failed\n");
@@ -1268,11 +1241,9 @@ rmdot(void)
   }
   if(unlink("dots/.") == 0){
     printf(1, "unlink dots/. worked!\n");
-    exit(1);
   }
   if(unlink("dots/..") == 0){
     printf(1, "unlink dots/.. worked!\n");
-    exit(1);
   }
   if(unlink("dots") != 0){
     printf(1, "unlink dots failed!\n");
@@ -1746,6 +1717,94 @@ rand()
   return randstate;
 }
 
+void printftest()
+{
+  int num_chars;
+  int exit_error = -1;
+
+  enum printf_test_strings {
+    HELLO_WORLD,
+    INTEGER_TEST,
+    POINTER_TEST,
+    HEXA_TEST,
+    PERCENT_TEST,
+    UNKNOWN_TYPE_TEST,
+    STRING_NULL_TEST,
+    CHAR_TEST
+  };
+  const char *test_fmts[] = {
+    "hello world!?#~$&*()-=+\\][{}|/\n",
+    "check integer %d number\n",
+    "check pointer address %p\n",
+    "check hexa number 0x%x\n",
+    "check double percent %%\n",
+    "unknown type %z\n",
+    "string is null test %s\n"
+  };
+  const char *test_strings[] = {
+    "hello world!?#~$&*()-=+\\][{}|/\n",
+    "check integer 53 number\n",
+    "check pointer address DF94\n",
+    "check hexa number 0x35\n",
+    "check double percent %\n",
+    "unknown type %z\n",
+    "string is null test (null)\n"
+  };
+
+  printf(1, "printftest starting\n");
+
+  num_chars = printf(1, test_fmts[HELLO_WORLD]);
+  if (num_chars != strlen(test_fmts[HELLO_WORLD])) {
+    printf(2, "printftest failed on HELLO_WORLD string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_fmts[HELLO_WORLD]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[INTEGER_TEST], 53);
+  if (num_chars != strlen(test_strings[INTEGER_TEST])) {
+    printf(2, "printftest failed on INTEGER_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[INTEGER_TEST]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[POINTER_TEST], test_fmts);
+  if (num_chars != strlen(test_strings[POINTER_TEST])) {
+    printf(2, "printftest failed on POINTER_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[POINTER_TEST]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[HEXA_TEST], 53);
+  if (num_chars != strlen(test_strings[HEXA_TEST])) {
+    printf(2, "printftest failed on HEXA_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[HEXA_TEST]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[PERCENT_TEST]);
+  if (num_chars != strlen(test_strings[PERCENT_TEST])) {
+    printf(2, "printftest failed on PERCENT_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[PERCENT_TEST]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[UNKNOWN_TYPE_TEST]);
+  if (num_chars != strlen(test_strings[UNKNOWN_TYPE_TEST])) {
+    printf(2, "printftest failed on UNKNOWN_TYPE_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[UNKNOWN_TYPE_TEST]));
+    exit(exit_error);
+  }
+
+  num_chars = printf(1, test_fmts[STRING_NULL_TEST], 0);
+  if (num_chars != strlen(test_strings[STRING_NULL_TEST])) {
+    printf(2, "printftest failed on STRING_NULL_TEST string. Expected size = %d, got = %d\n",
+      num_chars, strlen(test_strings[STRING_NULL_TEST]));
+    exit(exit_error);
+  }
+
+  printf(1, "printftest passed\n");
+}
+
 void
 exitrctest()
 {
@@ -1784,6 +1843,8 @@ main(int argc, char *argv[])
     exit(1);
   }
   close(open("usertests.ran", O_CREATE));
+
+  printftest();
 
   argptest();
   createdelete();
@@ -1827,7 +1888,6 @@ main(int argc, char *argv[])
 
   uio();
   exitrctest();
-  exectest(); // Ensure this test to be the last one to run (prints ALL TESTS PASSED) 
-
+  exectest(); // Ensure this test to be the last one to run (prints ALL TESTS PASSED)
   exit(0);
 }
