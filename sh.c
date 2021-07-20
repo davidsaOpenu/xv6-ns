@@ -3,6 +3,7 @@
 #include "types.h"
 #include "user.h"
 #include "fcntl.h"
+#include "wstatus.h"
 
 // Parsed command representation
 #define EXEC  1
@@ -12,6 +13,14 @@
 #define BACK  5
 
 #define MAXARGS 10
+
+// Internal command ran successfully
+#define RUN_INTERNAL_CMD_OK 0
+// It is not an internal command
+#define RUN_INTERNAL_CMD_NONE -1
+// Running internal command resulted in error
+#define RUN_INTERNAL_CMD_ERR -2
+
 
 struct cmd {
   int type;
@@ -52,6 +61,23 @@ struct backcmd {
 int fork1(void);  // Fork but panics on failure.
 void panic(char*);
 struct cmd *parsecmd(char*);
+static int dollar_question_var; // keeps the value of last cmd's return value
+
+
+static void dollar_question_no_error(void)
+{
+  dollar_question_var = 0;
+}
+
+static void dollar_question_set_error(int err)
+{
+  dollar_question_var = err;
+}
+
+static void dollar_question_update_wait_exit_status(void)
+{
+  dollar_question_var = WEXITSTATUS(dollar_question_var);
+}
 
 // Execute cmd.  Never returns.
 void
@@ -96,6 +122,7 @@ runcmd(struct cmd *cmd)
     }
 
     printf(2, "exec %s failed\n", ecmd->argv[0]);
+    exit(1);
     break;
 
   case REDIR:
@@ -161,14 +188,27 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
-int 
+// Executes internal commands
+// Returns
+// RUN_INTERNAL_CMD_OK : Successful internal command run
+// RUN_INTERNAL_CMD_NONE : No internal command ran
+// RUN_INTERNAL_CMD_ERROR : There was an error during execution of internal command
+int
 runinternal(char* buf){
+    if(buf[0] == 'e' && buf[1] == 'c' && buf[2] == 'h' && buf[3] == 'o' && buf[4] == ' ' && buf[5] == '$' && buf[6] == '?'){
+      printf(1, "%d\n", dollar_question_var);
+      return RUN_INTERNAL_CMD_OK;
+    }
+
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       // Chdir must be called by the parent, not the child.
       buf[strlen(buf)-1] = 0;  // chop \n
-      if(chdir(buf+3) < 0)
+      if(chdir(buf+3) < 0) {
         printf(2, "cannot cd %s\n", buf+3);
-      return 0;
+        dollar_question_set_error(-2);
+        return RUN_INTERNAL_CMD_ERR;
+      }
+      return RUN_INTERNAL_CMD_OK;
     }
 
     if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
@@ -185,25 +225,27 @@ runinternal(char* buf){
 
       tty_fd = open(buf+8, O_RDWR);
       if(tty_fd < 0){
-	    printf(2, "exec connect tty failed\n");
-	    return -1;
+        printf(2, "exec connect tty failed\n");
+        dollar_question_set_error(-2);
+        return RUN_INTERNAL_CMD_ERR;
       }
 
       if(connect_tty(tty_fd) < 0){
-	close(tty_fd);
-	return -1;
+        close(tty_fd);
+        dollar_question_set_error(-2);
+        return RUN_INTERNAL_CMD_ERR;
       }
 
       close(tty_fd);
-      return 0;
+      return RUN_INTERNAL_CMD_OK;
     }
 
     //Disconnect tty
     if(buf[0] == 'd' && buf[1] == 'i' && buf[2] == 's' && buf[3] == 'c' && buf[4] == 'o' && buf[5] == 'n' && buf[6] == 'n' &&  buf[7] == 'e' &&  buf[8] == 'c'  &&  buf[9] == 't' &&  buf[10] == '\n'){
-     buf[strlen(buf)-1] = 0;
-     disconnect_tty(0);
-     sleep(100);
-     return 0;
+      buf[strlen(buf)-1] = 0;
+      disconnect_tty(0);
+      sleep(100);
+      return RUN_INTERNAL_CMD_OK;
     }
 
     if(buf[0] == 'a' && buf[1] == 't' && buf[2] == 't' && buf[3] == 'a' && buf[4] == 'c' && buf[5] == 'h' && buf[6] == ' ' && buf[7] == 't' && buf[8] == 't' && buf[9] == 'y' && buf[11] == '\n'){
@@ -212,35 +254,36 @@ runinternal(char* buf){
       buf[strlen(buf)-1] = 0;
       tty_fd = open(buf+7, O_RDWR);
       if(tty_fd < 0){
-	    printf(2, "exec attach tty failed\n");
-	    return 0;
+        printf(2, "exec attach tty failed\n");
+        dollar_question_set_error(-2);
+        return RUN_INTERNAL_CMD_ERR;
       }
 
       if(attach_tty(tty_fd) < 0){
-	    printf(2, "exec attach tty failed 2\n");
-	    close(tty_fd);
-	    return 0;
+        printf(2, "exec attach tty failed 2\n");
+        close(tty_fd);
+        return RUN_INTERNAL_CMD_OK;
       }
 
       ioctl(tty_fd, TTYSETS, DEV_CONNECT);
       close(tty_fd);
       printf(2, "%s attached\n",buf+7);
-      return 0;
+      return RUN_INTERNAL_CMD_OK;
     }
 
     if(buf[0] == 'p' && buf[1] == 'i' && buf[2] == 'd' && buf[3] == '\n'){
-	printf(2, "PID: %d\n",getpid());
-        return 0;
+      printf(2, "PID: %d\n",getpid());
+      return RUN_INTERNAL_CMD_OK;
     }
 
-   return -1;
+   return RUN_INTERNAL_CMD_NONE;
 }
 
 int
 main(void)
 {
   static char buf[100];
-  int fd;
+  int fd, retval;
 
   // Ensure that three file descriptors are open.
   while((fd = open("console", O_RDWR)) >= 0){
@@ -252,12 +295,18 @@ main(void)
 
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
-    if(runinternal(buf) == 0)
+    retval = runinternal(buf);
+    if(retval == 0) {
+      dollar_question_no_error();
       continue;
+    } else if (retval == -2) {
+      continue;
+    }
 
     if(fork1() == 0)
       runcmd(parsecmd(buf));
-    wait(0);
+    wait(&dollar_question_var);
+    dollar_question_update_wait_exit_status();
   }
   exit(0);
 }
