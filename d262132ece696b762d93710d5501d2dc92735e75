@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c2a77a4_b3ca0c92",
+        "filename": "obj_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-20T07:16:54Z",
+      "side": 1,
+      "message": "nit: trailing whitespaces",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 29
+      },
+      "revId": "d262132ece696b762d93710d5501d2dc92735e75",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
