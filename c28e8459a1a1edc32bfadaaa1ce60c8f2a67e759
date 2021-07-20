@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28ec3a11_c886903f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-20T07:05:26Z",
+      "side": 1,
+      "message": "Thanks for working on this. \nLet\u0027s add \"make run-objfs-tests\" to the runtests.exp\n",
+      "revId": "c28e8459a1a1edc32bfadaaa1ce60c8f2a67e759",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb83a46b_f6481182",
+        "filename": "Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-20T07:05:26Z",
+      "side": 1,
+      "message": "objfs_tests",
+      "range": {
+        "startLine": 348,
+        "startChar": 3,
+        "endLine": 348,
+        "endChar": 8
+      },
+      "revId": "c28e8459a1a1edc32bfadaaa1ce60c8f2a67e759",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
