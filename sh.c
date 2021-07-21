@@ -12,6 +12,20 @@
 #define LIST  4
 #define BACK  5
 
+
+// Parsed internal commands
+enum internal_cmd {
+  INTERNAL_CMD_NONE,
+  INTERNAL_CMD_DOLLAR_QUESTION,
+  INTERNAL_CMD_CD,
+  INTERNAL_CMD_EXIT,
+  INTERNAL_CMD_CONNECT_TTY,
+  INTERNAL_CMD_DISCONNECT_TTY,
+  INTERNAL_CMD_ATTACH_TTY,
+  INTERNAL_CMD_PID
+}
+
+
 #define MAXARGS 10
 
 // Internal command ran successfully
@@ -188,42 +202,66 @@ getcmd(char *buf, int nbuf)
   return 0;
 }
 
+int get_internal_cmd_type(struct execcmd *cmd)
+{
+  int cmd_type = INTERNAL_CMD_NONE;
+
+  if ((strcmp(cmd->argv[0], "echo") == 0) && (strcmp(cmd->argv[1], "$?") == 0)) {
+    cmd_type = INTERNAL_CMD_DOLLAR_QUESTION;
+  } else if (strcmp(cmd->argv[0], "cd") == 0) {
+    cmd_type = INTERNAL_CMD_CD;
+  } else if (strcmp(cmd->argv[0], "exit") == 0) {
+    cmd_type = INTERNAL_CMD_EXIT;
+  } else if ((strcmp(cmd->argv[0], "connect") == 0) && (strcmp(cmd->argv[1], "tty") == 0)) {
+    cmd_type = INTERNAL_CMD_CONNECT_TTY;
+  } else if (strcmp(cmd->argv[0], "disconnect") == 0) {
+    cmd_type = INTERNAL_CMD_DISCONNECT_TTY;
+  } else if ((strcmp(cmd->argv[0], "attach") == 0) && (strcmp(cmd->argv[1], "tty") == 0)) {
+    cmd_type = INTERNAL_CMD_ATTACH_TTY;
+  } else if (strcmp(cmd->argv[0], "pid") == 0) {
+    cmd_type = INTERNAL_CMD_PID;
+  }
+
+  return cmd_type;
+}
+
 // Executes internal commands
 // Returns
 // RUN_INTERNAL_CMD_OK : Successful internal command run
 // RUN_INTERNAL_CMD_NONE : No internal command ran
 // RUN_INTERNAL_CMD_ERROR : There was an error during execution of internal command
 int
-runinternal(char* buf){
-    if(buf[0] == 'e' && buf[1] == 'c' && buf[2] == 'h' && buf[3] == 'o' && buf[4] == ' ' && buf[5] == '$' && buf[6] == '?'){
+runinternal(struct cmd **pcmd){
+    struct execcmd *cmd = (struct execcmd *)*pcmd;
+
+    int cmd_type = get_internal_cmd_type(cmd);
+
+    if(cmd_type == INTERNAL_CMD_DOLLAR_QUESTION){
       printf(1, "%d\n", dollar_question_var);
       return RUN_INTERNAL_CMD_OK;
     }
 
-    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
+    if(cmd_type == INTERNAL_CMD_CD){
       // Chdir must be called by the parent, not the child.
-      buf[strlen(buf)-1] = 0;  // chop \n
-      if(chdir(buf+3) < 0) {
-        printf(2, "cannot cd %s\n", buf+3);
+      if(chdir(cmd->argv[1]) < 0) {
+        printf(2, "cannot cd %s\n", cmd->argv[1]);
         dollar_question_set_error(RUN_INTERNAL_CMD_ERR);
         return RUN_INTERNAL_CMD_ERR;
       }
       return RUN_INTERNAL_CMD_OK;
     }
 
-    if(buf[0] == 'e' && buf[1] == 'x' && buf[2] == 'i' && buf[3] == 't' && buf[4] == '\n'){
+    if(cmd_type == INTERNAL_CMD_EXIT){
       // exit must be called by the parent, not the child.
       disconnect_tty(0);
       exit(0);
     }
 
     //Connect tty
-    if(buf[0] == 'c' && buf[1] == 'o' && buf[2] == 'n' && buf[3] == 'n' && buf[4] == 'e' && buf[5] == 'c' && buf[6] == 't' &&  buf[7] == ' ' &&  buf[8] == 't' &&  buf[9] == 't' &&  buf[10] == 'y' &&  buf[12] == '\n'){
+    if(cmd_type == INTERNAL_CMD_CONNECT_TTY){
       int tty_fd;
 
-      buf[strlen(buf)-1] = 0;
-
-      tty_fd = open(buf+8, O_RDWR);
+      tty_fd = open(cmd->argv[2], O_RDWR);
       if(tty_fd < 0){
         printf(2, "exec connect tty failed\n");
         dollar_question_set_error(RUN_INTERNAL_CMD_ERR);
@@ -241,18 +279,16 @@ runinternal(char* buf){
     }
 
     //Disconnect tty
-    if(buf[0] == 'd' && buf[1] == 'i' && buf[2] == 's' && buf[3] == 'c' && buf[4] == 'o' && buf[5] == 'n' && buf[6] == 'n' &&  buf[7] == 'e' &&  buf[8] == 'c'  &&  buf[9] == 't' &&  buf[10] == '\n'){
-      buf[strlen(buf)-1] = 0;
+    if(cmd_type == INTERNAL_CMD_DISCONNECT_TTY){
       disconnect_tty(0);
       sleep(100);
       return RUN_INTERNAL_CMD_OK;
     }
 
-    if(buf[0] == 'a' && buf[1] == 't' && buf[2] == 't' && buf[3] == 'a' && buf[4] == 'c' && buf[5] == 'h' && buf[6] == ' ' && buf[7] == 't' && buf[8] == 't' && buf[9] == 'y' && buf[11] == '\n'){
+    if(cmd_type == INTERNAL_CMD_ATTACH_TTY){
       int tty_fd;
 
-      buf[strlen(buf)-1] = 0;
-      tty_fd = open(buf+7, O_RDWR);
+      tty_fd = open(cmd->argv[2], O_RDWR);
       if(tty_fd < 0){
         printf(2, "exec attach tty failed\n");
         dollar_question_set_error(RUN_INTERNAL_CMD_ERR);
@@ -267,11 +303,11 @@ runinternal(char* buf){
 
       ioctl(tty_fd, TTYSETS, DEV_CONNECT);
       close(tty_fd);
-      printf(2, "%s attached\n",buf+7);
+      printf(2, "%s attached\n", cmd->argv[2]);
       return RUN_INTERNAL_CMD_OK;
     }
 
-    if(buf[0] == 'p' && buf[1] == 'i' && buf[2] == 'd' && buf[3] == '\n'){
+    if(cmd_type == INTERNAL_CMD_PID){
       printf(2, "PID: %d\n",getpid());
       return RUN_INTERNAL_CMD_OK;
     }
@@ -284,6 +320,7 @@ main(void)
 {
   static char buf[100];
   int fd, retval;
+  struct cmd *pcmd;
 
   // Ensure that three file descriptors are open.
   while((fd = open("console", O_RDWR)) >= 0){
@@ -295,7 +332,8 @@ main(void)
 
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
-    retval = runinternal(buf);
+    pcmd = parsecmd(buf);
+    retval = runinternal(&pcmd);
     if(retval == 0) {
       dollar_question_no_error();
       continue;
@@ -304,7 +342,7 @@ main(void)
     }
 
     if(fork1() == 0)
-      runcmd(parsecmd(buf));
+      runcmd(pcmd);
     wait(&dollar_question_var);
     dollar_question_update_wait_exit_status();
   }
