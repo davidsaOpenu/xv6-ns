@@ -119,6 +119,21 @@ int write_file(const char* file, char* text) {
   return close_file(fd);
 }
 
+int write_new_file(const char* file, char* text) {
+   int fd;
+   if ((fd = open(file, O_CREATE | O_RDWR)) < 1) {
+     if (suppress == 0)
+        printf(1, "\nFailed to open a new file \n");
+     return 0;
+   }
+
+   if (!write_file(file, text)) {
+     return 0;
+   }
+
+  return fd;
+}
+
 // Test enabling controller according to given type.
 int enable_controller(int type) {
   char buf[5] = { '+', 0 };
@@ -251,6 +266,22 @@ int temp_delete() {
   }
 
   return 1;
+}
+
+//return the value for a given entry from the bufer
+//entry mast contains all characters before the value include white-spase 
+int get_val(char *buf, char *entry){
+
+  do{
+     if(strncmp(buf, entry, strlen(entry))==0){
+       buf+=strlen(entry);
+       return atoi(buf);
+       }
+     else
+       while (*buf++!='\n')//go to next line
+            ;
+      }while(*buf!='\0');
+  return -1;//Assuming all values are supposed to be non-negative
 }
 
 // Write into buffer the sequence of activating, disabling then activating a given controller.
@@ -1019,12 +1050,108 @@ TEST(test_cant_grow_over_mem_limit)
 
 TEST(test_memory_stat_content_valid)
 {
-    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_STAT, 0), "empty file\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_STAT, 0), "file_dirty - 0\nfile_dirty_aggregated - 0\npgfault - 0\npgmajfault - 0\n"));
 }
 
 TEST(test_kernel_freem_mem)
 {
   ASSERT_FALSE(kmemtest());
+}
+
+
+TEST (test_mem_stat){
+      // Fork here since the process should not be running after we move it inside the cgroup.
+    int pid = fork();
+    int pidToMove = 0;
+    int wstatus;
+    char buf1[265];
+    char buf2[265];
+    char buf3[265];
+    char buf4[265];
+
+    strcpy(buf1, read_file(TEST_1_MEM_STAT,0));
+
+    // Child
+    if (pid == 0) {
+        pidToMove = getpid();
+        // Save the pid of child in temp file.
+        ASSERT_TRUE(temp_write(pidToMove));
+        // Go to sleep for long period of time.
+        sleep(10);
+
+        char str [256];
+        for (int i = 0; i < 256; i++)
+               str[i]='1';
+        int fd;
+        ASSERT_TRUE(fd=write_new_file("a", str));
+        ASSERT_TRUE(write_new_file("a", str));
+        ASSERT_TRUE(close_file(fd));
+
+        sleep(20);
+
+        ASSERT_TRUE(fd=write_new_file("b", str));
+        ASSERT_TRUE(close_file(fd));
+        ASSERT_TRUE(write_new_file("b", str));
+        ASSERT_TRUE(close_file(fd));
+
+        sleep(20);
+
+        ASSERT_TRUE(fd=write_new_file("a", str));
+        ASSERT_TRUE(close_file(fd));
+
+        exit(0);
+        }
+    // Father
+    else {
+        sleep(5);
+        // Read the child pid from temp file.
+        pidToMove = temp_read(0);
+
+        // Move the child process to "/cgroup/test1" cgroup.
+        ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, pidToMove));
+
+        // Check that the process we moved is really in "/cgroup/test1" cgroup.
+        ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, pidToMove));
+
+        // Go to sleep to ensure the child process had a chance to be scheduled.
+        //Allows the child to write a page twice for a new file
+        sleep(20);
+
+        strcpy(buf2, read_file(TEST_1_MEM_STAT,0));
+
+        //Check that file writing is reflected
+        // we calculate the dirte or aggregated as it is impossible to know if there is a delay in writing to disk
+        ASSERT_TRUE((get_val(buf1,"file_dirty - ")<get_val(buf2,"file_dirty - "))||(get_val(buf1,"file_dirty_aggregated - ")<get_val(buf2,"file_dirty_aggregated - ")));
+
+        //Allows the child to write to a new file close and write again
+        sleep(20);
+
+        strcpy(buf3, read_file(TEST_1_MEM_STAT,0));
+
+        //The second write to file A was before closing and file B was after closing,
+        // so we need more pgfaults besides what the writing itself causes
+
+        ASSERT_TRUE((get_val(buf3,"pgfault - ")-get_val(buf2,"pgfault - "))>(get_val(buf2,"pgfault - ")-get_val(buf1,"pgfault - ")));
+
+        //we wrote to 2 new fils
+        ASSERT_TRUE(get_val(buf3, "pgmajfault - ")-get_val(buf1, "pgmajfault - ")==2);
+
+        //Allows the child to write 1 page to a old file
+        sleep(20);
+
+        strcpy(buf4, read_file(TEST_1_MEM_STAT,0));
+
+        // we calculate the dirte and aggregated together as it is impossible to know if there is a delay in writing to disk
+        ASSERT_TRUE((get_val(buf4,"file_dirty - ")+get_val(buf4,"file_dirty_aggregated - "))-(get_val(buf3,"file_dirty - ")+get_val(buf3,"file_dirty_aggregated - "))==1);
+
+        // Wait for child to exit.
+        wait(&wstatus);
+        ASSERT_TRUE(wstatus);
+
+        // Remove the temp file.
+        ASSERT_TRUE(temp_delete());
+
+    }
 }
 
 int main(int argc, char * argv[])
@@ -1046,6 +1173,7 @@ int main(int argc, char * argv[])
     run_test(test_setting_cpu_id);
     run_test(test_correct_cpu_running);
     run_test(test_no_run);
+    run_test(test_mem_stat);
     run_test(test_setting_freeze);
     run_test(test_frozen_not_running);
     run_test(test_mem_current);
