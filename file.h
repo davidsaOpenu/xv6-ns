@@ -70,6 +70,7 @@ struct file {
         union {
           struct {
             char active;
+            uint file_dirty;
           } stat;
           struct {
             char active;
