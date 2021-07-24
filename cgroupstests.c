@@ -352,6 +352,7 @@ TEST(test_opening_and_closing_cgroup_files)
     ASSERT_TRUE(open_close_file(TEST_1_SET_FRZ));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
+    ASSERT_TRUE(open_close_file(TEST_1_MEM_STAT));
 }
 
 TEST(test_reading_cgroup_files)
@@ -372,6 +373,7 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+    ASSERT_TRUE(read_file(TEST_1_MEM_STAT, 1));
 }
 
 int test_enable_and_disable_controller(int controller_type)
