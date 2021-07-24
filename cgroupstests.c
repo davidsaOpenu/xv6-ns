@@ -1019,7 +1019,7 @@ TEST(test_cant_grow_over_mem_limit)
 
 TEST(test_memory_stat_content_valid)
 {
-    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_STAT, 0), "empty file\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_STAT, 0), "file_dirty - 0\nfile_dirty_aggregated - 0\npgfault - 0\npgmajfault - 0\n"));
 }
 
 TEST(test_kernel_freem_mem)
