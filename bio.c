@@ -97,6 +97,7 @@ bget(uint dev, uint blockno)
       b->dev = dev;
       b->blockno = blockno;
       b->flags = 0;
+      b->cgroup = 0;
       b->refcnt = 1;
       release(&bcache.lock);
       acquiresleep(&b->lock);
@@ -173,9 +174,8 @@ brelse(struct buf *b)
     bcache.head.next->prev = b;
     bcache.head.next = b;
   }
-  
+
   release(&bcache.lock);
 }
 //PAGEBREAK!
 // Blank page.
-

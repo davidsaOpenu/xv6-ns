@@ -328,6 +328,7 @@ void cgroup_initialize(struct cgroup * cgroup,
     frz_grp(cgroup, 0);
     // By default a group has limit of KERNBASE memory.
     set_max_mem(cgroup, KERNBASE);
+    cgroup->mem_stat_file_dirty = 0;
 
     cgroup->cpu_account_frame = 0;
     cgroup->cpu_percent = 0;
@@ -918,4 +919,18 @@ int disable_mem_controller(struct cgroup* cgroup)
   int res = unsafe_disable_mem_controller(cgroup);
   release(&cgtable.lock);
   return res;
+}
+
+void cgroup_mem_stat_file_dirty_incr(struct cgroup* cgroup)
+{
+    if (cgroup == 0 || cgroup->populated == 1) {
+        cgroup->mem_stat_file_dirty++;
+    }
+}
+
+void cgroup_mem_stat_file_dirty_decr(struct cgroup* cgroup)
+{
+    if (cgroup == 0 || cgroup->populated == 1) {
+        cgroup->mem_stat_file_dirty--;
+    }
 }
