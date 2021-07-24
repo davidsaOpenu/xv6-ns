@@ -803,3 +803,9 @@ cgroup_move_proc(struct cgroup * cgroup, int pid)
     release(&ptable.lock);
     return -1;
 }
+
+struct cgroup *proc_get_cgroup(void)
+{
+  struct proc *proc = myproc();
+  return proc->cgroup;
+}

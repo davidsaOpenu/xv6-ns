@@ -352,6 +352,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                 if (cgp == cgroup_root())
                     return -1;
                 f->mem.stat.active = cgp->mem_controller_enabled;
+                f->mem.stat.file_dirty = cgp->mem_stat_file_dirty;
                 break;
         }
 
@@ -650,12 +651,17 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
             r = copy_buffer_up_to_end(maxtext + f->off, min(maxtextp - maxtext, n), addr);
         } else if (filename_const == MEM_STAT) {
-            uint stattext_size = strlen("empty file") + NEW_LINE_AND_NULL_CHARS_IN_BYTES;
-            char stattext[stattext_size];
-            memset(stattext, '\0', stattext_size);
-            char *stattextp = stattext;
+            char file_dirty_buf[10] = {0};
+            uint stattext_size = strlen("file_dirty - ") +
+                    utoa(file_dirty_buf, f->mem.stat.file_dirty) +
+                    NEW_LINE_AND_NULL_CHARS_IN_BYTES;
 
-            copy_and_move_buffer(&stattextp, "empty file", strlen("empty file"));
+            char stattext[stattext_size];
+            char *stattextp = stattext;
+            memset(stattext, '\0', stattext_size);
+
+            copy_and_move_buffer(&stattextp, "file_dirty - ", strlen("file_dirty - "));
+            copy_and_move_buffer(&stattextp, file_dirty_buf, strlen(file_dirty_buf));
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             if ((stattextp - stattext + NULL_CHAR_IN_BYTES) != stattext_size) {
