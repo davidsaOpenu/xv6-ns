@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d15d486d_a4739392",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-25T08:45:20Z",
+      "side": 1,
+      "message": "Thanks for working on this. \n\nLet\u0027s redesign way we are using tty\u0027s and revisit the necessity of this change afterwards \nhttps://trello.com/c/tZ7b13oa/92-tty-restore-clean\nhttps://trello.com/c/H7cUi2cY/93-pouch-start-pouch-create-run",
+      "revId": "3c6273bd98272093e248d49ce5eeafbe8354213d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
