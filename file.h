@@ -71,6 +71,7 @@ struct file {
           struct {
             char active;
             uint file_dirty;
+            uint file_writeback;
           } stat;
           struct {
             char active;

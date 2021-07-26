@@ -80,6 +80,7 @@ install_trans(void)
     memmove(dbuf->data, lbuf->data, BSIZE);  // copy block to dst
     bwrite(dbuf);  // write dst to disk
     cgroup_mem_stat_file_dirty_decr(dbuf->cgroup);
+    cgroup_mem_stat_file_writeback_incr(dbuf->cgroup);
     brelse(lbuf);
     brelse(dbuf);
   }
