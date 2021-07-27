@@ -41,6 +41,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10713ab5_19c7ac12",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1019015
+      },
+      "writtenOn": "2021-07-27T07:34:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aff57e29_cb063dd2",
+      "range": {
+        "startLine": 661,
+        "startChar": 20,
+        "endLine": 661,
+        "endChar": 52
+      },
+      "revId": "311d34fc21703507033064e73d123f369459778d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a54f4e4d_0e8d156c",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-07-26T19:39:54Z",
       "side": 1,
       "message": "need to change a bit the definition here, remove the currently being to total number of",
+      "range": {
+        "startLine": 75,
+        "startChar": 103,
+        "endLine": 75,
+        "endChar": 113
+      },
+      "revId": "311d34fc21703507033064e73d123f369459778d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24fd8657_47361bc6",
+        "filename": "cgroup.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1019015
+      },
+      "writtenOn": "2021-07-27T07:34:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a54f4e4d_0e8d156c",
       "range": {
         "startLine": 75,
         "startChar": 103,
