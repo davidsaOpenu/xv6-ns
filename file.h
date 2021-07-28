@@ -72,6 +72,8 @@ struct file {
             char active;
             uint file_dirty;
             uint file_writeback;
+            uint pgfault;
+            uint pgmajfault;
           } stat;
           struct {
             char active;

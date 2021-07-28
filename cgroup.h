@@ -73,6 +73,8 @@ struct cgroup
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
     unsigned int mem_stat_file_dirty; /* Amount of cached filesystem data that was modified but not yet written back to disk */
     unsigned int mem_stat_file_writeback; /* Amount of cached filesystem data that was modified and is currently being written back to disk */
+    unsigned int mem_stat_pgfault;/*Total number of page faults incurred*/
+    unsigned int mem_stat_pgmajfault;/*Number of major page faults incurred*/
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -456,5 +458,18 @@ void cgroup_mem_stat_file_dirty_decr(struct cgroup* cgroup);
  */
 void cgroup_mem_stat_file_writeback_incr(struct cgroup* cgroup);
 
+/**
+ * @brief Increments the cgroup Memory Controller stat of pgfault
+ *
+ * @param cgroup pointer to a cgroup
+ */
+void cgroup_mem_stat_pgfault_incr(struct cgroup* cgroup);
+
+/**
+ * @brief Increments the cgroup Memory Controller stat of pgmajfault
+ *
+ * @param cgroup pointer to a cgroup
+ */
+void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup);
 
 #endif
