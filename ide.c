@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "cgroup.h"
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
@@ -104,6 +105,7 @@ void
 ideintr(void)
 {
   struct buf *b;
+  struct cgroup *cg= proc_get_cgroup();
 
   // First queued buffer is the active request.
   acquire(&idelock);
@@ -115,8 +117,12 @@ ideintr(void)
   idequeue = b->qnext;
 
   // Read data if needed.
-  if(!(b->flags & B_DIRTY) && idewait(1) >= 0)
+  if(!(b->flags & B_DIRTY) && idewait(1) >= 0){
+    cgroup_mem_stat_pgmajfault_incr(cg);
     insl(0x1f0, b->data, BSIZE/4);
+    }
+  else
+    cgroup_mem_stat_pgfault_incr(cg);
 
   // Wake process waiting for this buf.
   b->flags |= B_VALID;
