@@ -26,6 +26,8 @@
 #include "fs.h"
 #include "buf.h"
 #include "device.h"
+#include "proc.h"
+#include "cgroup.h"
 
 struct {
   struct spinlock lock;
@@ -76,7 +78,7 @@ static struct buf*
 bget(uint dev, uint blockno)
 {
   struct buf *b;
-
+  struct cgroup *cg = proc_get_cgroup();
   acquire(&bcache.lock);
 
   // Is the block already cached?
@@ -85,6 +87,7 @@ bget(uint dev, uint blockno)
       b->refcnt++;
       release(&bcache.lock);
       acquiresleep(&b->lock);
+      cgroup_mem_stat_pgfault_incr(cg);
       return b;
     }
   }
@@ -101,6 +104,7 @@ bget(uint dev, uint blockno)
       b->refcnt = 1;
       release(&bcache.lock);
       acquiresleep(&b->lock);
+      cgroup_mem_stat_pgmajfault_incr(cg);
       return b;
     }
   }

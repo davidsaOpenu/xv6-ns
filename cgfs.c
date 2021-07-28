@@ -32,7 +32,7 @@
 #define min(x, y) (x) > (y) ? (y) : (x)
 
 // Bytes it takes to store a new line and null characters
-#define NEW_LINE_AND_NULL_CHARS_IN_BYTES 2
+#define NEW_LINE_IN_BYTES 1
 #define NULL_CHAR_IN_BYTES 1
 
 /**
@@ -354,6 +354,8 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                 f->mem.stat.active = cgp->mem_controller_enabled;
                 f->mem.stat.file_dirty = cgp->mem_stat_file_dirty;
                 f->mem.stat.file_writeback = cgp->mem_stat_file_writeback;
+                f->mem.stat.pgfault = cgp->mem_stat_pgfault;
+                f->mem.stat.pgmajfault = cgp->mem_stat_pgmajfault;
                 break;
 
         }
@@ -656,12 +658,21 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
         } else if (filename_const == MEM_STAT) {
             char file_dirty_buf[10] = {0};
             char file_writeback_buf[10] = {0};
+            char pgfault_buf[10] = {0};
+            char pgmajfault_buf[10] = {0};
+
             uint stattext_size = strlen("file_dirty - ") +
                     utoa(file_dirty_buf, f->mem.stat.file_dirty) +
-                    NEW_LINE_AND_NULL_CHARS_IN_BYTES+
+                    NEW_LINE_IN_BYTES+
                     strlen("file_writeback - ") +
                     utoa(file_writeback_buf, f->mem.stat.file_writeback) +
-                    NEW_LINE_AND_NULL_CHARS_IN_BYTES;
+                    NEW_LINE_IN_BYTES+
+                    strlen("pgfault - ") +
+                    utoa(pgfault_buf, f->mem.stat.pgfault) +
+                    NEW_LINE_IN_BYTES+
+                    strlen("pgmajfault - ") +
+                    utoa(pgmajfault_buf, f->mem.stat.pgmajfault) +
+                    NEW_LINE_IN_BYTES+NULL_CHAR_IN_BYTES;
 
             char stattext[stattext_size];
             char *stattextp = stattext;
@@ -675,7 +686,15 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, file_writeback_buf, strlen(file_writeback_buf));
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
-            if ((stattextp - stattext + 2*NULL_CHAR_IN_BYTES) != stattext_size) {
+            copy_and_move_buffer(&stattextp, "pgfault - ", strlen("pgfault - "));
+            copy_and_move_buffer(&stattextp, pgfault_buf, strlen(pgfault_buf));
+            copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+            copy_and_move_buffer(&stattextp, "pgmajfault - ", strlen("pgmajfault - "));
+            copy_and_move_buffer(&stattextp, pgmajfault_buf, strlen(pgmajfault_buf));
+            copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+            if ((stattextp - stattext + NULL_CHAR_IN_BYTES) != stattext_size) {
                 cprintf("stattextp - stattext = %d, stattext_size = %d\n", stattextp - stattext, stattext_size);
                 panic("memory.stat unexpected content!");
             }
