@@ -41,6 +41,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37bbd174_83d4477b",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-29T16:34:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84df9936_791bbff3",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 37,
+        "endChar": 0
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41db7417_27ee18ca",
@@ -64,6 +88,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33fb54c7_0ba1dbf4",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-29T16:34:02Z",
+      "side": 1,
+      "message": "Done: https://trello.com/c/jRfgk6yK/95-cgfs-rework-files-char-buffer-usage",
+      "parentUuid": "41db7417_27ee18ca",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 654,
+        "endChar": 41
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01bb3097_93efc8eb",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-07-29T08:59:32Z",
       "side": 1,
       "message": "Lets move the check to tests",
+      "range": {
+        "startLine": 661,
+        "startChar": 0,
+        "endLine": 664,
+        "endChar": 13
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f866f2b2_deda095a",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-07-29T16:34:02Z",
+      "side": 1,
+      "message": "Done\nCreated a test which in followup patch will have a much meaningful checks when new statistics implemented. Test name: test_memory_stat_content_valid",
+      "parentUuid": "01bb3097_93efc8eb",
       "range": {
         "startLine": 661,
         "startChar": 0,
