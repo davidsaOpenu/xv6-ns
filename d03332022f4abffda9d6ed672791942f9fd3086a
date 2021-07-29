@@ -16,6 +16,75 @@
       "message": "recheck",
       "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84df9936_791bbff3",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-29T08:59:32Z",
+      "side": 1,
+      "message": "we can remove those defines",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 37,
+        "endChar": 0
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41db7417_27ee18ca",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-29T08:59:32Z",
+      "side": 1,
+      "message": "We need a task to handle those buffers properly without creating a pressure on the kernel stack",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 654,
+        "endChar": 41
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01bb3097_93efc8eb",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-07-29T08:59:32Z",
+      "side": 1,
+      "message": "Lets move the check to tests",
+      "range": {
+        "startLine": 661,
+        "startChar": 0,
+        "endLine": 664,
+        "endChar": 13
+      },
+      "revId": "d03332022f4abffda9d6ed672791942f9fd3086a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
