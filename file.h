@@ -71,6 +71,7 @@ struct file {
           struct {
             char active;
             uint file_dirty;
+            uint file_writeback;
           } stat;
           struct {
             char active;
@@ -112,3 +113,4 @@ extern struct devsw devsw[];
 #define CONSOLE 1
 
 #endif
+
