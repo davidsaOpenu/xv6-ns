@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c23db88_ce1e7d3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 29
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019015
+      },
+      "writtenOn": "2021-07-31T20:40:40Z",
+      "side": 1,
+      "message": "Thanks for working on it",
+      "revId": "2fac6cd6e6b04c4bae2cdd0f0065eea3f6f7f4a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b49221fb_143769ff",
+        "filename": "cgfs.c",
+        "patchSetId": 29
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1019015
+      },
+      "writtenOn": "2021-07-31T20:40:40Z",
+      "side": 1,
+      "message": "what append if !(cpu_controller_enabled) ?",
+      "range": {
+        "startLine": 846,
+        "startChar": 23,
+        "endLine": 846,
+        "endChar": 45
+      },
+      "revId": "2fac6cd6e6b04c4bae2cdd0f0065eea3f6f7f4a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
