@@ -806,6 +806,9 @@ cgroup_move_proc(struct cgroup * cgroup, int pid)
 
 struct cgroup *proc_get_cgroup(void)
 {
+  struct cgroup *cg = 0;
   struct proc *proc = myproc();
-  return proc->cgroup;
+  if (proc)
+     cg = proc->cgroup;
+  return cg;
 }
