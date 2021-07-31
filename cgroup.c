@@ -330,6 +330,9 @@ void cgroup_initialize(struct cgroup * cgroup,
     set_max_mem(cgroup, KERNBASE);
     cgroup->mem_stat_file_dirty = 0;
     cgroup->mem_stat_file_writeback = 0;
+    cgroup->mem_stat_pgfault = 0;
+    cgroup->mem_stat_pgmajfault = 0;
+
 
     cgroup->cpu_account_frame = 0;
     cgroup->cpu_percent = 0;
@@ -943,4 +946,17 @@ void cgroup_mem_stat_file_writeback_incr(struct cgroup* cgroup)
     }
 }
 
+void cgroup_mem_stat_pgfault_incr(struct cgroup* cgroup)
+{
+    if (cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_pgfault++;
+    }
+}
+
+void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup)
+{
+    if (cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_pgmajfault++;
+    }
+}
 
