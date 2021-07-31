@@ -79,7 +79,7 @@ bget(uint dev, uint blockno)
 {
   struct buf *b;
   struct cgroup *cg = proc_get_cgroup();
-  
+
   acquire(&bcache.lock);
 
   // Is the block already cached?
