@@ -39,6 +39,30 @@
       },
       "revId": "2fac6cd6e6b04c4bae2cdd0f0065eea3f6f7f4a5",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1580486d_88475a4c",
+        "filename": "cgfs.c",
+        "patchSetId": 29
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-01T12:05:11Z",
+      "side": 1,
+      "message": "There is a bug ticket in the subject all ready, the problem isn\u0027t related specifically to weight so I think it should be solved in a different commit.\nhttps://trello.com/c/EUHI5vEJ/91-bug-in-cgfs-open-read\n\n* an else statement to return -1 at the end of the if else chain u commented on will solve the problem for \u0027write\u0027, similar should be done in read and open. *",
+      "parentUuid": "b49221fb_143769ff",
+      "range": {
+        "startLine": 846,
+        "startChar": 23,
+        "endLine": 846,
+        "endChar": 45
+      },
+      "revId": "2fac6cd6e6b04c4bae2cdd0f0065eea3f6f7f4a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
