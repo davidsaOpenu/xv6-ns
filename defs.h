@@ -14,6 +14,7 @@ struct sleeplock;
 struct stat;
 struct superblock;
 struct cgroup;
+struct objsuperblock;
 
 // bio.c
 void            binit(void);
@@ -36,7 +37,10 @@ void            deviceput(uint);
 void            deviceget(uint);
 void            printdevices(void);
 struct inode*   getinodefordevice(uint);
+void            objdevinit();
 struct superblock* getsuperblock(uint);
+struct objsuperblock* getobjsuperblock(uint);
+int             getobjdevice(void);
 void            devinit(void);
 int             doesbackdevice(struct inode*);
 
@@ -80,6 +84,7 @@ struct inode*   initprocessroot(struct mount**);
 void            mntinit(void);
 void            printmounts(void);
 int             mount(struct inode*, struct inode*, struct mount*);
+int             objfs_mount(struct inode *mountpoint, struct inode *device, struct mount *parent);
 int             umount(struct mount*);
 struct mount*   getrootmount(void);
 struct mount*   mntdup(struct mount*);
