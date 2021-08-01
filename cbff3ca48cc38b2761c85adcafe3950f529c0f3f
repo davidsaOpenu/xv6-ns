@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0aa517a_2fefefbc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-01T18:33:19Z",
+      "side": 1,
+      "message": "Thanks for working on this. Comments inline. \n\nAlso, a general note (once made) is that this change\nis better to be spitted in parts. ",
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "163264fb_6f4312f0",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-01T18:33:19Z",
+      "side": 1,
+      "message": "is this change reflected by the commit message?",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 0
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48631280_6249b02d",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-01T18:33:19Z",
+      "side": 1,
+      "message": "duplication?",
+      "range": {
+        "startLine": 293,
+        "startChar": 10,
+        "endLine": 293,
+        "endChar": 13
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dc51ebd_9be5e5d1",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-01T18:33:19Z",
+      "side": 1,
+      "message": "seems that https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/520483/1/ulib.c#131 \nwas not addressed",
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e5e3bbf_586ac4a2",
+        "filename": "usertests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-01T18:33:19Z",
+      "side": 1,
+      "message": "is this change reflected by the commit message?",
+      "range": {
+        "startLine": 1461,
+        "startChar": 0,
+        "endLine": 1461,
+        "endChar": 31
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
