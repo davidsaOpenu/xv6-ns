@@ -27,18 +27,21 @@ int itoa(char * buf, int n)
         i /= 10;
     }
 
-    char revbuf[length];
-
     if (n == 0) {
         *buf++ = '0';
+        length++;
+    } else {
+        char revbuf[length];
+
+        for (i = 0; n > 0 && i < length; i++) {
+            revbuf[i] = (n % 10) + '0';
+            n /= 10;
+        }
+        while (--i >= 0) {
+            *buf++ = revbuf[i];
+        }
     }
-    for (i = 0; n > 0 && i < length; i++) {
-        revbuf[i] = (n % 10) + '0';
-        n /= 10;
-    }
-    while (--i >= 0) {
-        *buf++ = revbuf[i];
-    }
+
     *buf = '\0';
     return length;
 }
@@ -82,6 +85,20 @@ int utoa(char * buf, unsigned int n)
 int intlen(int n)
 {
     int len = 1;
+    while(n/10 != 0){
+        n /= 10;
+        len++;
+    }
+    return len;
+}
+
+/*
+ * Returns the number of digits in the integer.
+ */
+int uintlen(unsigned int n)
+{
+    int len = 1;
+
     while(n/10 != 0){
         n /= 10;
         len++;
