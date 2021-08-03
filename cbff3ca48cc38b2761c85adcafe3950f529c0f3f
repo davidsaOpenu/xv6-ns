@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "708d42ed_d1647ec0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-03T16:03:11Z",
+      "side": 1,
+      "message": "what does that mean?",
+      "range": {
+        "startLine": 13,
+        "startChar": 24,
+        "endLine": 13,
+        "endChar": 34
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f0aa517a_2fefefbc",
@@ -55,6 +78,30 @@
       "side": 1,
       "message": "It\u0027s part of the second point, compiling with \u0027-O0\u0027. Without this fix the code may overflow the image if large enough.",
       "parentUuid": "163264fb_6f4312f0",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 0
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b7ff57d_8e8cf01d",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-03T16:03:11Z",
+      "side": 1,
+      "message": "thanks for the explanation. can you please update the commit message to reflect that or to split out the change to a separate change request?",
+      "parentUuid": "e0441616_bf36ccd2",
       "range": {
         "startLine": 121,
         "startChar": 0,
@@ -147,6 +194,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b65badd_514f6c52",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-03T16:03:11Z",
+      "side": 1,
+      "message": "ok. Maybe worth adding a panic in case of bigger buffers.",
+      "parentUuid": "101f600f_0f99f261",
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e5e3bbf_586ac4a2",
@@ -184,6 +249,30 @@
       "side": 1,
       "message": "No. This is the only \"change\" that was required by a modern compiler. This is just syntax, nothing changes:\non the \u0027if\u0027 before this line we test that p\u003da (if no, exit());\nso p\u003da, and amt\u003dBIG-p (line 1455), so BIG\u003damt+p - nothing changes.",
       "parentUuid": "7e5e3bbf_586ac4a2",
+      "range": {
+        "startLine": 1461,
+        "startChar": 0,
+        "endLine": 1461,
+        "endChar": 31
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44ee2749_612e6fe8",
+        "filename": "usertests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-03T16:03:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08c936a3_bcbc2a84",
       "range": {
         "startLine": 1461,
         "startChar": 0,
