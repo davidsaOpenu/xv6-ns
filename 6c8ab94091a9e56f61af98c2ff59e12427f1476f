@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a61c768_303e720a",
+        "filename": "bio.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-03T08:45:39Z",
+      "side": 1,
+      "message": "lets add tests to check that accounting is done properly. bget is called not just on behalf of some cgroup",
+      "revId": "6c8ab94091a9e56f61af98c2ff59e12427f1476f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
