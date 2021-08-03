@@ -24,6 +24,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "63384f5d_233acefb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-03T16:41:59Z",
+      "side": 1,
+      "message": "Changed to \u0027predictable\u0027. Before that there were a lot of weird bugs caused by incorrect compilation.",
+      "parentUuid": "708d42ed_d1647ec0",
+      "range": {
+        "startLine": 13,
+        "startChar": 24,
+        "endLine": 13,
+        "endChar": 34
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f0aa517a_2fefefbc",
@@ -112,6 +136,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82ccbeb7_49f8d3b0",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-03T16:41:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b7ff57d_8e8cf01d",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 0
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48631280_6249b02d",
@@ -149,6 +197,30 @@
       "side": 1,
       "message": "yes, will remove",
       "parentUuid": "48631280_6249b02d",
+      "range": {
+        "startLine": 293,
+        "startChar": 10,
+        "endLine": 293,
+        "endChar": 13
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccd0b9fe_9b4f3aed",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-03T16:41:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4921224_c0b66b63",
       "range": {
         "startLine": 293,
         "startChar": 10,
@@ -208,6 +280,24 @@
       "side": 1,
       "message": "ok. Maybe worth adding a panic in case of bigger buffers.",
       "parentUuid": "101f600f_0f99f261",
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4d6cbbf_d13c5cf3",
+        "filename": "ulib.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-03T16:41:59Z",
+      "side": 1,
+      "message": "I changed it to work in-place, as this buffer was indeed not very useful.",
+      "parentUuid": "8b65badd_514f6c52",
       "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -273,6 +363,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "08c936a3_bcbc2a84",
+      "range": {
+        "startLine": 1461,
+        "startChar": 0,
+        "endLine": 1461,
+        "endChar": 31
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3532b36f_4301acd0",
+        "filename": "usertests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-03T16:41:59Z",
+      "side": 1,
+      "message": "I\u0027ve added an explanation.",
+      "parentUuid": "44ee2749_612e6fe8",
       "range": {
         "startLine": 1461,
         "startChar": 0,
