@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9a3f366_4b970355",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1017913
+      },
+      "writtenOn": "2021-08-04T17:00:51Z",
+      "side": 1,
+      "message": "BEFORE\n:~/xv6-ns$ size cgfs.o\n   text\t   data\t    bss\t    dec\t    hex\tfilename\n  13517\t      0\t   4096\t  17613\t   44cd\tcgfs.o\n\n\nAFTER\n:~/xv6-ns$ size cgfs.o\n   text\t   data\t    bss\t    dec\t    hex\tfilename\n  11112\t      0\t   4224\t  15336\t   3be8\tcgfs.o\n",
+      "revId": "e2dc2f0524ba471ee89c2e4cdf6f7d2a7d3533e1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
