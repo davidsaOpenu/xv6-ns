@@ -418,16 +418,16 @@ TEST(test_limiting_cpu_max_and_period)
     ASSERT_TRUE(enable_controller(CPU_CNT));
 
     // Update only max
-    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "5000"));
+    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "5"));
 
     // Check changes
-    ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 5000\nperiod - 100000\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 5\nperiod - 100\n"));
 
     // Update max & period
-    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "1000,20000"));
+    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "1,20"));
 
     // Check changes
-    ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 1000\nperiod - 20000\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 1\nperiod - 20\n"));
 
     // Disable cpu controller
     ASSERT_TRUE(disable_controller(CPU_CNT));

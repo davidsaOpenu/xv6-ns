@@ -37,7 +37,8 @@ OBJS = \
 	vectors.o\
 	vm.o\
 	udiv.o\
-	steady_clock.o\
+	clock.o\
+	clockasm.o\
 	klib.o\
 	cgfs.o\
 	cgroup.o\
@@ -92,14 +93,10 @@ LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 debug ?= false
-#x86
-HOST_CPU_TSC_FREQ := $(shell cat /proc/cpuinfo | grep -i "cpu mhz" | head -n 1 | rev | cut -d ' ' -f 1 | rev | cut -d '.' -f 1)*1000
-#ARM
-#HOST_CPU_TSC_FREQ := $(shell cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq )
 ifeq ($(debug), true)
-CFLAGS = -DXV6_WAIT_FOR_DEBUGGER=1 -fno-pic -static -fno-builtin -fno-strict-aliasing -Og -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer -std=gnu99 -mno-sse -DXV6_TSC_FREQUENCY=$(HOST_CPU_TSC_FREQ)
+CFLAGS = -DXV6_WAIT_FOR_DEBUGGER=1 -fno-pic -static -fno-builtin -fno-strict-aliasing -Og -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer -std=gnu99 -mno-sse
 else
-CFLAGS = -DXV6_WAIT_FOR_DEBUGGER=0 -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -m32 -Werror -fno-omit-frame-pointer -std=gnu99 -mno-sse -DXV6_TSC_FREQUENCY=$(HOST_CPU_TSC_FREQ)
+CFLAGS = -DXV6_WAIT_FOR_DEBUGGER=0 -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -m32 -Werror -fno-omit-frame-pointer -std=gnu99 -mno-sse
 endif
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
