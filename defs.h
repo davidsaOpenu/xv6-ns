@@ -1,3 +1,5 @@
+#include "types.h"
+
 struct buf;
 struct context;
 struct file;
@@ -216,14 +218,9 @@ int             fetchstr(uint, char**);
 void            syscall(void);
 int             getppid(void);
 
-// timer.c
-void            timerinit(void);
-
 // trap.c
 void            idtinit(void);
-extern uint     ticks;
 void            tvinit(void);
-extern struct spinlock tickslock;
 
 // uart.c
 void            uartinit(void);

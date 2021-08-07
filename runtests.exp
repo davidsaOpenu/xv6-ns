@@ -404,6 +404,26 @@ proc mounttest_with_ls {argv} {
     }
 }
 
+# - xv6 timer precision test
+# @argv - file name for logging
+proc timer_test {argv} {
+
+   set timeout -1
+   send "timer test\n"
+   sleep 2
+   send "10\n"
+   sleep 10
+   send "\n"
+   log_file -noappend [lindex $argv 0]
+   expect {
+      "SUCCESS"
+   }
+   sleep 2
+   expect {
+      "$ "
+   }
+}
+
 #-------------------------------------------------------------------------
 #-MAIN--------------------------------------------------------------------
 #-------------------------------------------------------------------------
@@ -446,6 +466,8 @@ set running [usertests $argv]
 set running [pidns_tests $argv]
 set running [mounttest $argv]
 set running [mounttest_with_ls $argv]
+
+set running [timer_test $argv]
 
 log_file
 # just in case

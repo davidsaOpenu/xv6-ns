@@ -7,12 +7,11 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
+#include "clock.h"
 
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
 extern uint vectors[];  // in vectors.S: array of 256 entry pointers
-struct spinlock tickslock;
-uint ticks;
 
 void
 tvinit(void)
@@ -23,7 +22,8 @@ tvinit(void)
     SETGATE(idt[i], 0, SEG_KCODE<<3, vectors[i], 0);
   SETGATE(idt[T_SYSCALL], 1, SEG_KCODE<<3, vectors[T_SYSCALL], DPL_USER);
 
-  initlock(&tickslock, "time");
+  extern uint cycles_per_microsecond; // clock.c
+  cprintf("tsc: %d MHz\n", cycles_per_microsecond);
 }
 
 void
@@ -48,12 +48,7 @@ trap(struct trapframe *tf)
 
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
-    if(cpuid() == 0){
-      acquire(&tickslock);
-      ticks++;
-      wakeup(&ticks);
-      release(&tickslock);
-    }
+    timerintr();
     lapiceoi();
     break;
   case T_IRQ0 + IRQ_IDE:

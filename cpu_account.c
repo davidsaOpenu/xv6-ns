@@ -1,11 +1,11 @@
 #include "cpu_account.h"
-#include "steady_clock.h"
+#include "clock.h"
 
 void cpu_account_initialize(struct cpu_account * cpu)
 {
     cpu->cgroup = 0;
     cpu->cpu_account_frame = 0;
-    cpu->cpu_account_period = 1 * 100 * 1000; // 100ms
+    cpu->cpu_account_period = 100; // 100ms
     cpu->now = 0;
     cpu->process_cpu_time = 0;
 }

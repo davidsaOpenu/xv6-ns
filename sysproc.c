@@ -6,7 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
-#include "steady_clock.h"
+#include "clock.h"
 #include "ioctl_request.h"
 #include "fcntl.h"
 #include "file.h"
@@ -91,18 +91,18 @@ sys_sbrk(void)
 int
 sys_sleep(void)
 {
-  int n;
-  uint ticks0;
+  uint n;
 
-  if(argint(0, &n) < 0)
-    return -1;
+  argint(0, (int*)&n);
   acquire(&tickslock);
-  ticks0 = ticks;
-  while(ticks - ticks0 < n){
+  n += ticks;
+  while(ticks < n){
     if(myproc()->killed){
       release(&tickslock);
       return -1;
     }
+    if(alarm > n)
+      alarm = n;
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
@@ -112,20 +112,29 @@ sys_sleep(void)
 int
 sys_usleep(void)
 {
-  int n;
+  uint n, tk;
+  timestamp ts;
 
-  if(argint(0, &n) < 0)
-    return -1;
-  unsigned int start = steady_clock_now();
+  argint(0, (int*)&n);
+  timestamp_now(ts);
+  tk = n / (MICROSECOND / JIFFY);
+  if(!tk)
+    goto udelay;
   acquire(&tickslock);
-  while(steady_clock_now() - start < (unsigned int)n){
+  tk += ticks;
+  while(ticks < tk){
     if(myproc()->killed){
       release(&tickslock);
       return -1;
     }
+    if(alarm > tk)
+      alarm = tk;
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+udelay:
+  while(us_since_ts(ts) < n)
+    ;
   return 0;
 }
 
@@ -221,12 +230,7 @@ sys_ioctl(void)
 int
 sys_uptime(void)
 {
-  uint xticks;
-
-  acquire(&tickslock);
-  xticks = ticks;
-  release(&tickslock);
-  return xticks;
+  return steady_clock_now();
 }
 
 int

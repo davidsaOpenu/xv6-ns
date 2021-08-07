@@ -37,7 +37,8 @@ OBJS = \
 	vectors.o\
 	vm.o\
 	udiv.o\
-	steady_clock.o\
+	clock.o\
+	clockasm.o\
 	klib.o\
 	cgfs.o\
 	cgroup.o\
@@ -95,12 +96,6 @@ OBJDUMP = $(TOOLPREFIX)objdump
 ########## CFLAGS ##########
 CFLAGS = -static -MD -m32 -mno-sse -gstabs -std=gnu99 -Wall -Werror -Wstack-usage=4096 \
 	-fno-pic -fno-builtin -fno-strict-aliasing -fno-omit-frame-pointer $(OFLAGS)
-
-#x86
-HOST_CPU_TSC_FREQ := $(shell cat /proc/cpuinfo | grep -i "cpu mhz" | head -n 1 | rev | cut -d ' ' -f 1 | rev | cut -d '.' -f 1)*1000
-#ARM
-#HOST_CPU_TSC_FREQ := $(shell cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq )
-CFLAGS += -DXV6_TSC_FREQUENCY=$(HOST_CPU_TSC_FREQ)
 
 ifeq ($(pause_debug), true)
 CFLAGS += -DXV6_WAIT_FOR_DEBUGGER=1
