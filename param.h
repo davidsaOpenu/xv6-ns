@@ -8,7 +8,8 @@
 #define NFILE       100  // open files per system
 #define NINODE       50  // maximum number of active i-nodes
 #define NDEV         10  // maximum major device number
-#define NTTY         3  // maximum major tty number
+#define MAX_TTY       5  // maximum minor tty number
+#define NTTY          3  // num additional ttys
 #define ROOTDEV       1  // device number of file system root disk
 #define MAXARG       32  // max exec arguments
 #define MAXOPBLOCKS  10  // max # of blocks any FS op writes
