@@ -280,6 +280,11 @@ createmount(char *path, short type, short major, short minor, struct mount **mnt
   struct inode *ip, *dp;
   char name[DIRSIZ];
 
+  if (major < 0 || minor < 0 || major >= NDEV || minor >= MAX_TTY) {
+    cprintf("createmount: minor/major out of range\n");
+    return 0;
+  }
+
   if((dp = nameiparentmount(path, name, mnt)) == 0)
     return 0;
   ilock(dp);
