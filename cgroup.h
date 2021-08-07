@@ -73,7 +73,7 @@ struct cgroup
 
     unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
 
-    unsigned long long cpu_time;
+    unsigned int cpu_time;
     unsigned int cpu_period_time;
     unsigned int cpu_percent;
     unsigned int cpu_account_period;

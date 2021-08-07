@@ -9,6 +9,7 @@
 #include "traps.h"
 #include "mmu.h"
 #include "x86.h"
+#include "clock.h"
 
 // Local APIC registers, divided by 4 for use as uint[] indices.
 #define ID      (0x0020/4)   // ID
@@ -42,9 +43,10 @@
 #define TDCR    (0x03E0/4)   // Timer Divide Configuration
 
 volatile uint *lapic;  // Initialized in mp.c
+extern uint timer_freq; // Initialized in clock.c
 
 //PAGEBREAK!
-static void
+void
 lapicw(int index, int value)
 {
   lapic[index] = value;
@@ -62,11 +64,16 @@ lapicinit(void)
 
   // The timer repeatedly counts down at bus frequency
   // from lapic[TICR] and then issues an interrupt.
-  // If xv6 cared more about precise timekeeping,
-  // TICR would be calibrated using an external time source.
+  // TICR is calibrated using PIT and synched to TSC.
   lapicw(TDCR, X1);
-  lapicw(TIMER, PERIODIC | (T_IRQ0 + IRQ_TIMER));
-  lapicw(TICR, 10000000);
+  if(!timer_freq){
+    lapicw(TIMER, MASKED);
+    lapicw(TICR, ~0);
+    timerinit();
+    clockinit();
+  }
+  lapicw(TIMER, T_IRQ0 + IRQ_TIMER);
+  lapicw(TICR, timer_freq);
 
   // Disable logical interrupt lines.
   lapicw(LINT0, MASKED);
@@ -118,6 +125,10 @@ lapiceoi(void)
 void
 microdelay(int us)
 {
+  timestamp ts;
+  timestamp_now(ts);
+  while(us_since_ts(ts) < us)
+    ;
 }
 
 #define CMOS_PORT    0x70
