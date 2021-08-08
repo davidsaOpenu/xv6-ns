@@ -6,11 +6,59 @@
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
-  { "cpu", "pid", "set", "mem" };
+  { "cpu", "pid", "set", "mem", "io" };
 
 char suppress = 0;
 
 int failed = 0;
+
+// returns true if `X` and `Y` are the same
+int compare(const char *X, const char *Y)
+{
+  while (*X && *Y)
+  {
+    if (*X != *Y)
+    {
+      return 0;
+    }
+
+    X++;
+    Y++;
+  }
+
+  return (*Y == '\0');
+}
+
+// finds the first occurrence of the substring sub in the string string.
+// The terminating '\0' characters are not compared.
+// Returns 0 if isn't a substring
+const char *strstr(const char *string, const char *sub)
+{
+  while (*string != '\0')
+  {
+    if ((*string == *sub) && compare(string, sub))
+    {
+      return string;
+    }
+    string++;
+  }
+  return 0;
+}
+
+static int copy_until_char(char * d, char * s, char ch)
+{
+    int len = 0;
+    while (*s != ch && *s != '\0') {
+        *d++ = *s++;
+        len++;
+    }
+
+    *d = 0;
+    if (*s == ch)
+        len++;
+
+    return len;
+}
 
 // Return if controller type is valid.
 int is_valid_controller_type(int controller_type) {
@@ -154,14 +202,10 @@ int verify_controller_enabled(int type) {
 
   char* contents = read_file(TEST_1_CGROUP_SUBTREE_CONTROL, 0);
 
-  int i;
-  for (i = 0; contents[i] != 0 && i < sizeof(contents) - 2; i++) {
-    if (contents[i] == buf[0] && contents[i + 1] == buf[1] && contents[i + 2] == buf[2]) {
-      return 1;
-    }
+  if (strstr(contents, buf) == 0) {
+      return 0;
   }
-
-  return 0;
+  return 1;
 }
 
 // Test verifying a controller is disabled according to given type.
@@ -177,7 +221,8 @@ int verify_controller_disabled(int type) {
   int i;
 
   for (i = 0; contents[i + 2] != 0; i++) {
-    if (contents[i] == buf[0] && contents[i + 1] == buf[1] && contents[i + 2] == buf[2]) {
+    if ((contents[i] == buf[0] && contents[i + 1] == buf[1] && contents[i + 2] == buf[2]) || 
+    (contents[i] == buf[0] && contents[i + 1] == buf[1] && contents[i + 2] == '\n' && buf[2] == '\0')) {
       printf(1, "\nController %s is still enabled\n", buf);
       return 0;
     }
@@ -1124,6 +1169,183 @@ TEST(test_cpu_stat)
     }
 }
 
+TEST(test_io_stat_content_valid)
+{
+  ASSERT_FALSE(strcmp(read_file(TEST_1_IO_STAT, 0), "dev:tty\trbytes\twbytes\trios\twios\n\n"));
+}
+
+struct io_stat_line {
+  int major, minor, rbytes, wbytes, rios, wios;
+};
+
+void parse_io_stat_line(struct io_stat_line* stat, char *line) {
+  static char tmp_bufer[64];
+
+  int len = copy_until_char(tmp_bufer, line, ':');
+  stat->major = atoi(tmp_bufer);
+  line += len;
+
+  len = copy_until_char(tmp_bufer, line, '\t');
+  stat->minor = atoi(tmp_bufer);
+  line += len;
+
+  len = copy_until_char(tmp_bufer, line, '\t');
+  stat->rbytes = atoi(tmp_bufer);
+  line += len;
+
+  len = copy_until_char(tmp_bufer, line, '\t');
+  stat->wbytes = atoi(tmp_bufer);
+  line += len;
+
+  len = copy_until_char(tmp_bufer, line, '\t');
+  stat->rios = atoi(tmp_bufer);
+  line += len;
+
+  len = copy_until_char(tmp_bufer, line, '\t');
+  stat->wios = atoi(tmp_bufer);
+}
+
+// return -1 on faiulr
+int parse_io_stat_file(struct io_stat_line table[], int maxTableSize) {
+  static char buf[256];
+
+  char *fContect = read_file(TEST_1_IO_STAT, 0);
+  if (!fContect) {
+    return -1;
+  }
+  strcpy(buf, fContect);
+
+  char *s = buf;
+  int i = 0;
+
+  for (i = 0; i < maxTableSize; i++) {
+    while (*s != '\n') {
+      s++;
+    }
+    s++;
+    if (*s == '\n' || *s == '\0') {
+      break;
+    }
+    parse_io_stat_line(&table[i], s);
+  }
+  return i;
+}
+
+// NOTE: open and close make io from the disk for reading/writing fs data (directory entries for example)
+// therefor we use open and close outside of the cgroup.
+TEST(test_io_stat)
+{
+  static const int STATE_TABLE_MAX_SIZE = 5;
+  static const int NUM_BYTES_TO_TEST = 10;
+
+  struct io_stat_line stat_table_before[STATE_TABLE_MAX_SIZE];
+  int beforeTableSize = parse_io_stat_file(stat_table_before, STATE_TABLE_MAX_SIZE);
+  ASSERT_TRUE(beforeTableSize != -1);
+
+
+  int fd = open(TEMP_FILE, O_CREATE | O_RDWR);
+
+  // prepare the string to print/write
+  char toPrintStr[NUM_BYTES_TO_TEST + 1];
+  memset(toPrintStr, 'A', NUM_BYTES_TO_TEST);
+  toPrintStr[NUM_BYTES_TO_TEST] = 0;
+
+  // go into TEST1 cgroup to print and write to file
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  // write exactly NUM_BYTES_TO_TEST bytes to screen
+  printf(1,"%s", toPrintStr);
+
+  // write and red NUM_BYTES_TO_READ_WRITE bytes to file
+
+  ASSERT_TRUE(write(fd, toPrintStr, NUM_BYTES_TO_TEST) == NUM_BYTES_TO_TEST);
+
+  // get out of TEST1 cgroup
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  // for getting the file offeset to the beginning of the file we need to close and open it
+  // and we can't close and open inside the cgroup because open/close use io.
+  close(fd);
+  fd = open(TEMP_FILE, O_RDONLY);
+
+  // go back into TEST1 cgroup
+  ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+  char fContect[NUM_BYTES_TO_TEST*2];
+  empty_string(fContect, sizeof(fContect));
+  // read the file intp fContect -- should read 10 exactly bytes
+  read(fd, fContect, NUM_BYTES_TO_TEST*2);
+  ASSERT_FALSE(strcmp(fContect, toPrintStr));
+
+  // get out of TEST1 cgroup
+  ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+  close(fd);
+  ASSERT_TRUE(temp_delete());
+
+  // clean the console
+  memset(toPrintStr, '\b', NUM_BYTES_TO_TEST);
+  printf(1, "%s", toPrintStr);
+  memset(toPrintStr, ' ', NUM_BYTES_TO_TEST);
+  printf(1, "%s", toPrintStr);
+  memset(toPrintStr, '\b', NUM_BYTES_TO_TEST);
+  printf(1, "%s", toPrintStr);
+
+  // parse io.stat into stat_table_after
+  struct io_stat_line stat_table_after[STATE_TABLE_MAX_SIZE];
+  int afterTableSize = parse_io_stat_file(stat_table_after, STATE_TABLE_MAX_SIZE);
+  ASSERT_TRUE(afterTableSize != -1);
+
+  struct io_stat_line *diskBefore = 0;
+  struct io_stat_line *diskAfter = 0;
+  struct io_stat_line *screenBefore = 0;
+  struct io_stat_line *screenAfter = 0;
+
+  // find the disk and screen entries
+  for (int i = 0; i < afterTableSize; i++) {
+    if (stat_table_after[i].major == 0 && stat_table_after[i].minor == 0) {
+      diskAfter = &stat_table_after[i];
+    }
+    if (stat_table_after[i].major == 1 && stat_table_after[i].minor == 0) {
+      screenAfter = &stat_table_after[i];
+    }
+  }
+  for (int i = 0; i < beforeTableSize; i++) {
+    if (stat_table_before[i].major == 0 && stat_table_before[i].minor == 0) {
+      diskBefore = &stat_table_before[i];
+    }
+    if (stat_table_before[i].major == 1 && stat_table_before[i].minor == 0) {
+      screenBefore = &stat_table_before[i];
+    }
+  }
+
+  // read and wrote NUM_BYTES_TO_TEST bytes in disk in 1 read and 1 write
+  if (diskBefore) {
+    ASSERT_UINT_EQ(diskBefore->rbytes + NUM_BYTES_TO_TEST, diskAfter->rbytes);
+    ASSERT_UINT_EQ(diskBefore->wbytes + NUM_BYTES_TO_TEST, diskAfter->wbytes);
+    ASSERT_UINT_EQ(diskBefore->rios + 1, diskAfter->rios);
+    ASSERT_UINT_EQ(diskBefore->wios + 1, diskAfter->wios);
+  }
+  else {
+    ASSERT_UINT_EQ(NUM_BYTES_TO_TEST, diskAfter->rbytes);
+    ASSERT_UINT_EQ(NUM_BYTES_TO_TEST, diskAfter->wbytes);
+    ASSERT_UINT_EQ(1, diskAfter->rios);
+    ASSERT_UINT_EQ(1, diskAfter->wios);
+  }
+  // read 0 bytes from screen in 0 reads and wrote NUM_BYTES_TO_TEST bytes in NUM_BYTES_TO_TEST writes (printf calls for putc for each char)
+  if (screenBefore) {
+    ASSERT_UINT_EQ(screenBefore->rbytes, screenAfter->rbytes);
+    ASSERT_UINT_EQ(screenBefore->wbytes + NUM_BYTES_TO_TEST, screenAfter->wbytes);
+    ASSERT_UINT_EQ(screenBefore->rios, screenAfter->rios);
+    ASSERT_UINT_EQ(screenBefore->rios + NUM_BYTES_TO_TEST, screenAfter->wios);
+  } else {
+    ASSERT_UINT_EQ(0, screenAfter->rbytes);
+    ASSERT_UINT_EQ(NUM_BYTES_TO_TEST, screenAfter->wbytes);
+    ASSERT_UINT_EQ(0, screenAfter->rios);
+    ASSERT_UINT_EQ(NUM_BYTES_TO_TEST, screenAfter->wios);
+  }
+}
+
 int main(int argc, char * argv[])
 {
     // comment out for debug messages
@@ -1135,11 +1357,13 @@ int main(int argc, char * argv[])
     run_test_break_msg(test_reading_cgroup_files);
     run_test(test_memory_stat_content_valid);
     run_test(test_cpu_stat_content_valid);
+    run_test(test_io_stat_content_valid);
     run_test(test_moving_process);
     run_test(test_enable_and_disable_all_controllers);
     run_test(test_limiting_pids);
     run_test(test_move_failure);
     run_test(test_fork_failure);
+    run_test(test_io_stat);
     run_test(test_cpu_stat);
     run_test(test_pid_current);
     run_test(test_setting_cpu_id);
