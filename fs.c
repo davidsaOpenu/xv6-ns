@@ -474,7 +474,12 @@ readi(struct inode *ip, char *dst, uint off, uint n)
     || ip->minor < 0 || ip->minor >= MAX_TTY 
     || !devsw[ip->major].read)
       return -1;
-    return devsw[ip->major].read(ip, dst, n);
+    int n_read = devsw[ip->major].read(ip, dst, n);
+    if (n_read != -1) {
+      struct cgroup *cgroup = myproc()->cgroup;
+      update_io_stat(cgroup, ip->major,ip->minor, n_read, 0);
+    }
+    return n_read;
   }
 
   if(off > ip->size || off + n < off)
@@ -488,6 +493,10 @@ readi(struct inode *ip, char *dst, uint off, uint n)
     memmove(dst, bp->data + off%BSIZE, m);
     brelse(bp);
   }
+
+  struct cgroup *cgroup = myproc()->cgroup;
+  update_io_stat(cgroup, ip->major,ip->minor, n, 0);
+
   return n;
 }
 
@@ -505,7 +514,12 @@ writei(struct inode *ip, char *src, uint off, uint n)
     || ip->minor < 0 || ip->minor >= MAX_TTY 
     || !devsw[ip->major].write)
       return -1;
-    return devsw[ip->major].write(ip, src, n);
+    int n_write = devsw[ip->major].write(ip, src, n);
+    if (n_write != -1) {
+      struct cgroup *cgroup = myproc()->cgroup;
+      update_io_stat(cgroup, ip->major,ip->minor, n_write, 1);  
+    }
+    return n_write;
   }
 
   if(off > ip->size || off + n < off)
@@ -520,6 +534,8 @@ writei(struct inode *ip, char *src, uint off, uint n)
     log_write(bp);
     brelse(bp);
   }
+  struct cgroup *cgroup = myproc()->cgroup;
+  update_io_stat(cgroup, ip->major,ip->minor, n, 1);
 
   if(n > 0 && off > ip->size){
     ip->size = off;
