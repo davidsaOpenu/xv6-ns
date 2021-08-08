@@ -29,6 +29,7 @@
 #define MEM_CUR 15
 #define MEM_MAX 16
 #define MEM_STAT 17
+#define IO_STAT 18
 
 #define min(x, y) (x) > (y) ? (y) : (x)
 #define abs(x) (x) > 0 ? (x) : (0)
@@ -245,7 +246,8 @@ static int get_file_name_constant(char * filename)
       return MEM_MAX;
     else if (strcmp(filename, CGFS_MEM_STAT) == 0)
       return MEM_STAT;
-
+    else if (strcmp(filename, CGFS_IO_STAT) == 0)
+        return IO_STAT;
     return -1;
 }
 
@@ -282,6 +284,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case PID_CUR:
             case MEM_CUR:
             case MEM_STAT:
+            case IO_STAT:
                 writable = 0;
                 break;
 
@@ -354,6 +357,11 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
                 if (cgp == cgroup_root())
                     return -1;
                 f->mem.stat.active = cgp->mem_controller_enabled;
+                break;
+            case IO_STAT:
+                if (cgp == cgroup_root())
+                    return -1;
+                memmove(&f->io.stat.io_stat_table, &cgp->io_stat_table, sizeof(f->io.stat.io_stat_table));
                 break;
         }
 
@@ -654,6 +662,47 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
+        } else if (filename_const == IO_STAT) {
+            char tmp_num_buff[20] = {0};
+            int num_str_length;
+            char *stattext = buf;
+            char *stattextp = stattext;
+            const ioStat *pstat;
+
+            copy_and_move_buffer(&stattextp, "dev:tty\trbytes\twbytes\trios\twios\n", strlen("dev:tty\trbytes\twbytes\trios\twios\n"));
+            for (int dev_i = 0; dev_i < NDEV; dev_i++) {
+                for (int tty_i = 0; tty_i < MAX_TTY; tty_i++) {
+                    pstat = &(f->io.stat.io_stat_table[dev_i][tty_i]);
+                    if (pstat->rbytes != 0 || pstat->rios != 0 || pstat->wbytes != 0 || pstat->wios != 0) {
+                        num_str_length = itoa(tmp_num_buff, dev_i);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, ":", strlen(":"));
+                        
+                        num_str_length = itoa(tmp_num_buff, tty_i);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
+
+                        num_str_length = itoa(tmp_num_buff, pstat->rbytes);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
+
+                        num_str_length = itoa(tmp_num_buff, pstat->wbytes);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
+
+                        num_str_length = itoa(tmp_num_buff, pstat->rios);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
+
+                        num_str_length = itoa(tmp_num_buff, pstat->wios);
+                        copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
+                        copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+                    }
+                }
+            }
+            copy_and_move_buffer(&stattextp, "\n\0", 2);
+
+            r = copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
         }
 
         f->off += r;
@@ -696,6 +745,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer_max_len(&bufp, CGFS_MEM_CUR);
             copy_and_move_buffer_max_len(&bufp, CGFS_CPU_STAT);
             copy_and_move_buffer_max_len(&bufp, CGFS_MEM_STAT);
+            copy_and_move_buffer_max_len(&bufp, CGFS_IO_STAT);
 
             if (f->cgp->cpu_controller_enabled) {
                 copy_and_move_buffer_max_len(&bufp, CGFS_CPU_WEIGHT);
