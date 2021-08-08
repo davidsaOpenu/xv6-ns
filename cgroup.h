@@ -1,6 +1,7 @@
 #include "param.h"
 #include "proc.h"
 #include "defs.h"
+#include "spinlock.h"
 
 #ifndef XV6_CGROUP_H
 #define XV6_CGROUP_H
@@ -11,6 +12,14 @@
 #define MAX_CONTROLLER_NAME_LENGTH 16  // Max length allowed for controller names
 
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
+
+typedef struct _ioStat
+{
+    int rbytes;     // Number of read bytes
+    int wbytes;     // Number of written bytes
+    int rios;       // Number of read IO actions
+    int wios;       // Number of write IO actions
+} ioStat;
 
 /**
  * Control group, contains up to NPROC processes.
@@ -48,6 +57,11 @@ struct cgroup
     char mem_controller_enabled;  /* Is 1 if memory controller is enabled,
                                   otherwise 0.*/
 
+    char io_controller_avalible; /* Is 1 if io controller may be enabled,
+                                otherwise 0.*/
+    char io_controller_enabled;  /* Is 1 if io controller is enabled,
+                                  otherwise 0.*/
+
     char populated; /* Is 1 if subtree has at least one process in it,
                        otherise 0.*/
 
@@ -83,6 +97,9 @@ struct cgroup
     unsigned int cpu_nr_throttled;
     unsigned int cpu_throttled_usec;
     char cpu_is_throttled_period;
+    ioStat io_stat_table[NDEV][MAX_TTY];
+    /* This lock is enough as a cgroup can't be deleted while there are still processes/other cgroups in it */
+    struct spinlock lock_io_stat_table; /* Lock access to io_stat_table. */
 };
 
 /**
@@ -433,5 +450,37 @@ int enable_mem_controller(struct cgroup* cgroup);
  */
 int unsafe_disable_mem_controller(struct cgroup* cgroup);
 int disable_mem_controller(struct cgroup* cgroup);
+
+/**
+ * This function updates the io usage of a cgroup and all of its ancestors.
+ * Receives cgroup pointer parameter "cgroup", 2 shorts major and minor, int size and char is_write.
+ * Updates the io_stat_table in the cell corresponding to the major and minor numbers.
+ * In accordance to size and is_write, updates the number of reads/writes to the device and the total size (in bytes) of reads/writes.
+ */
+void update_io_stat(struct cgroup* cgroup, short, short, int size, char is_write);
+
+/**
+ * These functions enable the io controller of a cgroup.
+ * Unsafe and safe versions of function (unsafe does not acquire cgroup table lock and safe does).
+ * Receives cgroup pointer parameter "cgroup".
+ * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
+ * Return values:
+ * - 0 on success.
+ * - -1 on failure.
+ */
+int unsafe_enable_io_controller(struct cgroup * cgroup);
+int enable_io_controller(struct cgroup * cgroup);
+
+/**
+ * These functions disable the io controller of a cgroup.
+ * Unsafe and safe versions of function (unsafe does not acquire cgroup table lock and safe does).
+ * Receives cgroup pointer parameter "cgroup".
+ * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
+ * Return values:
+ * - 0 on success.
+ * - -1 on failure.
+ */
+int unsafe_disable_io_controller(struct cgroup * cgroup);
+int disable_io_controller(struct cgroup * cgroup);
 
 #endif

@@ -2,9 +2,9 @@
 #define CGROUPSTESTS_H
 
 #define MAX_CONTROLLER_NAME_LENGTH      16
-#define CONTROLLER_COUNT                4
+#define CONTROLLER_COUNT                5
 
-enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
+enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT, IO_CNT };
 
 
 #define CGROUP                          "cgroup"
@@ -31,6 +31,7 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 #define TEST_1_MEM_CURRENT              "/cgroup/test1/memory.current"
 #define TEST_1_MEM_MAX                  "/cgroup/test1/memory.max"
 #define TEST_1_MEM_STAT                 "/cgroup/test1/memory.stat"
+#define TEST_1_IO_STAT                 "/cgroup/test1/io.stat"
 
 #define ROOT_CGROUP_PROCS               "/cgroup/cgroup.procs"
 
