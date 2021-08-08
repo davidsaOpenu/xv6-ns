@@ -76,6 +76,12 @@ struct file {
             unsigned int max;
           } max;
         } mem;
+        // io
+        union {
+          struct {
+            ioStat io_stat_table[NDEV][MAX_TTY];
+          } stat;
+        } io;
       };
     };
   };
