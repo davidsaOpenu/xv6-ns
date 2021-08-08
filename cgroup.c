@@ -268,6 +268,7 @@ void cgroup_initialize(struct cgroup * cgroup,
         cgroup->set_controller_enabled = 0;
         cgroup->mem_controller_avalible = 1;
         cgroup->mem_controller_enabled = 1;
+        memset(cgroup->io_stat_table, 0, sizeof(cgroup->io_stat_table));
     }
     else {
         cgroup->parent = parent_cgroup;
@@ -919,3 +920,28 @@ int disable_mem_controller(struct cgroup* cgroup)
   release(&cgtable.lock);
   return res;
 }
+
+void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, char is_write)
+{
+    // This check is independent of the cgroup itself, so it's out of the while loop
+    if (major < 0 || minor < 0 || cgroup == 0 || major >= sizeof(cgroup->io_stat_table) / sizeof(cgroup->io_stat_table[0]) ||
+        minor >= sizeof(cgroup->io_stat_table[0]) / sizeof(cgroup->io_stat_table[0][0]))
+        return;
+    ioStat *pstat;
+    while (cgroup != 0)
+    {
+        pstat = &(cgroup->io_stat_table[major][minor]);
+        if (is_write)
+        {
+            pstat->wios++;
+            pstat->wbytes += size;
+        }
+        else
+        {
+            pstat->rios++;
+            pstat->rbytes += size;
+        }        
+        cgroup = cgroup->parent;
+    }
+}
+
