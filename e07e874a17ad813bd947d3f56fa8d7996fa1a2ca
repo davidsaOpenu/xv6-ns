@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4291e3e4_bcd5185f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "CR",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19d99ec2_6ba1c185",
+        "filename": "console.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Why do you start from \"CONSOLE+1\"?\nAdd a comment to explain.\nAlso move the \"int i\" into the for loop",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4bf6035_49b65372",
+        "filename": "console.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Also it DEV_DISCONNECT",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2907157d_054017d0",
+        "filename": "fs.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "I think the NDEV and MAX_TTY should use \"\u003c\" and not \"\u003c\u003d\" as you start counting from 0",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72ebd628_157062aa",
+        "filename": "fs.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "I think the NDEV and MAX_TTY should use \"\u003c\" and not \"\u003c\u003d\" as you start counting from 0",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c1906f4_2a144329",
+        "filename": "init.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Use the CONSOLE const",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebcf9db0_a84a3456",
+        "filename": "sysfile.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Was this comment left by mistake?",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b04bfb8_06dc4b24",
+        "filename": "sysproc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Use \"\u003e\" instead of \"\u003e\u003d\"",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6526c860_3a66274b",
+        "filename": "sysproc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-14T11:23:07Z",
+      "side": 1,
+      "message": "Use \"\u003e\" instead of \"\u003e\u003d\"",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
