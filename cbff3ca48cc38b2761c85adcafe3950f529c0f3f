@@ -231,6 +231,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ed52bd_9571c961",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T04:59:14Z",
+      "side": 1,
+      "message": "Probably not expressed well. I meant in lines 277-278 and 292.",
+      "parentUuid": "ccd0b9fe_9b4f3aed",
+      "range": {
+        "startLine": 293,
+        "startChar": 10,
+        "endLine": 293,
+        "endChar": 13
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dc51ebd_9be5e5d1",
