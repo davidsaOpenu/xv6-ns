@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1caa3c0b_cd31bc5d",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T11:28:03Z",
+      "side": 1,
+      "message": "this return value has to be handled by sys_mkdir\n\nalso we need some global errno to reflect \n\"cgroup_create: max depth allowed reached\" condition \n\nand a test that creates cgroups to reach the limit and\nverifies errno\n\nother system call erroneous conditions to be tested as well \nand comments to be updates to indicate different errno conditions",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 21
+      },
+      "revId": "57b504a30a7e477ce0116d86266b0cb5d26ce9e6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4afe33d1_55310d2a",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T11:28:03Z",
+      "side": 1,
+      "message": "no need to print just to set an errno that indicates a \n\"cgroup_create: max number of descendants allowed reached\" condition",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 29
+      },
+      "revId": "57b504a30a7e477ce0116d86266b0cb5d26ce9e6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3a39ffe_62ebb176",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T11:28:03Z",
+      "side": 1,
+      "message": "same here. no need to print. errno condition that reflects \"no avalible cgroup slot\"",
+      "revId": "57b504a30a7e477ce0116d86266b0cb5d26ce9e6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4a4ec01_46f95931",
+        "filename": "mount_ns.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T11:28:03Z",
+      "side": 1,
+      "message": "same. no need to print. we need an errno that will be propagared to fork (ammend sys_fork with possible errno conditions). \n\nwe can implememnt something that resemples perror https://man7.org/linux/man-pages/man3/perror.3.html",
+      "revId": "57b504a30a7e477ce0116d86266b0cb5d26ce9e6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
