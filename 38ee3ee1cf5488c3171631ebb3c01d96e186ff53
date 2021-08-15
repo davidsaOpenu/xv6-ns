@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "692faea2_e3972338",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:11:50Z",
+      "side": 1,
+      "message": "Thanks for working on this. \n\nLast remark considering the commit message. If not splitting, \ncan you please add a list of files that were changed per specific\nfeature?",
+      "revId": "38ee3ee1cf5488c3171631ebb3c01d96e186ff53",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
