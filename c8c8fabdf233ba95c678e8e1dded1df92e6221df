@@ -16,6 +16,24 @@
       "message": "leftover?",
       "revId": "c8c8fabdf233ba95c678e8e1dded1df92e6221df",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0cd8c51_38858fe0",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-15T13:23:25Z",
+      "side": 1,
+      "message": "No, it sets the correct compilation flags for debugging targets, so when you call \u0027make qemu-gdb\u0027 it will generate debug-able binaries. For other targets the optimization flag remains -O2.\n\nThe older option for debugging is calling \u0027make debug\u003dtrue qemu-gdb\u0027, which is both redundant - since if you want \u0027qemu-gdb\u0027 it\u0027s clear you also want the debug library, and causes a busy-waiting loop on main(), which I don\u0027t see the reason for, since on debug targets qemu starts in a paused state anyway.\n\nI suggest removing the \u0027debug\u003dtrue\u0027 flag entirely, unless there is a good reason for its busy loop.",
+      "parentUuid": "4498b345_f5464bde",
+      "revId": "c8c8fabdf233ba95c678e8e1dded1df92e6221df",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
