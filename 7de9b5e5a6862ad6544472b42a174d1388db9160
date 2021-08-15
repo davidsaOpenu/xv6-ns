@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d18b8ed_0c48c175",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-15T08:38:47Z",
+      "side": 1,
+      "message": "Great work, nice and consistent definitions.",
+      "revId": "7de9b5e5a6862ad6544472b42a174d1388db9160",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
