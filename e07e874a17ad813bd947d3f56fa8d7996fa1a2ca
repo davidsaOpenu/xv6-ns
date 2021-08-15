@@ -35,6 +35,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53177961_c2048f10",
+        "filename": "console.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19d99ec2_6ba1c185",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4bf6035_49b65372",
@@ -48,6 +66,24 @@
       "writtenOn": "2021-08-14T11:23:07Z",
       "side": 1,
       "message": "Also it DEV_DISCONNECT",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "578afc54_868aae47",
+        "filename": "console.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "I think this is actually correct",
+      "parentUuid": "b4bf6035_49b65372",
       "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -69,6 +105,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "574ed28c_7d1897c7",
+        "filename": "fs.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "we use ip-\u003emajor \u003e\u003d NDEV because the major include 0 and the const isn\u0027t",
+      "parentUuid": "2907157d_054017d0",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72ebd628_157062aa",
@@ -82,6 +136,24 @@
       "writtenOn": "2021-08-14T11:23:07Z",
       "side": 1,
       "message": "I think the NDEV and MAX_TTY should use \"\u003c\" and not \"\u003c\u003d\" as you start counting from 0",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1029c5eb_b5f39f7d",
+        "filename": "fs.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "72ebd628_157062aa",
       "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -103,6 +175,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b769bbe2_16120103",
+        "filename": "init.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "init runs in user space",
+      "parentUuid": "3c1906f4_2a144329",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebcf9db0_a84a3456",
@@ -116,6 +206,24 @@
       "writtenOn": "2021-08-14T11:23:07Z",
       "side": 1,
       "message": "Was this comment left by mistake?",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7198a5f_061c00cf",
+        "filename": "sysfile.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ebcf9db0_a84a3456",
       "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -137,6 +245,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4079214_70944cf7",
+        "filename": "sysproc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "we use ip-\u003emajor \u003e\u003d NDEV because the major include 0 and the const isn\u0027t",
+      "parentUuid": "3b04bfb8_06dc4b24",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6526c860_3a66274b",
@@ -150,6 +276,24 @@
       "writtenOn": "2021-08-14T11:23:07Z",
       "side": 1,
       "message": "Use \"\u003e\" instead of \"\u003e\u003d\"",
+      "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57490f3d_ebfa3a52",
+        "filename": "sysproc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-08-15T07:55:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6526c860_3a66274b",
       "revId": "e07e874a17ad813bd947d3f56fa8d7996fa1a2ca",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
