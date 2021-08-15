@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "b2c84662_fefa2011",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-15T10:12:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63384f5d_233acefb",
+      "range": {
+        "startLine": 13,
+        "startChar": 24,
+        "endLine": 13,
+        "endChar": 34
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f0aa517a_2fefefbc",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 6
@@ -245,6 +269,30 @@
       "side": 1,
       "message": "Probably not expressed well. I meant in lines 277-278 and 292.",
       "parentUuid": "ccd0b9fe_9b4f3aed",
+      "range": {
+        "startLine": 293,
+        "startChar": 10,
+        "endLine": 293,
+        "endChar": 13
+      },
+      "revId": "cbff3ca48cc38b2761c85adcafe3950f529c0f3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb769be_655efb2a",
+        "filename": "Makefile",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1019077
+      },
+      "writtenOn": "2021-08-15T10:12:37Z",
+      "side": 1,
+      "message": "I removed the duplicated targets",
+      "parentUuid": "a9ed52bd_9571c961",
       "range": {
         "startLine": 293,
         "startChar": 10,
