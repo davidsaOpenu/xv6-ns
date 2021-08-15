@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41a47e7c_91135c9e",
+        "filename": "namespace.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T10:51:47Z",
+      "side": 1,
+      "message": "let\u0027s replace by panic(\"out of nsproxy objects\")",
+      "range": {
+        "startLine": 74,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 24
+      },
+      "revId": "951724ee0cac9ae1ee771bb4e373b5bb1edc1089",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38f2677b_485207cb",
+        "filename": "namespace.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T10:51:47Z",
+      "side": 1,
+      "message": "has to be further handled by fork",
+      "revId": "951724ee0cac9ae1ee771bb4e373b5bb1edc1089",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
