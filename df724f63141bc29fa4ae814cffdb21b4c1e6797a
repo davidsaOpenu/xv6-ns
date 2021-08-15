@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eded4a7e_eb60c63e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "Thanks for working on this. \n\nLooks like a good time to write tests.  \n",
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19e509c1_3c7193d8",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "sure to have it on the kernel stack ?",
+      "range": {
+        "startLine": 666,
+        "startChar": 10,
+        "endLine": 666,
+        "endChar": 40
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda2cd6e_bf9f832f",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "nit: whitespaces",
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d876acd1_48e84291",
+        "filename": "cgroup.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "- line length \n\n- line per predicate \n\n- macro with menaingful mane for sizeof(cgroup-\u003eio_stat_table) / sizeof(cgroup-\u003eio_stat_table[0] and give \n\n- same for \n sizeof(cgroup-\u003eio_stat_table[0]) / sizeof(cgroup-\u003eio_stat_table[0][0]))",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 928,
+        "endChar": 88
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a2ef4cb_715b3825",
+        "filename": "cgroup.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 944,
+        "startChar": 9,
+        "endLine": 944,
+        "endChar": 17
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71439c8b_cdea3823",
+        "filename": "cgroup.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "consider adding descriptions",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 13
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dfa4c0f_c241604f",
+        "filename": "fs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "- wondering whether update_io_stat has to be called from more places \n\n- also let\u0027s think about potential races on the lock in update_io_stat.\n  update_io_stat is frequently called and the lock is long.",
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "509b5500_a10cae50",
+        "filename": "fs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-15T05:57:40Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 534,
+        "startChar": 53,
+        "endLine": 534,
+        "endChar": 54
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
