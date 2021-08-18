@@ -104,7 +104,6 @@ struct inode_operations {
     int             (*readi) (struct vfs_inode*, char*, uint, uint);
     void            (*stati) (struct vfs_inode*, struct stat*);
     int             (*writei) (struct vfs_inode*, char*, uint, uint);
-    void            (*itrunc) (struct vfs_inode *ip);
 };
 
 // in-memory copy of an inode

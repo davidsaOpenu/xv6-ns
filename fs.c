@@ -28,7 +28,7 @@
 
 //static struct vfs_inode *
 //        iget(uint dev, uint inum);
-//static void            itrunc (struct vfs_inode *ip);
+static void            itrunc (struct vfs_inode *ip);
 
 // Read the super block.
 void
@@ -300,31 +300,19 @@ iget(uint dev, uint inum) {
     ip->vfs_inode.ref = 1;
     ip->vfs_inode.valid = 0;
 
-    /* Initiate inode operations for obj fs */
-    if (IS_OBJ_DEVICE(dev)) {
-        ip->vfs_inode.i_op.idup = &obj_idup;
-        ip->vfs_inode.i_op.iupdate = &obj_iupdate;
-        //        &icache.inode[i].i_op.itrunc = &itrunc;
-        ip->vfs_inode.i_op.iput = &obj_iput;
-    }
-
     /* Initiate inode operations for regular fs */
-    else {
-        ip->vfs_inode.i_op.idup = &idup;
-        ip->vfs_inode.i_op.iupdate = &iupdate;
-        ip->vfs_inode.i_op.iput = &iput;
-        ip->vfs_inode.i_op.dirlink = &dirlink;
-        ip->vfs_inode.i_op.itrunc = &itrunc;
-        ip->vfs_inode.i_op.dirlookup = &dirlookup;
-        ip->vfs_inode.i_op.ilock = &ilock;
-        ip->vfs_inode.i_op.iunlock = &iunlock;
-        ip->vfs_inode.i_op.readi = &readi;
-        ip->vfs_inode.i_op.stati = &stati;
-        ip->vfs_inode.i_op.writei = &writei;
-        ip->vfs_inode.i_op.iunlockput = &iunlockput;
+    ip->vfs_inode.i_op.idup = &idup;
+    ip->vfs_inode.i_op.iupdate = &iupdate;
+    ip->vfs_inode.i_op.iput = &iput;
+    ip->vfs_inode.i_op.dirlink = &dirlink;
+    ip->vfs_inode.i_op.dirlookup = &dirlookup;
+    ip->vfs_inode.i_op.ilock = &ilock;
+    ip->vfs_inode.i_op.iunlock = &iunlock;
+    ip->vfs_inode.i_op.readi = &readi;
+    ip->vfs_inode.i_op.stati = &stati;
+    ip->vfs_inode.i_op.writei = &writei;
+    ip->vfs_inode.i_op.iunlockput = &iunlockput;
 
-
-    }
     //cprintf("in iget end before release\n");
 
     release(&icache.lock);
@@ -337,11 +325,7 @@ iget(uint dev, uint inum) {
 // Returns ip to enable ip = idup(ip1) idiom.
 struct vfs_inode *
 idup(struct vfs_inode *ip) {
-    //cprintf("in before lock idup begin\n");
-
     acquire(&icache.lock);
-    //cprintf("in after lock idup begin\n");
-
     ip->ref++;
     release(&icache.lock);
     return ip;
@@ -385,8 +369,6 @@ ilock(struct vfs_inode *vfs_ip) {
 // Unlock the given inode.
 void
 iunlock(struct vfs_inode *ip) {
-    //cprintf(" in iunlock\n");
-
     if (ip == 0 || !holdingsleep(&ip->lock) || ip->ref < 1)
         panic("iunlock");
 
@@ -402,30 +384,21 @@ iunlock(struct vfs_inode *ip) {
 // case it has to free the inode.
 void
 iput(struct vfs_inode *ip) {
-    //cprintf(" in iput\n");
-
     acquiresleep(&ip->lock);
     if (ip->valid && ip->nlink == 0) {
-        //cprintf("in before lock iput begin\n");
-
         acquire(&icache.lock);
-        //cprintf("in after lock iput begin\n");
-
         int r = ip->ref;
         release(&icache.lock);
         if (r == 1) {
             // inode has no links and no other references: truncate and free.
-            ip->i_op.itrunc(ip);
+            itrunc(ip);
             ip->type = 0;
             ip->i_op.iupdate(ip);
             ip->valid = 0;
         }
     }
     releasesleep(&ip->lock);
-    //cprintf("in before lock iput begin\n");
-
     acquire(&icache.lock);
-    //cprintf("in after lock iput begin\n");
 
     ip->ref--;
     if (ip->ref == 0) {
@@ -489,14 +462,12 @@ bmap(struct inode *ip, uint bn) {
 // to it (no directory entries referring to it)
 // and has no in-memory reference to it (is
 // not an open file or current directory).
-void
+static void
 itrunc(struct vfs_inode *vfs_ip) {
     int i, j;
     struct buf *bp;
     uint *a;
     struct inode *ip = container_of(vfs_ip, struct inode, vfs_inode);
-
-    //cprintf(" in itrunc\n");
 
     for (i = 0; i < NDIRECT; i++) {
         if (ip->addrs[i]) {

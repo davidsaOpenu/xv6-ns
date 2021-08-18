@@ -1,4 +1,5 @@
-#pragma once
+#ifndef XV6_OBJ_DISK_H
+#define XV6_OBJ_DISK_H
 
 #include "obj_fs.h"
 #include "types.h"
@@ -70,8 +71,6 @@
  * TODO make it a thread safe.
  */
 
-#include "types.h"
-
 
 // Possible errors:
 #define NO_ERR 0
@@ -85,8 +84,6 @@
 // In the future, this can be set the size of SHA256 digest.
 #define OBJECT_ID_LENGTH MAX_OBJECT_NAME_LENGTH
 
-char memory_storage[STORAGE_DEVICE_SIZE];
-
 typedef struct {
     /*
      * If the object's name is exactly `MAX_OBJECT_NAME_LENGTH` we don't store
@@ -98,10 +95,8 @@ typedef struct {
     int occupied;
 } ObjectsTableEntry;
 
-
 int obj_id_cmp(const char* p, const char* q);
 uint obj_id_bytes(const char* object_id);
-
 
 /**
  * Loads the super-block struct from the disk and set the state of the driver.
@@ -210,7 +205,7 @@ uint check_rewrite_object_validality(uint size, const char* name);
 uint check_delete_object_validality(const char* name);
 //@}
 
-
+uint new_inode_number();
 
 /**
  * The following methods provides metadata about the file system state.
@@ -254,3 +249,5 @@ uint device_size();
  * fregmentation, the actual amount of data you can write might be lower.
  */
 uint occupied_bytes();
+
+#endif

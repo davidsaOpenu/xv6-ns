@@ -1,4 +1,6 @@
-#pragma once
+#ifndef XV6_OBJ_LOG_H
+#define XV6_OBJ_LOG_H
+
 
 /**
  * `obj_log.h` specify the third layer in the object file system. The purpose
@@ -185,8 +187,10 @@
 
 #define LOGBOOK_OBJECT_ID "\xfflogbook\xff"
 
+void init_objfs_log();
 void finish_log_transactions();
+//uint log_add_object(const void* object, uint size, const char* name);
+//uint log_rewrite_object(const void* object, uint size, const char* name);
+//uint log_delete_object(const char* name);
 
-uint log_add_object(const void* object, uint size, const char* name);
-uint log_rewrite_object(const void* object, uint size, const char* name);
-uint log_delete_object(const char* name);
+#endif

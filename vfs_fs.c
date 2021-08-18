@@ -112,17 +112,7 @@
 ////    return ip;
 ////}
 //
-//// Truncate inode (discard contents).
-//// Only called when the inode has no links
-//// to it (no directory entries referring to it)
-//// and has no in-memory reference to it (is
-//// not an open file or current directory).
-//void
-//vfs_itrunc(struct vfs_inode *ip)
-//{
-//    // TODO: not implemented
-//}
-//
+
 //void
 //vfs_iupdate(struct vfs_inode *ip)
 //{
@@ -163,7 +153,7 @@
 //        release(&icache.lock);
 //        if(r == 1){
 //            // inode has no links and no other references: truncate and free.
-//            ip->i_op.itrunc(ip);
+//            itrunc(ip);
 //            ip->type = 0;
 //            ip->i_op.iupdate(ip);
 //            ip->valid = 0;

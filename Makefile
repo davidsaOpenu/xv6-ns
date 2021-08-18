@@ -6,10 +6,8 @@ OBJS = \
 	device.o\
 	exec.o\
 	file.o\
-	obj_file.o\
 	vfs_file.o\
 	fs.o\
-	obj_fs.o\
 	vfs_fs.o\
 	ide.o\
 	ioapic.o\
@@ -47,7 +45,11 @@ OBJS = \
 	cgroup.o\
 	cpu_account.o\
 	obj_disk.o\
-	obj_cache.o
+	obj_cache.o\
+	obj_log.o
+#	obj_fs.o
+#	obj_file.o\
+
 
 
 # Cross-compiling (e.g., on Mac OS X)
@@ -279,7 +281,7 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 ifndef CPUS
 CPUS := 2
 endif
-QEMUOPTS = -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp $(CPUS) -m 512 $(QEMUEXTRA)
+QEMUOPTS = -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp $(CPUS) -m 512 $(QEMUEXTRA) -nographic
 
 gdb: OFLAGS = -Og -ggdb
 gdb: fs.img xv6.img
@@ -367,6 +369,6 @@ windows_debugging_clean:
 run-objfs-tests:
 	$(CC) $(CLAGS) \
 		obj_disk.c obj_cache.c obj_log.c obj_fs_tests.c obj_fs_tests_utilities.c \
-		-DKERNEL_TESTS -DSTORAGE_DEVICE_SIZE=67108864 -DOBJECTS_TABLE_SIZE=200 \
+		-std=gnu99 -DKERNEL_TESTS -DSTORAGE_DEVICE_SIZE=67108864 -DOBJECTS_TABLE_SIZE=200 \
 		-o tests
 	./tests

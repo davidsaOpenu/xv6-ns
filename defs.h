@@ -68,12 +68,12 @@ int             vfs_filewrite(struct vfs_file*, char*, int n);
 // obj_fs.c
 int             obj_dirlink(struct vfs_inode*, char*, uint);
 struct vfs_inode*   obj_dirlookup(struct vfs_inode*, char*, uint*);
-//struct vfs_inode*   obj_ialloc(uint, short);
+struct vfs_inode*   obj_ialloc(uint, short);
 struct vfs_inode*   obj_idup(struct vfs_inode*);
 void            obj_iinit(uint dev);
 void            obj_ilock(struct vfs_inode*);
 void            obj_iput(struct vfs_inode*);
-//struct vfs_inode *obj_iget(uint dev, uint inum);
+struct vfs_inode *obj_iget(uint dev, uint inum);
 void            obj_iunlock(struct vfs_inode*);
 void            obj_iunlockput(struct vfs_inode*);
 void            obj_iupdate(struct vfs_inode*);
@@ -87,7 +87,6 @@ void            obj_stati(struct vfs_inode*, struct stat*);
 int             obj_writei(struct vfs_inode*, char*, uint, uint);
 void            obj_fsinit(uint);
 struct vfs_inode*   obj_initprocessroot(struct mount**);
-void            obj_itrunc (struct vfs_inode *ip);
 
 // fs.c
 void            readsb(int dev, struct superblock *sb);
@@ -112,7 +111,6 @@ void            stati(struct vfs_inode*, struct stat*);
 int             writei(struct vfs_inode*, char*, uint, uint);
 void            fsinit(uint);
 struct vfs_inode*   initprocessroot(struct mount**);
-void            itrunc (struct vfs_inode *ip);
 
 // mount.c
 void            mntinit(void);

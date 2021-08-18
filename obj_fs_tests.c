@@ -448,6 +448,7 @@ int main() {
     printf("[===========]\n");
     init_obj_fs();
     init_objects_cache();
+//    init_objfs_log();
 
     // Driver layer
     run_test(initialization);

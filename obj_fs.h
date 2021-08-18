@@ -15,7 +15,8 @@ struct objsuperblock {
     uint storage_device_size;
     uint objects_table_offset;
     uint objects_table_size;
-
+    // the last inode added
+    uint last_inode;
     // variables to trace the file-system state
     uint bytes_occupied;
     uint occupied_objects;
@@ -48,6 +49,32 @@ struct obj_dinode {
     char data_object_name[MAX_OBJECT_NAME_LENGTH];
 };
 
+
+/**
+ * 5 is `strlen("inode")`
+ * sizeof(uint) + 1 is the size of the counter
+ * 1 for null terminator
+ */
+#define INODE_NAME_LENGTH (5 + sizeof(uint) + 1 + 1)
+
+//int             dirlink(struct inode*, char*, uint);
+//struct inode*   dirlookup(struct inode*, char*, uint*);
+//struct inode*   ialloc(uint, short);
+//struct inode*   idup(struct inode*);
+//void            iinit(int dev);
+//void            ilock(struct inode*);
+//void            inode_name(char* output, uint inum);
+//void            iput(struct inode*);
+//struct inode*   iget(uint dev, uint inum);
+//void            iunlock(struct inode*);
+//void            iunlockput(struct inode*);
+//void            iupdate(struct inode*);
+//int             namecmp(const char*, const char*);
+//struct inode*   namei(char*);
+//struct inode*   nameiparent(char*, char*);
+//int             readi(struct inode*, char*, uint, uint);
+//void            stati(struct inode*, struct stat*);
+//int             writei(struct inode*, const char*, uint, uint);
 //struct file_system_type objfs_type {
 //    name = "objfs"
 //};

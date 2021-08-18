@@ -201,7 +201,14 @@ isdirempty(struct vfs_inode *dp)
 //  int off;
 //  struct dirent de;
 
-  // TODO: need to make the sutiable func for objfs
+  // TODO: from itay changes
+//  uint size;
+//  if (cache_object_size(dp->data_object_name, &size) != NO_ERR) {
+//      panic("isdirempty failed getting inode data object size");
+//  }
+
+// TODO: need to make the sutiable func for objfs
+
 //  for(off=2*sizeof(de); off<dp->size; off+=sizeof(de)){
 //    if(readi(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
 //      panic("isdirempty: readi");
@@ -422,7 +429,7 @@ sys_open(void)
 
   /* Initiate file operations for obj fs */
   if (IS_OBJ_DEVICE(f->ip->dev)) {
-      f->f_op.filewrite = &obj_filewrite;
+//      f->f_op.filewrite = &obj_filewrite;
   }
 
   /* Initiate file operations for obj fs */
