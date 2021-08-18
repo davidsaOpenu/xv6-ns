@@ -15,10 +15,10 @@
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
-argfd(int n, int *pfd, struct file **pf)
+argfd(int n, int *pfd, struct vfs_file **pf)
 {
   int fd;
-  struct file *f;
+  struct vfs_file *f;
 
   if(argint(n, &fd) < 0)
     return -1;
@@ -137,8 +137,8 @@ sys_ioctl(void)
   int command;
 
   int ret;
-  struct file *f;
-  struct inode* ip;
+  struct vfs_file *f;
+  struct vfs_inode* ip;
 
   if(argfd(0, &fd, &f) < 0 || argint(1, &request) < 0 || argint(2, &command) < 0)
     return -1;

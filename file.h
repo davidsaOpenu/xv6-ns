@@ -5,97 +5,18 @@
 #include "sleeplock.h"
 #include "cgfs.h"
 #include "param.h"
+#include "vfs_file.h"
 
 struct file {
-  enum { FD_NONE, FD_PIPE, FD_INODE, FD_CG } type;
-  int ref; // reference count
-  char readable;
-  char writable;
-  uint off;
-  union {
-    // FD_PIPE
-    struct pipe *pipe;
-
-    // FD_INODE
-    struct {
-      struct inode *ip;
-      struct mount *mnt;
-    };
-
-    // FD_CG
-    struct {
-      struct cgroup *cgp;
-      char cgfilename[MAX_CGROUP_FILE_NAME_LENGTH];
-      union {
-        // cpu
-        union {
-          struct {
-            char active;
-            int usage_usec;
-            int user_usec;
-            int system_usec;
-            int nr_periods;
-            int nr_throttled;
-            int throttled_usec;
-          } stat;
-          struct {
-            int weight;
-          } weight;
-          struct {
-            int max;
-            int period;
-          } max;
-        } cpu;
-        // pid
-        union {
-          struct {
-            char active;
-            int max;
-          } max;
-        } pid;
-        // cpu_set
-        union {
-          struct {
-            char active;
-            int cpu_id;
-          } set;
-        } cpu_s;
-        // freezer
-        union {
-          struct {
-            int frozen;
-          } freezer;
-        } frz;
-        // memory
-        union {
-          struct {
-            char active;
-          } stat;
-          struct {
-            char active;
-            unsigned int max;
-          } max;
-        } mem;
-      };
-    };
-  };
+  struct vfs_file vfs_file;
 };
 
 
 // in-memory copy of an inode
 struct inode {
-  uint dev;           // Device number
-  uint inum;          // Inode number
-  int ref;            // Reference count
-  struct sleeplock lock; // protects everything below here
-  int valid;          // inode has been read from disk?
-
-  short type;         // copy of disk inode
-  short major;
-  short minor;
-  short nlink;
   uint size;
   uint addrs[NDIRECT+1];
+  struct vfs_inode vfs_inode;
 };
 
 // table mapping major device number to

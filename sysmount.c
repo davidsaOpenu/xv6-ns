@@ -34,7 +34,7 @@ sys_mount(void)
     }
     if(strcmp(fstype, "objfs") == 0) {
         cprintf("MOUNT OBJ FS\n");
-        struct inode *mount_dir;
+        struct vfs_inode *mount_dir;
         if (argstr(1, &mount_path) < 0) {
             cprintf("badargs\n");
             return -1;
@@ -59,9 +59,8 @@ sys_mount(void)
         end_op();
 
         return res;
-
     } else if(strcmp(fstype, "cgroup") == 0) {
-        struct inode *mount_dir;
+        struct vfs_inode *mount_dir;
         if (argstr(0, &device_path) < 0 || argstr(1, &mount_path) < 0 || device_path != 0) {
             cprintf("badargs\n");
             return -1;
@@ -89,7 +88,7 @@ sys_mount(void)
 
     } else {
 
-        struct inode *device, *mount_dir;
+        struct vfs_inode *device, *mount_dir;
         if (argstr(0, &device_path) < 0 || argstr(1, &mount_path) < 0) {
             cprintf("badargs\n");
             return -1;
@@ -157,7 +156,7 @@ sys_umount(void)
     int delete_cgroup_res = cgroup_delete(mount_path, "umount");
 
     if(delete_cgroup_res == -1){
-        struct inode *mount_dir;
+        struct vfs_inode *mount_dir;
         struct mount *mnt;
 
         if ((mount_dir = nameimount(mount_path, &mnt)) == 0) {

@@ -70,7 +70,6 @@ runcmd(struct cmd *cmd)
     }
 
 
-
   switch(cmd->type){
   default:
     panic("runcmd");
@@ -154,6 +153,7 @@ int
 getcmd(char *buf, int nbuf)
 {
   printf(2, "$ ");
+
   memset(buf, 0, nbuf);
   gets(buf, nbuf);
   if(buf[0] == 0) // EOF
@@ -259,6 +259,7 @@ main(void)
       runcmd(parsecmd(buf));
     wait(0);
   }
+
   exit(0);
 }
 
