@@ -6,7 +6,11 @@ OBJS = \
 	device.o\
 	exec.o\
 	file.o\
+	obj_file.o\
+	vfs_file.o\
 	fs.o\
+	obj_fs.o\
+	vfs_fs.o\
 	ide.o\
 	ioapic.o\
 	kalloc.o\
@@ -42,7 +46,9 @@ OBJS = \
 	cgfs.o\
 	cgroup.o\
 	cpu_account.o\
-	obj_disk.o
+	obj_disk.o\
+	obj_cache.o
+
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
@@ -213,7 +219,8 @@ UPROGS=\
         _ctrl_grp \
         _demo_pid_ns \
         _demo_mount_ns \
-        _ioctltests
+        _ioctltests \
+        _objfs_tests
 
 INTERNAL_DEV=\
 	internal_fs_a\
@@ -265,6 +272,7 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 ifndef CPUS
 CPUS := 2
 endif
+
 QEMUOPTS = -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp $(CPUS) -m 512 $(QEMUEXTRA) -nographic
 
 qemu: fs.img xv6.img

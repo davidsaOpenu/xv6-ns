@@ -15,6 +15,8 @@ struct stat;
 struct superblock;
 struct cgroup;
 struct objsuperblock;
+struct vfs_inode;
+struct vfs_file;
 
 // bio.c
 void            binit(void);
@@ -32,64 +34,96 @@ void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
 
 // device.c
-int             getorcreatedevice(struct inode*);
+int             getorcreatedevice(struct vfs_inode*);
+int             getorcreateobjdevice();
 void            deviceput(uint);
 void            deviceget(uint);
 void            printdevices(void);
-struct inode*   getinodefordevice(uint);
-void            objdevinit();
-struct superblock* getsuperblock(uint);
-struct objsuperblock* getobjsuperblock(uint);
-int             getobjdevice(void);
+struct vfs_inode*   getinodefordevice(uint);
+void            objdevinit(uint dev);
+struct vfs_superblock* getsuperblock(uint);
+//struct objsuperblock* getobjsuperblock(uint);
+//int             getobjdevice(void);
 void            devinit(void);
-int             doesbackdevice(struct inode*);
+int             doesbackdevice(struct vfs_inode*);
 
 // exec.c
 int             exec(char*, char**);
 
 // file.c
-struct file*    filealloc(void);
-void            fileclose(struct file*);
-struct file*    filedup(struct file*);
-void            fileinit(void);
-int             fileread(struct file*, char*, int n);
-int             filestat(struct file*, struct stat*);
-int             filewrite(struct file*, char*, int n);
+int             filewrite(struct vfs_file*, char*, int n);
+
+// obj_file.c
+int             obj_filewrite(struct vfs_file*, char*, int n);
+
+// vfs_file.c
+void            vfs_fileinit(void);
+struct vfs_file*    vfs_filealloc(void);
+void            vfs_fileclose(struct vfs_file*);
+struct vfs_file*    vfs_filedup(struct vfs_file*);
+int             vfs_fileread(struct vfs_file*, char*, int n);
+int             vfs_filestat(struct vfs_file*, struct stat*);
+int             vfs_filewrite(struct vfs_file*, char*, int n);
+
+// obj_fs.c
+int             obj_dirlink(struct vfs_inode*, char*, uint);
+struct vfs_inode*   obj_dirlookup(struct vfs_inode*, char*, uint*);
+//struct vfs_inode*   obj_ialloc(uint, short);
+struct vfs_inode*   obj_idup(struct vfs_inode*);
+void            obj_iinit(uint dev);
+void            obj_ilock(struct vfs_inode*);
+void            obj_iput(struct vfs_inode*);
+//struct vfs_inode *obj_iget(uint dev, uint inum);
+void            obj_iunlock(struct vfs_inode*);
+void            obj_iunlockput(struct vfs_inode*);
+void            obj_iupdate(struct vfs_inode*);
+int             obj_namecmp(const char*, const char*);
+struct vfs_inode*   obj_namei(char*);
+struct vfs_inode*   obj_nameimount(char*, struct mount**);
+struct vfs_inode*   obj_nameiparent(char*, char*);
+struct vfs_inode*   obj_nameiparentmount(char*, char*, struct mount**);
+int             obj_readi(struct vfs_inode*, char*, uint, uint);
+void            obj_stati(struct vfs_inode*, struct stat*);
+int             obj_writei(struct vfs_inode*, char*, uint, uint);
+void            obj_fsinit(uint);
+struct vfs_inode*   obj_initprocessroot(struct mount**);
+void            obj_itrunc (struct vfs_inode *ip);
 
 // fs.c
 void            readsb(int dev, struct superblock *sb);
-int             dirlink(struct inode*, char*, uint);
-struct inode*   dirlookup(struct inode*, char*, uint*);
-struct inode*   ialloc(uint, short);
-struct inode*   idup(struct inode*);
+int             dirlink(struct vfs_inode*, char*, uint);
+struct vfs_inode*   dirlookup(struct vfs_inode*, char*, uint*);
+struct vfs_inode*   ialloc(uint, short);
+struct vfs_inode*   idup(struct vfs_inode*);
 void            iinit(uint dev);
-void            ilock(struct inode*);
-void            iput(struct inode*);
-void            iunlock(struct inode*);
-void            iunlockput(struct inode*);
-void            iupdate(struct inode*);
+void            ilock(struct vfs_inode*);
+void            iput(struct vfs_inode*);
+struct vfs_inode *iget(uint dev, uint inum);
+void            iunlock(struct vfs_inode*);
+void            iunlockput(struct vfs_inode*);
+void            iupdate(struct vfs_inode*);
 int             namecmp(const char*, const char*);
-struct inode*   namei(char*);
-struct inode*   nameimount(char*, struct mount**);
-struct inode*   nameiparent(char*, char*);
-struct inode*   nameiparentmount(char*, char*, struct mount**);
-int             readi(struct inode*, char*, uint, uint);
-void            stati(struct inode*, struct stat*);
-int             writei(struct inode*, char*, uint, uint);
-void            readsb(int, struct superblock *);
+struct vfs_inode*   namei(char*);
+struct vfs_inode*   nameimount(char*, struct mount**);
+struct vfs_inode*   nameiparent(char*, char*);
+struct vfs_inode*   nameiparentmount(char*, char*, struct mount**);
+int             readi(struct vfs_inode*, char*, uint, uint);
+void            stati(struct vfs_inode*, struct stat*);
+int             writei(struct vfs_inode*, char*, uint, uint);
 void            fsinit(uint);
-struct inode*   initprocessroot(struct mount**);
+struct vfs_inode*   initprocessroot(struct mount**);
+void            itrunc (struct vfs_inode *ip);
 
 // mount.c
 void            mntinit(void);
 void            printmounts(void);
-int             mount(struct inode*, struct inode*, struct mount*);
-int             objfs_mount(struct inode *mountpoint, struct inode *device, struct mount *parent);
+int             mount(struct vfs_inode*, struct vfs_inode*, struct mount*);
+int             objfs_mount(struct vfs_inode *mountpoint, struct vfs_inode *device, struct mount *parent);
 int             umount(struct mount*);
 struct mount*   getrootmount(void);
 struct mount*   mntdup(struct mount*);
 void            mntput(struct mount*);
-struct mount*   mntlookup(struct inode*, struct mount*);
+struct mount*   mntlookup(struct vfs_inode*, struct mount*);
 void            umountall(struct mount_list*);
 struct mount_list* copyactivemounts(void);
 struct mount*   getroot(struct mount_list*);
@@ -153,7 +187,7 @@ void            picenable(int);
 void            picinit(void);
 
 // pipe.c
-int             pipealloc(struct file**, struct file**);
+int             pipealloc(struct vfs_file**, struct vfs_file**);
 void            pipeclose(struct pipe*, int);
 int             piperead(struct pipe*, char*, int);
 int             pipewrite(struct pipe*, char*, int);
@@ -241,7 +275,7 @@ int             allocuvm(pde_t*, uint, uint);
 int             deallocuvm(pde_t*, uint, uint);
 void            freevm(pde_t*);
 void            inituvm(pde_t*, char*, uint);
-int             loaduvm(pde_t*, char*, struct inode*, uint, uint);
+int             loaduvm(pde_t*, char*, struct vfs_inode*, uint, uint);
 pde_t*          copyuvm(pde_t*, uint);
 void            switchuvm(struct proc*);
 void            switchkvm(void);

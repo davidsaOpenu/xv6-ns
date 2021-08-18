@@ -26,6 +26,9 @@
 #include "fs.h"
 #include "buf.h"
 #include "device.h"
+#include "vfs_fs.h"
+#include "file.h"
+#include "vfs_file.h"
 
 struct {
   struct spinlock lock;
@@ -109,10 +112,11 @@ bget(uint dev, uint blockno)
 void
 devicerw(struct inode *device, struct buf *b)
 {
+    // cprintf("in devicerw\n");
   if ((b->flags & B_DIRTY) == 0) {
-    readi(device, (char *) b->data, BSIZE*b->blockno, BSIZE);
+    readi(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
   } else {
-    writei(device, (char *) b->data, BSIZE*b->blockno, BSIZE);
+    writei(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
   }
   b->flags |= B_VALID;
   b->flags &= ~B_DIRTY;
@@ -121,12 +125,26 @@ devicerw(struct inode *device, struct buf *b)
 void
 brw(struct buf *b)
 {
-  struct inode *device;
-  if ((device = getinodefordevice(b->dev)) != 0) {
-    devicerw(device, b);
+  struct vfs_inode *device;
+    // cprintf("in brw\n");
+  // TODO: need to think of objfs
+  if (!IS_OBJ_DEVICE(b->dev)) {
+      // cprintf("brw : in if in brw b->dev: %d\n", b->dev);
+
+      if ((device = getinodefordevice(b->dev)) != 0) {
+          // cprintf("brw : in if in if \n");
+
+          struct inode * i_device = container_of(device, struct inode, vfs_inode);
+          // cprintf("i_device size: %d\n", i_device->size);
+
+          devicerw(i_device, b);
+      } else {
+          iderw(b);
+      }
   } else {
-    iderw(b);
+      // cprintf("brw OBJ DEVICE detected!\n");
   }
+
 }
 
 // Return a locked buf with the contents of the indicated block.

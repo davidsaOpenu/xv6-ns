@@ -8,6 +8,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "string.h"
 
 void
 initlock(struct spinlock *lk, char *name)
@@ -24,10 +25,13 @@ initlock(struct spinlock *lk, char *name)
 void
 acquire(struct spinlock *lk)
 {
+//    if (0 == strcmp(lk->name,"icache")) {
+//        cprintf("in acquire of lock icache\n");
+//    }
+
   pushcli(); // disable interrupts to avoid deadlock.
   if(holding(lk))
     panic("acquire");
-
   // The xchg is atomic.
   while(xchg(&lk->locked, 1) != 0)
     ;

@@ -1,21 +1,22 @@
-#ifndef XV6_FILE_H
-#define XV6_FILE_H
+#ifndef XV6_OBJ_FILE_H
+#define XV6_OBJ_FILE_H
 
-#include "fs.h"
+#include "obj_fs.h"
 #include "sleeplock.h"
 #include "cgfs.h"
 #include "param.h"
 #include "vfs_file.h"
 
-struct file {
+#define MAX_INODE_OBJECT_DATA (1ull << 25)  // 32MB
+
+struct obj_file {
   struct vfs_file vfs_file;
 };
 
 
 // in-memory copy of an inode
-struct inode {
-  uint size;
-  uint addrs[NDIRECT+1];
+struct obj_inode {
+  char data_object_name[MAX_OBJECT_NAME_LENGTH];
   struct vfs_inode vfs_inode;
 };
 

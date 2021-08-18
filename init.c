@@ -5,37 +5,39 @@
 #include "user.h"
 #include "fcntl.h"
 
-char *argv[] = { "sh", 0 };
+char *argv[] = {"sh", 0};
 
 int
-main(void)
-{
-  int pid, wpid;
+main(void) {
+    int pid, wpid;
 
-  if(open("console", O_RDWR) < 0){
-    mknod("console", 1, 1);
-    open("console", O_RDWR);
-  }
-  dup(0);  // stdout
-  dup(0);  // stderr
-
-  mknod("tty0", 2, 2);
-  mknod("tty1", 3, 3);
-  mknod("tty2", 4, 4);
-
-  for(;;){
-    printf(1, "init: starting sh\n");
-    pid = fork();
-    if(pid < 0){
-      printf(1, "init: fork failed\n");
-      exit(1);
+    printf(2, "in main in init.c\n");
+    if (open("console", O_RDWR) < 0) {
+        mknod("console", 1, 1);
+        open("console", O_RDWR);
     }
-    if(pid == 0){
-      exec("sh", argv);
-      printf(1, "init: exec sh failed\n");
-      exit(1);
+    printf(2, "in main in init.c after console open\n");
+
+    dup(0);  // stdout
+    dup(0);  // stderr
+
+    mknod("tty0", 2, 2);
+    mknod("tty1", 3, 3);
+    mknod("tty2", 4, 4);
+
+    for (;;) {
+        printf(1, "init: starting sh\n");
+        pid = fork();
+        if (pid < 0) {
+            printf(1, "init: fork failed\n");
+            exit(1);
+        }
+        if (pid == 0) {
+            exec("sh", argv);
+            printf(1, "init: exec sh failed\n");
+            exit(1);
+        }
+        while ((wpid = wait(0)) >= 0 && wpid != pid)
+            printf(1, "zombie!\n");
     }
-    while((wpid=wait(0)) >= 0 && wpid != pid)
-      printf(1, "zombie!\n");
-  }
 }
