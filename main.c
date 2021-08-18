@@ -5,11 +5,10 @@
 #include "mmu.h"
 #include "proc.h"
 #include "x86.h"
- #include "obj_disk.h"
+// #include "obj_disk.h"
 #include "vfs_file.h"
-
-// #include "obj_cache.h"
-// #include "obj_log.h"
+//#include "obj_cache.h"
+//#include "obj_log.h"
 
 static void objfsinit(void);
 
@@ -32,6 +31,8 @@ main(void) {
 #if XV6_WAIT_FOR_DEBUGGER
     while (!gdb_attached) {}
 #endif
+cprintf("in init\n");
+
     kinit1(end, P2V(4 * 1024 * 1024)); // phys page allocator
     kvmalloc();      // kernel page table
     mpinit();        // detect other processors
@@ -40,11 +41,17 @@ main(void) {
     picinit();       // disable pic
     ioapicinit();    // another interrupt controller
     consoleinit();   // console hardware
+
     ttyinit();
+
     uartinit();      // serial port
+    cprintf("after uartinit\n");
+
     pinit();         // process table
+
     tvinit();        // trap vectors
     binit();         // buffer cache
+    cprintf("before filetable\n");
     vfs_fileinit();      // file table
     ideinit();       // disk
     objfsinit();     // objfs disk
@@ -59,9 +66,11 @@ main(void) {
 
 static void
 objfsinit(void) {
-    init_obj_fs();
-//   init_objects_cache();
-//   finish_log_transactions();
+    cprintf("in objfsinit\n");
+//    init_obj_fs();
+//    init_objects_cache();
+//    init_objfs_log();
+    //   finish_log_transactions();
 }
 
 // Other CPUs jump here from entryother.S.

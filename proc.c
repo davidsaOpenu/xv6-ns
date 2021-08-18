@@ -10,6 +10,7 @@
 #include "pid_ns.h"
 #include "namespace.h"
 #include "cpu_account.h"
+//#include "obj_log.h"
 
 struct {
     struct spinlock lock;
@@ -635,6 +636,7 @@ forkret(void) {
         first = 0;
         iinit(ROOTDEV);
         initlog(ROOTDEV);
+//        init_objfs_log();
         mntinit(); // initialize mounts
     }
 

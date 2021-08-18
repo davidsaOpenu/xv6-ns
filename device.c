@@ -47,7 +47,7 @@ objdevinit(uint dev) {
     cprintf("in objdevinit\n");
     if (dev < NOBJDEVS) {
         cprintf("in if in objdevinit\n");
-        memcpy(&dev_holder.objdev[dev].sb, memory_storage, sizeof(dev_holder.objdev[dev].sb));
+//           memcpy(&dev_holder.objdev[dev].sb, memory_storage, sizeof(dev_holder.objdev[dev].sb));
     }
 }
 
@@ -111,14 +111,17 @@ getorcreateobjdevice() {
 
 void deviceget(uint dev) {
 
-    // cprintf("in deviceget begin\n");
     if (IS_LOOP_DEVICE(dev)) {
         dev = DEV_TO_LOOP_DEVICE(dev);
         acquire(&dev_holder.lock);
         dev_holder.loopdevs[dev].ref++;
         release(&dev_holder.lock);
+    } else if (IS_OBJ_DEVICE(dev)) {
+        dev = DEV_TO_OBJ_DEVICE(dev);
+        acquire(&dev_holder.lock);
+        dev_holder.objdev[dev].ref++;
+        release(&dev_holder.lock);
     }
-    // cprintf("in deviceget end\n");
 }
 
 void
@@ -136,6 +139,11 @@ deviceput(uint dev) {
             dev_holder.loopdevs[dev].ip = 0;
         }
         dev_holder.loopdevs[dev].ref--;
+        release(&dev_holder.lock);
+    } else if (IS_OBJ_DEVICE(dev)) {
+        dev = DEV_TO_OBJ_DEVICE(dev);
+        acquire(&dev_holder.lock);
+        dev_holder.objdev[dev].ref--;
         release(&dev_holder.lock);
     }
 }
