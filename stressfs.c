@@ -30,6 +30,7 @@ main(int argc, char *argv[])
   printf(1, "write %d\n", i);
 
   path[8] += i;
+    printf(1, "in stressfs before open\n");
   fd = open(path, O_CREATE | O_RDWR);
   for(i = 0; i < 20; i++)
 //    printf(fd, "%d\n", i);

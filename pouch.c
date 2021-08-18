@@ -33,6 +33,7 @@ static int pouch_limit_cgroup(char* container_name, char* cgroup_state_obj, char
     strcat(cg_limit_cname, "/");
     strcat(cg_limit_cname,cgroup_state_obj);
 
+    printf(1, "open in pouch_limit_cgroup\n");
     int cont_fd = open(container_name, 0);
     if(cont_fd < 0){
        printf(stderr, "There is no container: %s in a started stage\n", container_name);
@@ -416,6 +417,7 @@ static int pouch_fork(char* container_name){
 
         // Move the current process to "/cgroup/<cname>" cgroup.
         strcat(cg_cname,"/cgroup.procs");
+        printf(1, "in pouch before open\n");
         int cgroup_procs_fd = open(cg_cname, O_RDWR);
         char cur_pid_buf[10];
         itoa(cur_pid_buf, pid);
@@ -480,6 +482,7 @@ static int create_pouch_cgroup(char *cg_cname, char *cname){
     strcpy(cgpath, cg_cname);
     strcat(cgpath,"/cgroup.subtree_control");
 
+    printf(1, "in pouch before open cgpath\n");
     int cgroup_subtree_control_fd =
         open(cgpath, O_RDWR);
 
@@ -532,6 +535,7 @@ static int print_cinfo(char* container_name, char * tty_name, int pid){
     strcat(cgstat,container_name);
     strcat(cgstat,"/cpu.stat");
 
+    printf(1, "in pouch before open cpu\n");
     int cpu_max_fd = open(cgmax, O_RDWR);
     int cpu_stat_fd = open(cgstat, O_RDWR);
     int ppid = getppid();

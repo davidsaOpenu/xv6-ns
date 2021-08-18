@@ -6,7 +6,11 @@ OBJS = \
 	device.o\
 	exec.o\
 	file.o\
+	obj_file.o\
+	vfs_file.o\
 	fs.o\
+	obj_fs.o\
+	vfs_fs.o\
 	ide.o\
 	ioapic.o\
 	kalloc.o\
@@ -42,7 +46,9 @@ OBJS = \
 	cgfs.o\
 	cgroup.o\
 	cpu_account.o\
-	obj_disk.o
+	obj_disk.o\
+	obj_cache.o
+
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
@@ -173,7 +179,7 @@ vectors.S: vectors.pl
 ULIB = ulib.o usys.o printf.o umalloc.o tty.o
 
 _%: %.o $(ULIB)
-	$(LD) $(LDFLAGS) -T userspace.ld -N -e main -Ttext 0 -o $@ $^
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
@@ -220,7 +226,8 @@ UPROGS=\
         _ctrl_grp \
         _demo_pid_ns \
         _demo_mount_ns \
-        _ioctltests
+        _ioctltests \
+        _objfs_tests
 
 INTERNAL_DEV=\
 	internal_fs_a\

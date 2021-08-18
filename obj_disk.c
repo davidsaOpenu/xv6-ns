@@ -39,8 +39,6 @@ uint get_objects_table_index(const char* name, uint* output) {
 
 
 ObjectsTableEntry* objects_table_entry(uint offset) {
-    cprintf("In objects_table_entry\n");
-
     return (ObjectsTableEntry*)&memory_storage[
         super_block.objects_table_offset
         + offset * sizeof(ObjectsTableEntry)
@@ -54,14 +52,12 @@ uint flush_objects_table_entry(uint offset) {
      * entry received by `objects_table_entry` changes the table itself.
      * In the future, this method would write the specific bytes to the disk.
      */
-    cprintf("In flush_objects_table_entry\n");
 
     return NO_ERR;
 }
 
 
 int obj_id_cmp(const char* p, const char* q) {
-    cprintf("In obj_id_cmp\n");
 
     uint i = 0;
     while(*p && *p == *q && i < OBJECT_ID_LENGTH) {
@@ -167,8 +163,6 @@ static void* find_empty_space(uint size) {
 
 
 static void initialize_super_block_entry() {
-    cprintf("In initialize_super_block_entry\n");
-
     ObjectsTableEntry* entry = objects_table_entry(0);
     memcpy(entry->object_id, SUPER_BLOCK_ID, strlen(SUPER_BLOCK_ID) + 1);
     entry->disk_offset = 0;
@@ -178,8 +172,6 @@ static void initialize_super_block_entry() {
 
 
 static void initialize_objects_table_entry() {
-    cprintf("In initialize_objects_table_entry\n");
-
     ObjectsTableEntry* entry = objects_table_entry(1);
     memcpy(entry->object_id, OBJECT_TABLE_ID, strlen(OBJECT_TABLE_ID) + 1);
     entry->disk_offset = super_block.objects_table_offset;
@@ -196,9 +188,10 @@ static void write_super_block() {
 
 
 void init_obj_fs() {
-    cprintf("In init_obj_fs\n");
-
+    struct vfs_superblock sb;
     // with real device, we would read the block form the disk.
+
+    // Super block initializing
     super_block.storage_device_size = STORAGE_DEVICE_SIZE;
     super_block.objects_table_offset = sizeof(struct objsuperblock);
     super_block.objects_table_size = OBJECTS_TABLE_SIZE;
@@ -206,6 +199,11 @@ void init_obj_fs() {
         sizeof(super_block)
         + OBJECTS_TABLE_SIZE * sizeof(ObjectsTableEntry);
     super_block.occupied_objects = 2;
+    sb.ninodes = 200; // TODO: A random number, to check if works well
+    super_block.vfs_sb = sb;
+
+    // Inode initializing
+
 
     // To keep consistency, we write the super block to the disk and sets the
     // table state. This part should be read from the device and be created
@@ -220,8 +218,6 @@ void init_obj_fs() {
 
 
 uint add_object(const void* object, uint size, const char* name) {
-    cprintf("In add_object\n");
-
     uint err = check_add_object_validality(size, name);
     if (err != NO_ERR) {
         return err;
@@ -249,8 +245,6 @@ uint add_object(const void* object, uint size, const char* name) {
 
 
 uint rewrite_object(const void* object, uint size, const char* name) {
-    cprintf("In rewrite_object\n");
-
     uint err;
     err = check_rewrite_object_validality(size, name);
     if (err != NO_ERR) {
@@ -288,8 +282,6 @@ uint rewrite_object(const void* object, uint size, const char* name) {
 
 
 uint object_size(const char* name, uint* output) {
-    cprintf("In object_size\n");
-
     if (strlen(name) > MAX_OBJECT_NAME_LENGTH) {
         return OBJECT_NAME_TOO_LONG;
     }
@@ -382,7 +374,6 @@ uint check_delete_object_validality(const char* name) {
 
 
 uint max_objects() {
-    cprintf("In max_objects\n");
 
     return super_block.objects_table_size;
 }

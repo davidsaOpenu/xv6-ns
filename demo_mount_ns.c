@@ -10,6 +10,7 @@ void
 createNwrite(char *path, char *str, int strlen){
          int fd;
 
+         printf(1, "in createNwrite before open\n");
          if ((fd = open(path,O_CREATE|O_RDWR)) <= 0){
             printf(stderr, "open failed\n");
             exit(1);
