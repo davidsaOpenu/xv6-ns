@@ -16,6 +16,23 @@
       "message": "Great work, nice and consistent definitions.",
       "revId": "7de9b5e5a6862ad6544472b42a174d1388db9160",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3f0b629_346986c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T14:06:37Z",
+      "side": 1,
+      "message": "Nice work on the CR fix!",
+      "revId": "7de9b5e5a6862ad6544472b42a174d1388db9160",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
