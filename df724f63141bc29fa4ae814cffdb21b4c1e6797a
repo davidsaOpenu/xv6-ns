@@ -41,6 +41,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ac5b6c5_5be3c5e6",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Changed it to use a single tmp_buff for all \"itoa like\" calls in this function, thus decreasing the use of the stack",
+      "parentUuid": "19e509c1_3c7193d8",
+      "range": {
+        "startLine": 666,
+        "startChar": 10,
+        "endLine": 666,
+        "endChar": 40
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dda2cd6e_bf9f832f",
@@ -58,6 +82,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7f00b4e_51dcf81a",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dda2cd6e_bf9f832f",
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d876acd1_48e84291",
@@ -71,6 +113,30 @@
       "writtenOn": "2021-08-15T05:57:40Z",
       "side": 1,
       "message": "- line length \n\n- line per predicate \n\n- macro with menaingful mane for sizeof(cgroup-\u003eio_stat_table) / sizeof(cgroup-\u003eio_stat_table[0] and give \n\n- same for \n sizeof(cgroup-\u003eio_stat_table[0]) / sizeof(cgroup-\u003eio_stat_table[0][0]))",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 928,
+        "endChar": 88
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98de1b34_8f54c56b",
+        "filename": "cgroup.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d876acd1_48e84291",
       "range": {
         "startLine": 927,
         "startChar": 0,
@@ -104,6 +170,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bb4ca41_e0bdc5c4",
+        "filename": "cgroup.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a2ef4cb_715b3825",
+      "range": {
+        "startLine": 944,
+        "startChar": 9,
+        "endLine": 944,
+        "endChar": 17
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "71439c8b_cdea3823",
@@ -117,6 +207,30 @@
       "writtenOn": "2021-08-15T05:57:40Z",
       "side": 1,
       "message": "consider adding descriptions",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 13
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b180de1_2e3f1eb5",
+        "filename": "cgroup.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71439c8b_cdea3823",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -157,6 +271,30 @@
       "writtenOn": "2021-08-15T05:57:40Z",
       "side": 1,
       "message": "nit",
+      "range": {
+        "startLine": 534,
+        "startChar": 53,
+        "endLine": 534,
+        "endChar": 54
+      },
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "921521d4_6438a057",
+        "filename": "fs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T13:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "509b5500_a10cae50",
       "range": {
         "startLine": 534,
         "startChar": 53,
