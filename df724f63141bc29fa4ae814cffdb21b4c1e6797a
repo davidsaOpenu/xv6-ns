@@ -258,6 +258,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88adf566_c6f49749",
+        "filename": "fs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-08-21T14:05:47Z",
+      "side": 1,
+      "message": "* As discussed in the meeting, we believe that readi and writei are the lowest places that do IO.\n* Added a lock_io_stat_table spinlock while relying on the fact that a cgroup can\u0027t be deleted while it has processes/cgroups in it",
+      "parentUuid": "9dfa4c0f_c241604f",
+      "revId": "df724f63141bc29fa4ae814cffdb21b4c1e6797a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "509b5500_a10cae50",
