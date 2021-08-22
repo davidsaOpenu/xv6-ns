@@ -34,6 +34,24 @@
       "parentUuid": "4498b345_f5464bde",
       "revId": "c8c8fabdf233ba95c678e8e1dded1df92e6221df",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "977f8676_0eeda6e8",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-08-22T06:07:14Z",
+      "side": 1,
+      "message": "debug flag and XV6_WAIT_FOR_DEBUGGER were added as a part of https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/458518 and \nseems they are required for visual studio (I have not ability to \ncheck it, though).\n\nline 277 is a duplication of line 107. \n\nLine 107 can be removed, I guess.\n\nAnd probably worth renaming debug to pause_debug in Makefile and \nin windows-debugging-templates/readme.txt to reflect the fact that \nthe flag is used only in cases when debugging is not started in a paused state.",
+      "parentUuid": "d0cd8c51_38858fe0",
+      "revId": "c8c8fabdf233ba95c678e8e1dded1df92e6221df",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
