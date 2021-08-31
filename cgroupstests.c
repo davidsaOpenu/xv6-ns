@@ -1215,6 +1215,8 @@ TEST(test_io_stat)
   int beforeTableSize = parse_io_stat_file(stat_table_before, STATE_TABLE_MAX_SIZE);
   ASSERT_TRUE(beforeTableSize != -1);
 
+  write_file(TEST_1_CGROUP_SUBTREE_CONTROL, "+io");
+  read_file(TEST_1_CGROUP_SUBTREE_CONTROL, 0);
 
   int fd = open(TEMP_FILE, O_CREATE | O_RDWR);
 
