@@ -81,6 +81,10 @@ struct file {
           struct {
             ioStat io_stat_table[NDEV][MAX_TTY];
           } stat;
+          struct
+          {
+            ioStat io_max_table[NDEV][MAX_TTY];
+          } max;
         } io;
       };
     };

@@ -24,6 +24,7 @@
 #define CGFS_MEM_MAX "memory.max"
 #define CGFS_MEM_STAT "memory.stat"
 #define CGFS_IO_STAT "io.stat"
+#define CGFS_IO_MAX "io.max"
 
 /**
  * This function opens a cgroup filesystem file or directory.

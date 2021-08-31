@@ -1147,11 +1147,11 @@ TEST(test_io_stat_content_valid)
   ASSERT_FALSE(strcmp(read_file(TEST_1_IO_STAT, 0), "dev:tty\trbytes\twbytes\trios\twios\n\n"));
 }
 
-struct io_stat_line {
+typedef struct _io_stat_line {
   int major, minor, rbytes, wbytes, rios, wios;
-};
+} io_stat_line;
 
-void parse_io_stat_line(struct io_stat_line* stat, char *line) {
+void parse_io_stat_line(io_stat_line* stat, char *line) {
   static char tmp_bufer[64];
 
   int len = copy_until_char(tmp_bufer, line, ':');
@@ -1179,7 +1179,7 @@ void parse_io_stat_line(struct io_stat_line* stat, char *line) {
 }
 
 // return -1 on faiulr
-int parse_io_stat_file(struct io_stat_line table[], int maxTableSize) {
+int parse_io_stat_file(io_stat_line table[], int maxTableSize) {
   static char buf[256];
 
   char *fContect = read_file(TEST_1_IO_STAT, 0);
@@ -1211,10 +1211,9 @@ TEST(test_io_stat)
   static const int STATE_TABLE_MAX_SIZE = 5;
   static const int NUM_BYTES_TO_TEST = 10;
 
-  struct io_stat_line stat_table_before[STATE_TABLE_MAX_SIZE];
+  io_stat_line stat_table_before[STATE_TABLE_MAX_SIZE];
   int beforeTableSize = parse_io_stat_file(stat_table_before, STATE_TABLE_MAX_SIZE);
   ASSERT_TRUE(beforeTableSize != -1);
-
 
   int fd = open(TEMP_FILE, O_CREATE | O_RDWR);
 
@@ -1229,7 +1228,7 @@ TEST(test_io_stat)
   // write exactly NUM_BYTES_TO_TEST bytes to screen
   printf(1,"%s", toPrintStr);
 
-  // write and red NUM_BYTES_TO_READ_WRITE bytes to file
+  // write and read NUM_BYTES_TO_READ_WRITE bytes to file
 
   ASSERT_TRUE(write(fd, toPrintStr, NUM_BYTES_TO_TEST) == NUM_BYTES_TO_TEST);
 
@@ -1265,14 +1264,14 @@ TEST(test_io_stat)
   printf(1, "%s", toPrintStr);
 
   // parse io.stat into stat_table_after
-  struct io_stat_line stat_table_after[STATE_TABLE_MAX_SIZE];
+  io_stat_line stat_table_after[STATE_TABLE_MAX_SIZE];
   int afterTableSize = parse_io_stat_file(stat_table_after, STATE_TABLE_MAX_SIZE);
   ASSERT_TRUE(afterTableSize != -1);
 
-  struct io_stat_line *diskBefore = 0;
-  struct io_stat_line *diskAfter = 0;
-  struct io_stat_line *screenBefore = 0;
-  struct io_stat_line *screenAfter = 0;
+  io_stat_line *diskBefore = 0;
+  io_stat_line *diskAfter = 0;
+  io_stat_line *screenBefore = 0;
+  io_stat_line *screenAfter = 0;
 
   // find the disk and screen entries
   for (int i = 0; i < afterTableSize; i++) {
