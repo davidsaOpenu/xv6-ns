@@ -32,6 +32,7 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT, IO_CNT };
 #define TEST_1_MEM_MAX                  "/cgroup/test1/memory.max"
 #define TEST_1_MEM_STAT                 "/cgroup/test1/memory.stat"
 #define TEST_1_IO_STAT                 "/cgroup/test1/io.stat"
+#define TEST_1_IO_MAX                 "/cgroup/test1/io.max"
 
 #define ROOT_CGROUP_PROCS               "/cgroup/cgroup.procs"
 
