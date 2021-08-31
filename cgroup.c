@@ -2,11 +2,13 @@
 #include "cgfs.h"
 #include "spinlock.h"
 #include "memlayout.h"
+#include "steady_clock.h"
 
 #define MAX_DES_DEF 64
 #define MAX_DEP_DEF 64
 #define MAX_CGROUP_FILE_NAME_LENGTH 64
 #define CGROUP_ACCOUNT_PERIOD_100MS (100 * 1000)
+#define MAX_IO (-1) 
 
 struct
 {
@@ -270,7 +272,6 @@ void cgroup_initialize(struct cgroup * cgroup,
         cgroup->mem_controller_enabled = 1;
         cgroup->io_controller_avalible = 1;
         cgroup->io_controller_enabled = 1;
-        memset(cgroup->io_stat_table, 0, sizeof(cgroup->io_stat_table));
     }
     else {
         cgroup->parent = parent_cgroup;
@@ -350,6 +351,20 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->cpu_nr_throttled = 0;
     cgroup->cpu_throttled_usec = 0;
     cgroup->cpu_is_throttled_period = 0;
+    memset(cgroup->io_stat_table, 0, sizeof(cgroup->io_stat_table));
+    memset(cgroup->io_account_table, 0, sizeof(cgroup->io_account_table));
+    for (int i = 0; i < sizeof(cgroup->io_account_table)/sizeof(cgroup->io_account_table[0]); i++)
+    {
+        for (int j = 0; j < sizeof(cgroup->io_account_table[0])/sizeof(cgroup->io_account_table[0][0]); j++)
+        {
+            cgroup->io_account_table[i][j].max_io.rbytes = MAX_IO;
+            cgroup->io_account_table[i][j].max_io.wbytes = MAX_IO;
+            cgroup->io_account_table[i][j].max_io.rios = MAX_IO;
+            cgroup->io_account_table[i][j].max_io.wios = MAX_IO;
+        }
+    }
+    cgroup->io_account_period =  1000 * 1000; // 1000ms = 1 second
+
 }
 
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
@@ -931,6 +946,107 @@ int disable_mem_controller(struct cgroup* cgroup)
   return res;
 }
 
+static inline void copy_ioStat(const ioStat *src, ioStat *dst) {
+    dst->rbytes = src->rbytes;
+    dst->wbytes = src->wbytes;
+    dst->rios = src->rios;
+    dst->wios = src->wios;
+}
+
+// delay the io by sleeping and giving up the cpu until the next frame
+static void delay_io(struct cgroup *cgroup, ioAccount *paccount) {
+    acquire(&tickslock);
+    while(steady_clock_now()/cgroup->io_account_period <= paccount->io_account_frame){
+        if(myproc()->killed){
+            release(&tickslock);
+            return;
+        }
+        sleep(&ticks, &tickslock);
+    }
+    release(&tickslock);
+}
+
+int cgroup_request_io(struct cgroup *cgroup, short major, short minor, int size, char is_write) {
+    // This check is independent of the cgroup itself, so it's out of the while loop
+    if (major < 0 ||
+        minor < 0 ||
+        cgroup == 0 ||
+        major >= NELEM(cgroup->io_stat_table) ||
+        minor >= NELEM(cgroup->io_stat_table[0]))
+        return -1;
+    //cprintf("in cgroup_request_io\n");
+    acquire(&cgroup->lock_cgroup_io_tables);
+    ioAccount *paccount = &(cgroup->io_account_table[major][minor]);
+
+    paccount->now = steady_clock_now();
+    //cprintf("updating %s %d\n", cgroup->cgroup_dir_path, cgroup->io_account_period);
+    if (paccount->now / cgroup->io_account_period > paccount->io_account_frame) {
+        // New frame
+        if (paccount->now / cgroup->io_account_period == paccount->io_account_frame + 1) {
+            copy_ioStat(&paccount->curr_frame_io, &paccount->last_frame_io);
+        }
+        else {
+            memset(&paccount->last_frame_io, 0, sizeof(ioStat)); // set last frame io values to 0
+        }
+        memset(&paccount->curr_frame_io, 0, sizeof(ioStat)); // set curr frame io values to 0
+        paccount->io_account_frame = paccount->now / cgroup->io_account_period;
+    }
+    if (is_write)
+    {
+        if (cgroup != cgroup_root() && cgroup->io_controller_enabled) {
+            //cprintf("\nin is_write frame %d size %d bytes %d max %d - ", paccount->io_account_frame, size, paccount->curr_frame_io.wbytes, paccount->max_io.wbytes);
+            // if io max is reached
+            if(((paccount->max_io.wios != MAX_IO && paccount->curr_frame_io.wios == paccount->max_io.wios) ||
+                (paccount->max_io.wbytes != MAX_IO && paccount->curr_frame_io.wbytes == paccount->max_io.wbytes))) {
+                //cprintf("sleeping\n");
+                release(&cgroup->lock_cgroup_io_tables);
+                // delay the io
+                delay_io(cgroup, paccount);
+                
+                return 0;
+            }
+            // if this io will make the device pass the limit
+            else if(paccount->max_io.wbytes != MAX_IO && paccount->curr_frame_io.wbytes + size > paccount->max_io.wbytes) {
+                // change the size of the io to the max size
+                size = paccount->max_io.rbytes - paccount->curr_frame_io.rbytes;
+                //cprintf("changed size to %d", size);
+            }
+            //cprintf("\n");
+        }
+        paccount->curr_frame_io.wios++;
+        paccount->curr_frame_io.wbytes += size;
+    }
+    else // read
+    {
+        if (cgroup != cgroup_root() && cgroup->io_controller_enabled)
+        {
+            //cprintf("\nin read frame %d size %d bytes %d max %d - ", paccount->io_account_frame, size, paccount->curr_frame_io.rbytes, paccount->max_io.rbytes);
+            // if io max is reached
+            if (((paccount->max_io.rios != MAX_IO && paccount->curr_frame_io.rios == paccount->max_io.rios) ||
+            (paccount->max_io.rbytes != MAX_IO && paccount->curr_frame_io.rbytes == paccount->max_io.rbytes))) {
+                //cprintf("sleeping\n");
+                release(&cgroup->lock_cgroup_io_tables);
+                // delay the io
+                delay_io(cgroup, paccount);
+
+                return 0;
+            }
+            // if this io will make the device pass the limit
+            else if(paccount->max_io.rbytes != MAX_IO && paccount->curr_frame_io.rbytes + size > paccount->max_io.rbytes) {
+                // change the size of the io to the max size
+                size = paccount->max_io.rbytes - paccount->curr_frame_io.rbytes;
+                //cprintf("changed size to %d", size);
+            }
+            //cprintf("\n");
+        }
+        
+        paccount->curr_frame_io.rios++;
+        paccount->curr_frame_io.rbytes += size;
+    }
+    release(&cgroup->lock_cgroup_io_tables);
+    return size;
+}
+
 void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, char is_write)
 {
     // This check is independent of the cgroup itself, so it's out of the while loop
@@ -938,13 +1054,15 @@ void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, c
         minor < 0 ||
         cgroup == 0 ||
         major >= NELEM(cgroup->io_stat_table) ||
-        minor >= NELEM(cgroup->io_stat_table[0]))
+        minor >= NELEM(cgroup->io_stat_table[0]) ||
+        size <= 0)
         return;
+    
     ioStat *pstat;
     // No need to lock cgtable.lock as a cgroup can't be deleted while containing processes/cgroups
     while (cgroup != 0)
     {
-        acquire(&cgroup->lock_io_stat_table);
+        acquire(&cgroup->lock_cgroup_io_tables);
         pstat = &(cgroup->io_stat_table[major][minor]);
         if (is_write)
         {
@@ -956,7 +1074,7 @@ void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, c
             pstat->rios++;
             pstat->rbytes += size;
         }
-        release(&cgroup->lock_io_stat_table);
+        release(&cgroup->lock_cgroup_io_tables);
         cgroup = cgroup->parent;
     }
 }
