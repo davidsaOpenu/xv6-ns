@@ -4,9 +4,10 @@
 #include "test.h"
 #include "param.h"
 #include "cgroupstests.h"
+#include "wstatus.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
-  { "cpu", "pid", "set", "mem", "io" };
+    {"cpu", "pid", "set", "mem", "io"};
 
 char suppress = 0;
 
@@ -398,6 +399,8 @@ TEST(test_opening_and_closing_cgroup_files)
     ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_STAT));
+    ASSERT_TRUE(open_close_file(TEST_1_IO_STAT));
+    ASSERT_TRUE(open_close_file(TEST_1_IO_MAX));
 }
 
 TEST(test_reading_cgroup_files)
@@ -1174,11 +1177,11 @@ TEST(test_io_stat_content_valid)
   ASSERT_FALSE(strcmp(read_file(TEST_1_IO_STAT, 0), "dev:tty\trbytes\twbytes\trios\twios\n\n"));
 }
 
-struct io_stat_line {
+typedef struct _io_stat_line {
   int major, minor, rbytes, wbytes, rios, wios;
-};
+} io_stat_line;
 
-void parse_io_stat_line(struct io_stat_line* stat, char *line) {
+void parse_io_stat_line(io_stat_line* stat, char *line) {
   static char tmp_bufer[64];
 
   int len = copy_until_char(tmp_bufer, line, ':');
@@ -1206,7 +1209,7 @@ void parse_io_stat_line(struct io_stat_line* stat, char *line) {
 }
 
 // return -1 on faiulr
-int parse_io_stat_file(struct io_stat_line table[], int maxTableSize) {
+int parse_io_stat_file(io_stat_line table[], int maxTableSize) {
   static char buf[256];
 
   char *fContect = read_file(TEST_1_IO_STAT, 0);
@@ -1238,10 +1241,9 @@ TEST(test_io_stat)
   static const int STATE_TABLE_MAX_SIZE = 5;
   static const int NUM_BYTES_TO_TEST = 10;
 
-  struct io_stat_line stat_table_before[STATE_TABLE_MAX_SIZE];
+  io_stat_line stat_table_before[STATE_TABLE_MAX_SIZE];
   int beforeTableSize = parse_io_stat_file(stat_table_before, STATE_TABLE_MAX_SIZE);
   ASSERT_TRUE(beforeTableSize != -1);
-
 
   int fd = open(TEMP_FILE, O_CREATE | O_RDWR);
 
@@ -1256,7 +1258,7 @@ TEST(test_io_stat)
   // write exactly NUM_BYTES_TO_TEST bytes to screen
   printf(1,"%s", toPrintStr);
 
-  // write and red NUM_BYTES_TO_READ_WRITE bytes to file
+  // write and read NUM_BYTES_TO_READ_WRITE bytes to file
 
   ASSERT_TRUE(write(fd, toPrintStr, NUM_BYTES_TO_TEST) == NUM_BYTES_TO_TEST);
 
@@ -1292,14 +1294,14 @@ TEST(test_io_stat)
   printf(1, "%s", toPrintStr);
 
   // parse io.stat into stat_table_after
-  struct io_stat_line stat_table_after[STATE_TABLE_MAX_SIZE];
+  io_stat_line stat_table_after[STATE_TABLE_MAX_SIZE];
   int afterTableSize = parse_io_stat_file(stat_table_after, STATE_TABLE_MAX_SIZE);
   ASSERT_TRUE(afterTableSize != -1);
 
-  struct io_stat_line *diskBefore = 0;
-  struct io_stat_line *diskAfter = 0;
-  struct io_stat_line *screenBefore = 0;
-  struct io_stat_line *screenAfter = 0;
+  io_stat_line *diskBefore = 0;
+  io_stat_line *diskAfter = 0;
+  io_stat_line *screenBefore = 0;
+  io_stat_line *screenAfter = 0;
 
   // find the disk and screen entries
   for (int i = 0; i < afterTableSize; i++) {
@@ -1346,6 +1348,59 @@ TEST(test_io_stat)
   }
 }
 
+TEST(test_io_max)
+{
+  static const int NUM_BYTES_TO_TEST = 10;
+
+  // prepare the string to print/write
+  char toPrintStr[NUM_BYTES_TO_TEST + 1];
+  memset(toPrintStr, 'A', NUM_BYTES_TO_TEST);
+  toPrintStr[NUM_BYTES_TO_TEST] = 0;
+
+  // Enable cgroup io controller
+  ASSERT_TRUE(write_file(TEST_1_CGROUP_SUBTREE_CONTROL, "+io"));
+
+  ASSERT_TRUE(write_file(TEST_1_IO_MAX, "1:0,wbps=2"));
+
+  int pid = fork();
+  // Child
+  if (pid == 0)
+  {
+    // Move the child process to the cgroup.
+    if (!move_proc(TEST_1_CGROUP_PROCS, getpid()))
+    {
+      printf(1, "\nFailed to move child proc to %s\n", TEST_1_CGROUP_PROCS);
+      exit(1);
+    }
+
+    int time_before = uptime();
+    printf(1, "%s", toPrintStr);
+    int child_duration = uptime() - time_before;
+    temp_write(child_duration);
+
+    exit(0);
+  }
+
+  // Wait for child to exit.
+  int wstatus;
+  wait(&wstatus);
+  ASSERT_FALSE(WEXITSTATUS(wstatus));
+
+  memset(toPrintStr, '\b', NUM_BYTES_TO_TEST);
+  printf(1, "%s", toPrintStr);
+
+  // read child duration from file
+  int child_duration = temp_read(0);
+  // Remove the temp file.
+  ASSERT_TRUE(temp_delete());
+
+  ASSERT_TRUE(child_duration > 300);
+
+  // Disable cgroup io controller - the child have to disable controller first
+  ASSERT_TRUE(write_file(TEST_1_CGROUP_SUBTREE_CONTROL, "-io"));
+
+}
+
 int main(int argc, char * argv[])
 {
     // comment out for debug messages
@@ -1364,6 +1419,7 @@ int main(int argc, char * argv[])
     run_test(test_move_failure);
     run_test(test_fork_failure);
     run_test(test_io_stat);
+    run_test(test_io_max);
     run_test(test_cpu_stat);
     run_test(test_pid_current);
     run_test(test_setting_cpu_id);
