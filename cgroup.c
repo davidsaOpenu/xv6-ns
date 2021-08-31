@@ -2,11 +2,13 @@
 #include "cgfs.h"
 #include "spinlock.h"
 #include "memlayout.h"
+#include "steady_clock.h"
 
 #define MAX_DES_DEF 64
 #define MAX_DEP_DEF 64
 #define MAX_CGROUP_FILE_NAME_LENGTH 64
-#define CGROUP_ACCOUNT_PERIOD_100MS (100 * 1000)
+#define CPU_ACCOUNT_PERIOD (100 * 1000) // 100ms
+#define IO_ACCOUNT_PERIOD (1000 * 1000) // 1sec
 
 struct
 {
@@ -270,7 +272,6 @@ void cgroup_initialize(struct cgroup * cgroup,
         cgroup->mem_controller_enabled = 1;
         cgroup->io_controller_avalible = 1;
         cgroup->io_controller_enabled = 1;
-        memset(cgroup->io_stat_table, 0, sizeof(cgroup->io_stat_table));
     }
     else {
         cgroup->parent = parent_cgroup;
@@ -345,11 +346,24 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->cpu_time = 0;
     cgroup->cpu_period_time = 0;
     cgroup->cpu_time_limit = ~0;
-    cgroup->cpu_account_period = CGROUP_ACCOUNT_PERIOD_100MS;
+    cgroup->cpu_account_period = CPU_ACCOUNT_PERIOD;
     cgroup->cpu_nr_periods = 0;
     cgroup->cpu_nr_throttled = 0;
     cgroup->cpu_throttled_usec = 0;
     cgroup->cpu_is_throttled_period = 0;
+    memset(cgroup->io_stat_table, 0, sizeof(cgroup->io_stat_table));
+    memset(cgroup->io_account_table, 0, sizeof(cgroup->io_account_table));
+    for (int i = 0; i < NELEM(cgroup->io_account_table); i++)
+    {
+        for (int j = 0; j < NELEM(cgroup->io_account_table[0]); j++)
+        {
+            cgroup->io_account_table[i][j].max_io.read.bytes = IO_ACCOUNT_NO_LIMIT;
+            cgroup->io_account_table[i][j].max_io.write.bytes = IO_ACCOUNT_NO_LIMIT;
+            cgroup->io_account_table[i][j].max_io.read.ios = IO_ACCOUNT_NO_LIMIT;
+            cgroup->io_account_table[i][j].max_io.write.ios = IO_ACCOUNT_NO_LIMIT;
+        }
+    }
+    cgroup->io_account_period = IO_ACCOUNT_PERIOD;
 }
 
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
@@ -931,32 +945,148 @@ int disable_mem_controller(struct cgroup* cgroup)
   return res;
 }
 
-void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, char is_write)
+void copy_ioStat(const ioStat *src, ioStat *dst) {
+    dst->read.bytes = src->read.bytes;
+    dst->write.bytes = src->write.bytes;
+    dst->read.ios = src->read.ios;
+    dst->write.ios = src->write.ios;
+}
+
+// delay the io by sleeping until the next frame
+static void delay_io(struct cgroup *cgroup, ioAccount *paccount) {
+    acquire(&tickslock);
+    while(steady_clock_now()/cgroup->io_account_period <= paccount->io_account_frame){
+        if(myproc()->killed){
+            release(&tickslock);
+            return;
+        }
+        sleep(&ticks, &tickslock);
+    }
+    release(&tickslock);
+}
+
+// Check how much io can be performed
+int unsafe_io_action_check(const ioAction *curr, const ioAction *pmax, int size)
 {
+    if ((pmax->ios != IO_ACCOUNT_NO_LIMIT && curr->ios >= pmax->ios) ||
+        (pmax->bytes != IO_ACCOUNT_NO_LIMIT && curr->bytes >= pmax->bytes))
+    {
+        // IO limit has already been reached
+        return 0;
+    }
+    int accumulated_bytes_needed = curr->bytes + size;
+    if (pmax->bytes != IO_ACCOUNT_NO_LIMIT && accumulated_bytes_needed > pmax->bytes)
+    {
+        return min(accumulated_bytes_needed - pmax->bytes, size);
+    }
+    return size;
+}
+
+void unsafe_cgroup_io_update_frame(struct cgroup *cgroup, ioAccount *paccount)
+{
+    unsigned int clock_now = steady_clock_now();
+    unsigned int current_frame = clock_now / cgroup->io_account_period;
+
+    if (current_frame > paccount->io_account_frame)
+    {
+        // New frame
+        if (current_frame == paccount->io_account_frame + 1)
+        {
+            copy_ioStat(&paccount->curr_frame_io, &paccount->last_frame_io);
+        } else {
+            // set last frame io values to 0
+            memset(&paccount->last_frame_io, 0, sizeof(ioStat));
+        }
+        // set curr frame io values to 0
+        memset(&paccount->curr_frame_io, 0, sizeof(ioStat));
+        paccount->io_account_frame = current_frame;
+    }
+}
+
+int cgroup_request_io(struct cgroup *cgroup, short major, short minor, uint size, char is_write) {
     // This check is independent of the cgroup itself, so it's out of the while loop
     if (major < 0 ||
         minor < 0 ||
         cgroup == 0 ||
         major >= NELEM(cgroup->io_stat_table) ||
         minor >= NELEM(cgroup->io_stat_table[0]))
+        return -1;
+
+    if (cgroup == cgroup_root() || (!cgroup->io_controller_enabled)) {
+        // IO controller disabled
+        return size;
+    }
+
+    acquire(&cgroup->lock_cgroup_io_tables);
+    ioAccount *paccount = &(cgroup->io_account_table[major][minor]);
+    
+    int allowed_io_size = 0;
+
+    unsafe_cgroup_io_update_frame(cgroup, paccount);
+
+    // Get pointers to the appropriate action
+    ioAction * pcurr;
+    ioAction * pmax;
+    if (is_write) {
+        pcurr = &(paccount->curr_frame_io.write);
+        pmax = &(paccount->max_io.write);
+    } else {
+        pcurr = &(paccount->curr_frame_io.read);
+        pmax = &(paccount->max_io.read);
+    }
+
+    // Get allowed io and delay if necessary
+    allowed_io_size = unsafe_io_action_check(pcurr, pmax, size);
+    while (allowed_io_size == 0) {
+        release(&cgroup->lock_cgroup_io_tables);
+        delay_io(cgroup, paccount);
+        acquire(&cgroup->lock_cgroup_io_tables);
+        unsafe_cgroup_io_update_frame(cgroup, paccount);
+        allowed_io_size = unsafe_io_action_check(pcurr, pmax, size);
+    }
+    release(&cgroup->lock_cgroup_io_tables);
+    return allowed_io_size;
+}
+
+
+void update_io_stat(struct cgroup *cgroup, short major, short minor, int size, char is_write)
+{   
+    // This check is independent of the cgroup itself, so it's out of the while loop
+    if (major < 0 ||
+        minor < 0 ||
+        cgroup == 0 ||
+        major >= NELEM(cgroup->io_stat_table) ||
+        minor >= NELEM(cgroup->io_stat_table[0]) ||
+        size <= 0)
         return;
+    
     ioStat *pstat;
+    ioAccount *paccount;
     // No need to lock cgtable.lock as a cgroup can't be deleted while containing processes/cgroups
     while (cgroup != 0)
     {
-        acquire(&cgroup->lock_io_stat_table);
+        acquire(&cgroup->lock_cgroup_io_tables);
         pstat = &(cgroup->io_stat_table[major][minor]);
+        paccount = &(cgroup->io_account_table[major][minor]);
         if (is_write)
         {
-            pstat->wios++;
-            pstat->wbytes += size;
+            pstat->write.ios++;
+            pstat->write.bytes += size;
+            if (cgroup != cgroup_root() && (cgroup->io_controller_enabled)) {
+                paccount->curr_frame_io.write.ios++;
+                paccount->curr_frame_io.write.bytes += size;
+            }
         }
         else
         {
-            pstat->rios++;
-            pstat->rbytes += size;
+            pstat->read.ios++;
+            pstat->read.bytes += size;
+            if (cgroup != cgroup_root() && (cgroup->io_controller_enabled)) {
+                paccount->curr_frame_io.read.ios++;
+                paccount->curr_frame_io.read.bytes += size;
+            }
         }
-        release(&cgroup->lock_io_stat_table);
+        release(&cgroup->lock_cgroup_io_tables);
         cgroup = cgroup->parent;
     }
 }
@@ -976,9 +1106,7 @@ int unsafe_enable_io_controller(struct cgroup* cgroup) {
     // Set io controller to enabled.
     cgroup->io_controller_enabled = 1;
     // Set io controller to avalible in all child cgroups.
-    for (int i = 1;
-      i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
-      i++)
+    for (int i = 1; i < NELEM(cgtable.cgroups); i++)
       if (cgtable.cgroups[i].parent == cgroup)
         cgtable.cgroups[i].io_controller_avalible = 1;
   }
@@ -998,9 +1126,7 @@ int unsafe_disable_io_controller(struct cgroup* cgroup) {
 
   // Check that all child cgroups have io controller disabled. (cannot
   // disable controller when children have it enabled)
-  for (int i = 1;
-    i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
-    i++)
+  for (int i = 1; i < NELEM(cgtable.cgroups); i++)
     if (cgtable.cgroups[i].parent == cgroup &&
       cgtable.cgroups[i].io_controller_enabled) {
       return -1;
@@ -1010,9 +1136,7 @@ int unsafe_disable_io_controller(struct cgroup* cgroup) {
   cgroup->io_controller_enabled = 0;
 
   // Set io controller to unavalible in all child cgroups.
-  for (int i = 1;
-    i < sizeof(cgtable.cgroups) / sizeof(cgtable.cgroups[0]);
-    i++)
+  for (int i = 1; i < NELEM(cgtable.cgroups); i++)
     if (cgtable.cgroups[i].parent == cgroup)
       cgtable.cgroups[i].io_controller_avalible = 0;
 
