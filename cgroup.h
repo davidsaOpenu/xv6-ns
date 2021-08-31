@@ -21,6 +21,15 @@ typedef struct _ioStat
     int wios;       // Number of write IO actions
 } ioStat;
 
+typedef struct _ioAccount
+{
+    unsigned int now;
+    unsigned int io_account_frame;
+    ioStat last_frame_io;
+    ioStat curr_frame_io;
+    ioStat max_io;
+} ioAccount;
+
 /**
  * Control group, contains up to NPROC processes.
  */
@@ -97,9 +106,14 @@ struct cgroup
     unsigned int cpu_nr_throttled;
     unsigned int cpu_throttled_usec;
     char cpu_is_throttled_period;
+
     ioStat io_stat_table[NDEV][MAX_TTY];
+    
+    ioAccount io_account_table[NDEV][MAX_TTY];
+    unsigned int io_account_period;
+
     /* This lock is enough as a cgroup can't be deleted while there are still processes/other cgroups in it */
-    struct spinlock lock_io_stat_table; /* Lock access to io_stat_table. */
+    struct spinlock lock_cgroup_io_tables; /* Lock access to io_stat_table and io_account_table */
 };
 
 /**
@@ -450,6 +464,15 @@ int enable_mem_controller(struct cgroup* cgroup);
  */
 int unsafe_disable_mem_controller(struct cgroup* cgroup);
 int disable_mem_controller(struct cgroup* cgroup);
+
+/**
+ * This function updates the io account of a cgroup.
+ * The funcion will dealy the io if the cgroup's io max is reached.
+ * Receives cgroup pointer parameter "cgroup", 2 shorts major and minor, int size and char is_write.
+ * Updates the io_stat_table in the cell corresponding to the major and minor numbers.
+ * In accordance to size and is_write, updates the number of reads/writes to the device and the total size (in bytes) of reads/writes.
+ */
+int cgroup_request_io(struct cgroup *cgroup, short major, short minor, int size, char is_write);
 
 /**
  * This function updates the io usage of a cgroup and all of its ancestors.

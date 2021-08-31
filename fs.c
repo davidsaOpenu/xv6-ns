@@ -468,18 +468,26 @@ readi(struct inode *ip, char *dst, uint off, uint n)
 {
   uint tot, m;
   struct buf *bp;
+  struct cgroup *cgroup = myproc()->cgroup;
 
   if(ip->type == T_DEV){
     if(ip->major < 0 || ip->major >= NDEV
     || ip->minor < 0 || ip->minor >= MAX_TTY 
     || !devsw[ip->major].read)
       return -1;
-    int n_read = devsw[ip->major].read(ip, dst, n);
-    if (n_read != -1) {
-      struct cgroup *cgroup = myproc()->cgroup;
-      update_io_stat(cgroup, ip->major,ip->minor, n_read, 0);
+
+    int curr_n = 0;
+    while (curr_n < n) {
+      //cprintf("reading curr_n %d\n", curr_n);
+      int can_read = cgroup_request_io(cgroup, ip->major,ip->minor, n-curr_n, 0);
+    
+      devsw[ip->major].read(ip, dst+curr_n, can_read);
+      curr_n += can_read;
+    
+      update_io_stat(cgroup, ip->major,ip->minor, can_read, 0);
     }
-    return n_read;
+    
+    return n;
   }
 
   if(off > ip->size || off + n < off)
@@ -487,15 +495,22 @@ readi(struct inode *ip, char *dst, uint off, uint n)
   if(off + n > ip->size)
     n = ip->size - off;
 
-  for(tot=0; tot<n; tot+=m, off+=m, dst+=m){
-    bp = bread(ip->dev, bmap(ip, off/BSIZE));
-    m = min(n - tot, BSIZE - off%BSIZE);
-    memmove(dst, bp->data + off%BSIZE, m);
-    brelse(bp);
+  int curr_n = 0;
+  while (curr_n < n) {
+    //cprintf("disk reading curr_n %d\n", curr_n);
+    int can_read = cgroup_request_io(cgroup, ip->major,ip->minor, n-curr_n, 0);
+
+    for(tot=curr_n; tot<curr_n+can_read; tot+=m, off+=m, dst+=m){
+      bp = bread(ip->dev, bmap(ip, off/BSIZE));
+      m = min(curr_n + can_read - tot, BSIZE - off%BSIZE);
+      memmove(dst, bp->data + off%BSIZE, m);
+      brelse(bp);
+    }
+    curr_n += can_read;
+
+    update_io_stat(cgroup, ip->major,ip->minor, can_read, 0);
   }
 
-  struct cgroup *cgroup = myproc()->cgroup;
-  update_io_stat(cgroup, ip->major,ip->minor, n, 0);
 
   return n;
 }
@@ -508,18 +523,25 @@ writei(struct inode *ip, char *src, uint off, uint n)
 {
   uint tot, m;
   struct buf *bp;
+  struct cgroup *cgroup = myproc()->cgroup;
 
   if(ip->type == T_DEV){
     if(ip->major < 0 || ip->major >= NDEV
     || ip->minor < 0 || ip->minor >= MAX_TTY 
     || !devsw[ip->major].write)
       return -1;
-    int n_write = devsw[ip->major].write(ip, src, n);
-    if (n_write != -1) {
-      struct cgroup *cgroup = myproc()->cgroup;
-      update_io_stat(cgroup, ip->major,ip->minor, n_write, 1);  
+
+    int curr_n = 0;
+    while (curr_n < n) {
+      int can_write = cgroup_request_io(cgroup, ip->major,ip->minor, n-curr_n, 1);
+      //cprintf("writing curr_n %d can_write %d\n", curr_n, can_write);
+    
+      devsw[ip->major].write(ip, src+curr_n, can_write);
+      curr_n += can_write;
+    
+      update_io_stat(cgroup, ip->major,ip->minor, can_write, 1);
     }
-    return n_write;
+    return n;
   }
 
   if(off > ip->size || off + n < off)
@@ -527,16 +549,23 @@ writei(struct inode *ip, char *src, uint off, uint n)
   if(off + n > MAXFILE*BSIZE)
     return -1;
 
-  for(tot=0; tot<n; tot+=m, off+=m, src+=m){
-    bp = bread(ip->dev, bmap(ip, off/BSIZE));
-    m = min(n - tot, BSIZE - off%BSIZE);
-    memmove(bp->data + off%BSIZE, src, m);
-    log_write(bp);
-    brelse(bp);
-  }
-  struct cgroup *cgroup = myproc()->cgroup;
-  update_io_stat(cgroup, ip->major,ip->minor, n, 1);
+  int curr_n = 0;
+  while (curr_n < n) {
+    int can_write = cgroup_request_io(cgroup, ip->major,ip->minor, n-curr_n, 1);
+    //cprintf("disk writing curr_n %d, n: %d, off: %d, can_write: %d\n", curr_n, n, off, can_write);
 
+    for(tot=curr_n; tot<curr_n+can_write; tot+=m, off+=m, src+=m){
+      bp = bread(ip->dev, bmap(ip, off/BSIZE));
+      m = min(curr_n + can_write - tot, BSIZE - off%BSIZE);
+      memmove(bp->data + off%BSIZE, src, m);
+      log_write(bp);
+      brelse(bp);
+    }
+    curr_n += can_write;
+
+    update_io_stat(cgroup, ip->major,ip->minor, can_write, 1);
+  }
+  
   if(n > 0 && off > ip->size){
     ip->size = off;
     iupdate(ip);
