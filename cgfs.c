@@ -681,7 +681,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             for (int dev_i = 0; dev_i < NDEV; dev_i++) {
                 for (int tty_i = 0; tty_i < MAX_TTY; tty_i++) {
                     pstat = &(f->io.stat.io_stat_table[dev_i][tty_i]);
-                    if (pstat->rbytes != 0 || pstat->rios != 0 || pstat->wbytes != 0 || pstat->wios != 0) {
+                    if (pstat->read.bytes != 0 || pstat->read.ios != 0 || pstat->write.bytes != 0 || pstat->write.ios != 0) {
                         num_str_length = itoa(tmp_num_buff, dev_i);
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, ":", strlen(":"));
@@ -690,19 +690,19 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
 
-                        num_str_length = itoa(tmp_num_buff, pstat->rbytes);
+                        num_str_length = itoa(tmp_num_buff, pstat->read.bytes);
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
 
-                        num_str_length = itoa(tmp_num_buff, pstat->wbytes);
+                        num_str_length = itoa(tmp_num_buff, pstat->write.bytes);
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
 
-                        num_str_length = itoa(tmp_num_buff, pstat->rios);
+                        num_str_length = itoa(tmp_num_buff, pstat->read.ios);
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, "\t", strlen("\t"));
 
-                        num_str_length = itoa(tmp_num_buff, pstat->wios);
+                        num_str_length = itoa(tmp_num_buff, pstat->write.ios);
                         copy_and_move_buffer(&stattextp, tmp_num_buff, num_str_length);
                         copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
                     }
