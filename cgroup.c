@@ -163,12 +163,14 @@ struct cgroup * cgroup_create(char * path)
     for (int i = 0; parent_cgp_temp != 0; i++) {
         if (parent_cgp_temp->max_depth_value <= i) {
             release(&cgtable.lock);
-            panic("cgroup_create: max depth allowed reached");
+            cprintf("cgroup_create: max depth allowed reached");
+            return 0;
         }
         if (parent_cgp_temp->max_descendants_value == parent_cgp_temp->nr_descendants) {
             release(&cgtable.lock);
-            panic("cgroup_create: max number of descendants allowed "
+            cprintf("cgroup_create: max number of descendants allowed "
                   "reached");
+            return 0;
         }
         parent_cgp_temp = parent_cgp_temp->parent;
     }
@@ -187,7 +189,8 @@ struct cgroup * cgroup_create(char * path)
     /*Check if we have found an avalible slot.*/
     if (new_cgp == 0) {
         release(&cgtable.lock);
-        panic("cgroup_create: no avalible cgroup slots");
+        cprintf("cgroup_create: no avalible cgroup slots");
+        return 0;
     }
 
     /*Initialize the new cgroup.*/

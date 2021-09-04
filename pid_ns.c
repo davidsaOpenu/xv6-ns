@@ -52,7 +52,8 @@ struct pid_ns* pid_ns_alloc() {
     }
   }
   release(&pidnstable.lock);
-  panic("out of pid_ns objects");
+  cprintf("out of pid_ns objects");
+  return 0;
 }
 
 void pid_ns_init_ns(struct pid_ns* pid_ns, struct pid_ns* parent) {
@@ -67,6 +68,8 @@ struct pid_ns* pid_ns_dup(struct pid_ns* pid_ns) {
 
 struct pid_ns* pid_ns_new(struct pid_ns* parent) {
   struct pid_ns * pid_ns = pid_ns_alloc();
+  if (pid_ns == 0)
+    return 0;
   pid_ns_init_ns(pid_ns, parent);
   return pid_ns;
 }

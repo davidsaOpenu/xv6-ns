@@ -31,12 +31,22 @@ argfd(int n, int *pfd, struct file **pf)
   return 0;
 }
 
+/*
+Return Value:
+  On success, the PID of the child process is returned in the parent, and
+  0  is returned in the child.  On failure, -1 is returned in the parent,
+  no child process is created.
+*/
 int
 sys_fork(void)
 {
   return fork();
 }
 
+/*
+Return Value:
+  On success, no return Value. returns -1 when the status argument is missing
+*/
 int
 sys_exit()
 {
@@ -48,6 +58,11 @@ sys_exit()
   return 0;  // not reached
 }
 
+/*
+Return Value:
+  On success, return pid of the child process that exited.
+  Return -1 if this process has no children.
+*/
 int
 sys_wait(void)
 {
@@ -58,6 +73,11 @@ sys_wait(void)
   return wait(wstatus);
 }
 
+/*
+Return Value:
+  On success, returns 0.
+  returns -1 when no process with the requested pid was found.
+*/
 int
 sys_kill(void)
 {
@@ -68,12 +88,22 @@ sys_kill(void)
   return kill(pid);
 }
 
+/*
+Returns the pid of the current process.
+*/
 int
 sys_getpid(void)
 {
   return myproc()->ns_pid;
 }
 
+/*
+Return Value:
+  On success, returns the previous program break. If  the  break
+  was  increased, then this value is a pointer to the start of the newly
+  allocated memory.
+  Returns -1 on failure.
+*/
 int
 sys_sbrk(void)
 {
@@ -88,6 +118,10 @@ sys_sbrk(void)
   return addr;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_sleep(void)
 {
@@ -109,6 +143,10 @@ sys_sleep(void)
   return 0;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_usleep(void)
 {
@@ -129,6 +167,10 @@ sys_usleep(void)
   return 0;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_ioctl(void)
 {
@@ -234,11 +276,19 @@ sys_uptime(void)
   return xticks;
 }
 
+/*
+Return Value:
+  Returns the parent pid.
+*/
 int
 sys_getppid(void){
     return myproc()->parent->ns_pid;
 }
 
+/*
+Return Value:
+  Returns the id of the cpu.
+*/
 int
 sys_getcpu(void) {
     cli();
@@ -247,6 +297,10 @@ sys_getcpu(void) {
     return id;
 }
 
+/*
+Return Value:
+  Returns the size of process memory in bytes.
+*/
 // This is our solution for what can be found at the /proc
 // virtual filesystem in linux.
 int
