@@ -18,6 +18,10 @@
 #include "cgroup.h"
 
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_mount(void)
 {
@@ -114,6 +118,11 @@ sys_mount(void)
 
 }
 
+
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_umount(void)
 {
@@ -164,6 +173,10 @@ sys_umount(void)
     return delete_cgroup_res;
 }
 
+/*
+Return Value:
+  always returns 0.
+*/
 int
 sys_printmounts(void)
 {
@@ -171,6 +184,10 @@ sys_printmounts(void)
     return 0;
 }
 
+/*
+Return Value:
+  always returns 0.
+*/
 int
 sys_printdevices(void)
 {

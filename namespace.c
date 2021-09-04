@@ -61,7 +61,8 @@ allocnsproxyinternal(void)
         }
     }
 
-    panic("out of nsproxy objects");
+    // out of nsproxy objects
+    return (void*)0;
 }
 
 struct nsproxy*
@@ -69,6 +70,8 @@ emptynsproxy(void)
 {
     acquire(&namespacetable.lock);
     struct nsproxy* result = allocnsproxyinternal();
+    if (result == (void*)0)
+        return (void*)0;
     result->mount_ns = newmount_ns();
     result->pid_ns = pid_ns_new(0);
     release(&namespacetable.lock);
@@ -80,6 +83,8 @@ struct nsproxy*
 namespace_replace_pid_ns(struct nsproxy* oldns, struct pid_ns* pid_ns)
 {
     struct nsproxy* nsproxy = allocnsproxyinternal();
+    if (nsproxy == (void*)0)
+        return (void*)0;
     nsproxy->mount_ns = mount_nsdup(oldns->mount_ns);
     nsproxy->pid_ns = pid_ns_dup(pid_ns);
     return nsproxy;
@@ -91,7 +96,10 @@ unshare(int nstype)
     acquire(&namespacetable.lock);
     if (myproc()->nsproxy->ref > 1) {
         struct nsproxy *oldns = myproc()->nsproxy;
-        myproc()->nsproxy = allocnsproxyinternal();
+        struct nsproxy *newns = allocnsproxyinternal();
+        if (newns == (void*)0)
+            return -1;
+        myproc()->nsproxy = newns;
         myproc()->nsproxy->mount_ns = mount_nsdup(oldns->mount_ns);
         myproc()->nsproxy->pid_ns = pid_ns_dup(oldns->pid_ns);
         oldns->ref--;
@@ -101,7 +109,10 @@ unshare(int nstype)
         case MOUNT_NS:
             {
                 struct mount_ns* previous = myproc()->nsproxy->mount_ns;
-                myproc()->nsproxy->mount_ns = copymount_ns();
+                struct mount_ns* new = copymount_ns();
+                if (new == (void*)0)
+                    return -1;
+                myproc()->nsproxy->mount_ns = new;
                 mount_nsput(previous);
                 return 0;
             }
@@ -111,7 +122,11 @@ unshare(int nstype)
                 return -1;
               }
 
-              myproc()->child_pid_ns = pid_ns_new(myproc()->nsproxy->pid_ns);
+              struct pid_ns* pid_ns = pid_ns_new(myproc()->nsproxy->pid_ns);
+              if (pid_ns == 0)
+                return -1;
+
+              myproc()->child_pid_ns = pid_ns;
               return 0;
             }
         default:

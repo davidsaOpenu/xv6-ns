@@ -53,6 +53,10 @@ fdalloc(struct file *f)
   return -1;
 }
 
+/*
+Return Value:
+  On success, returns the new file descriptor. Returns -1 on failure.
+*/
 int
 sys_dup(void)
 {
@@ -67,6 +71,11 @@ sys_dup(void)
   return fd;
 }
 
+/*
+Return Value:
+  On success, returns the number of read bytes.
+  Returns -1 on failure.
+*/
 int
 sys_read(void)
 {
@@ -88,6 +97,10 @@ sys_read(void)
     return fileread(f, p, n);
 }
 
+/*
+Return Value:
+  On success, the number of bytes written is returned. On error, -1 is returned
+*/
 int
 sys_write(void)
 {
@@ -104,6 +117,10 @@ sys_write(void)
     return filewrite(f, p, n);
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_close(void)
 {
@@ -120,6 +137,10 @@ sys_close(void)
   return 0;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_fstat(void)
 {
@@ -135,6 +156,10 @@ sys_fstat(void)
   return filestat(f, st);
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 // Create the path new as a link to the same inode as old.
 int
 sys_link(void)
@@ -201,6 +226,10 @@ isdirempty(struct inode *dp)
   return 1;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 //PAGEBREAK!
 int
 sys_unlink(void)
@@ -330,6 +359,10 @@ create(char *path, short type, short major, short minor)
   return res;
 }
 
+/*
+Return Value:
+  On success, returns the file descriptor. Returns -1 on failure.
+*/
 int
 sys_open(void)
 {
@@ -392,6 +425,10 @@ sys_open(void)
   return fd;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_mkdir(void)
 {
@@ -422,6 +459,10 @@ sys_mkdir(void)
   return 0;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_mknod(void)
 {
@@ -442,6 +483,10 @@ sys_mknod(void)
   return 0;
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_chdir(void)
 {
@@ -483,6 +528,10 @@ sys_chdir(void)
   return 0;
 }
 
+/*
+Return Value:
+  When exec succeeds, it does not return to the calling program. returns -1 on error.
+*/
 int
 sys_exec(void)
 {
@@ -509,6 +558,10 @@ sys_exec(void)
   return exec(path, argv);
 }
 
+/*
+Return Value:
+  On success, returns 0. Returns -1 on failure.
+*/
 int
 sys_pipe(void)
 {

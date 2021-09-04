@@ -244,6 +244,7 @@ fork(void)
   int i, pid;
   struct proc *np;
   struct proc *curproc = myproc();
+  struct nsproxy *nsproxy; 
 
   // Check if the current process has a child pid namespace and if its pid1 was killed.
   if (curproc->child_pid_ns && curproc->child_pid_ns->pid1_ns_killed) {
@@ -290,7 +291,12 @@ fork(void)
 
   struct pid_ns* cur = curproc->child_pid_ns;
   if (cur) {
-    np->nsproxy = namespace_replace_pid_ns(curproc->nsproxy, cur);
+      nsproxy = namespace_replace_pid_ns(curproc->nsproxy, cur);
+      if (nsproxy == (void*)0) {
+        cnprintf("out of nsproxy objects");
+        return -1;
+      }
+      np->nsproxy = nsproxy;
   } else {
     np->nsproxy = namespacedup(curproc->nsproxy);
     cur = np->nsproxy->pid_ns;
