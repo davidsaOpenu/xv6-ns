@@ -49,6 +49,8 @@ void init_objects_cache() {
     hits = 0;
     misses = 0;
 
+    initsleeplock(&cachelock, "cachelock");
+
     // the following, was copied from `bio.c` with minor changes.
     struct obj_cache_entry* e;
     obj_cache.head.prev = &obj_cache.head;

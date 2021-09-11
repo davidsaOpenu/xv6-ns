@@ -1,6 +1,5 @@
 #include "obj_log.h"
 
-#include "string.h"
 #include "sleeplock.h"
 
 #include "obj_cache.h"

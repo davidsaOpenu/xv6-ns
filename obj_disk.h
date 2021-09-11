@@ -84,6 +84,8 @@
 // In the future, this can be set the size of SHA256 digest.
 #define OBJECT_ID_LENGTH MAX_OBJECT_NAME_LENGTH
 
+char memory_storage[STORAGE_DEVICE_SIZE];
+
 typedef struct {
     /*
      * If the object's name is exactly `MAX_OBJECT_NAME_LENGTH` we don't store

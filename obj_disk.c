@@ -26,9 +26,6 @@ struct sleeplock disklock;
 
 struct objsuperblock super_block;
 
-
-char memory_storage[STORAGE_DEVICE_SIZE];
-
 uint get_objects_table_index(const char* name, uint* output) {
     cprintf("In get_objects_table_index\n");
 
@@ -198,6 +195,8 @@ void init_obj_fs() {
     struct vfs_superblock sb;
     // with real device, we would read the block form the disk.
 
+    initsleeplock(&disklock, "disklock");
+
     // Super block initializing
     super_block.storage_device_size = STORAGE_DEVICE_SIZE;
     super_block.objects_table_offset = sizeof(struct objsuperblock);
@@ -208,7 +207,7 @@ void init_obj_fs() {
     super_block.occupied_objects = 2;
     sb.ninodes = 200; // TODO: A random number, to check if works well
     super_block.vfs_sb = sb;
-
+    cprintf("in init_obj_fs, storage_device_size: %d\n", super_block.storage_device_size);
     // Inode initializing
 
 

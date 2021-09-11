@@ -47,7 +47,7 @@ objdevinit(uint dev) {
     cprintf("in objdevinit\n");
     if (dev < NOBJDEVS) {
         cprintf("in if in objdevinit\n");
-//           memcpy(&dev_holder.objdev[dev].sb, memory_storage, sizeof(dev_holder.objdev[dev].sb));
+           memcpy(&dev_holder.objdev[dev].sb, memory_storage, sizeof(dev_holder.objdev[dev].sb));
     }
 }
 

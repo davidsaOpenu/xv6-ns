@@ -5,10 +5,9 @@
 #include "mmu.h"
 #include "proc.h"
 #include "x86.h"
-// #include "obj_disk.h"
+ #include "obj_disk.h"
 #include "vfs_file.h"
-//#include "obj_cache.h"
-//#include "obj_log.h"
+#include "obj_cache.h"
 
 static void objfsinit(void);
 
@@ -56,14 +55,13 @@ main(void)
   namespaceinit(); // initialize namespaces
   mpmain();        // finish this processor's setup
 }
+struct sleeplock loglock;
 
 static void
 objfsinit(void) {
     cprintf("in objfsinit\n");
-//    init_obj_fs();
-//    init_objects_cache();
-//    init_objfs_log();
-    //   finish_log_transactions();
+    init_obj_fs();
+    init_objects_cache();
 }
 
 // Other CPUs jump here from entryother.S.

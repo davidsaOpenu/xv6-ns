@@ -118,7 +118,7 @@ CFLAGS += -DXV6_WAIT_FOR_DEBUGGER=0
 endif
 
 OFLAGS = -O2
-CFLAGS += -DSTORAGE_DEVICE_SIZE=50 -DOBJECTS_TABLE_SIZE=200
+CFLAGS += -DSTORAGE_DEVICE_SIZE=327680 -DOBJECTS_TABLE_SIZE=200
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 ############################
 
@@ -182,7 +182,7 @@ vectors.S: vectors.pl
 ULIB = ulib.o usys.o printf.o umalloc.o tty.o
 
 _%: %.o $(ULIB)
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
+	$(LD) $(LDFLAGS) -T userspace.ld -N -e main -Ttext 0 -o $@ $^
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
