@@ -376,7 +376,9 @@ obj_readi(struct vfs_inode *vfs_ip, char *dst, uint off, uint n) {
     if(off + n > size)
         n = size - off;
 
-    char data[size];
+    //    TODO: need to read/write file in chunks, because there is no space in the stack for MAX_INODE_OBJECT_DATA
+//    char data[size];
+    char data[1000];
     if (cache_get_object(ip->data_object_name, data) != NO_ERR) {
         panic("readi failed reading object content");
     }
@@ -414,7 +416,10 @@ obj_writei(struct vfs_inode *vfs_ip, char *src, uint off, uint n) {
     if (size < off + n) {
         size = off + n;
     }
-    char data[size];
+
+//    TODO: need to read/write file in chunks, because there is no space in the stack for MAX_INODE_OBJECT_DATA
+//    char data[size];
+    char data[1000];
     if (cache_get_object(ip->data_object_name, data) != NO_ERR) {
         panic("obj_writei failed reading object data");
     }

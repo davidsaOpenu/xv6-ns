@@ -129,7 +129,7 @@ void bubble_sort(uint* arr, uint n) {
 static void* find_empty_space(uint size) {
     cprintf("In find_empty_space\n");
 
-    uint entries_indices[super_block.occupied_objects];
+    uint entries_indices[OBJECTS_TABLE_SIZE];
     uint* current = entries_indices;
     for (uint i = 0; i < max_objects(); ++i) {
         if (objects_table_entry(i)->occupied) {
@@ -190,8 +190,6 @@ static void initialize_objects_table_entry() {
 // the disk lock should be held by the caller
 static void write_super_block() {
     cprintf("In write_super_block\n");
-                              panic("Ddddddsdassssssssssssddddddddddddddddddddd");
-
     memmove(memory_storage, &super_block, sizeof(super_block));
 }
 
