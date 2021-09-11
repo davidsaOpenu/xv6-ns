@@ -44,9 +44,7 @@ struct {
   struct obj_cache_entry head;
 } obj_cache;
 
-void _check(char * val) {
-    //
-}
+
 void init_objects_cache() {
     hits = 0;
     misses = 0;
