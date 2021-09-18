@@ -26,8 +26,19 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-//static struct vfs_inode *
-//        iget(uint dev, uint inum);
+int             dirlink(struct vfs_inode*, char*, uint);
+struct vfs_inode*   dirlookup(struct vfs_inode*, char*, uint*);
+struct vfs_inode*   idup(struct vfs_inode*);
+void            ilock(struct vfs_inode*);
+void            iput(struct vfs_inode*);
+void            iunlock(struct vfs_inode*);
+void            iunlockput(struct vfs_inode*);
+void            iupdate(struct vfs_inode*);
+int             readi(struct vfs_inode*, char*, uint, uint);
+void            stati(struct vfs_inode*, struct stat*);
+int             writei(struct vfs_inode*, char*, uint, uint);
+int             isdirempty (struct vfs_inode*);
+
 static void            itrunc (struct vfs_inode *ip);
 
 // Read the super block.
@@ -62,7 +73,6 @@ balloc(uint dev)
   int b, bi, m;
   struct buf *bp;
 
-    //cprintf(" in balloc\n");
 
     bp = 0;
     struct vfs_superblock *vfs_sb = getsuperblock(dev);
@@ -97,7 +107,6 @@ bfree(int dev, uint b)
   struct buf *bp;
   int bi, m;
 
-    //cprintf(" in bfree\n");
 
     struct vfs_superblock *vfs_sb = getsuperblock(dev);
     struct superblock * sb = container_of(vfs_sb, struct superblock, vfs_sb);
@@ -203,7 +212,6 @@ void fsinit(uint dev) {
     struct vfs_superblock *vfs_sb = getsuperblock(dev);
     struct superblock * sb = container_of(vfs_sb, struct superblock, vfs_sb);
 
-    //cprintf(" in fsinit\n");
 
     readsb(dev, sb);
     cprintf("sb: size %d nblocks %d ninodes %d nlog %d logstart %d\
@@ -250,8 +258,6 @@ iupdate(struct vfs_inode *vfs_ip) {
     struct dinode *dip;
     struct inode * ip = container_of(vfs_ip, struct inode, vfs_inode);
 
-    //cprintf(" in iupdate\n");
-
     struct vfs_superblock *vfs_sb = getsuperblock(ip->vfs_inode.dev);
     struct superblock * sb = container_of(vfs_sb, struct superblock, vfs_sb);
 
@@ -274,9 +280,7 @@ struct vfs_inode *
 iget(uint dev, uint inum) {
     struct inode *ip, *empty;
 
-    //cprintf("in before lock iget begin\n");
     acquire(&icache.lock);
-    //cprintf("in after lock iget begin\n");
 
     // Is the inode already cached?
     empty = 0;
@@ -294,7 +298,7 @@ iget(uint dev, uint inum) {
         if (empty == 0 && ip->vfs_inode.ref == 0)    // Remember empty slot.
             empty = ip;
     }
-    if(empty == 0 && ip->ref == 0)    // Remember empty slot.
+    if(empty == 0 && ip->vfs_inode.ref == 0)    // Remember empty slot.
       empty = ip;
   }
 
@@ -321,6 +325,7 @@ iget(uint dev, uint inum) {
     ip->vfs_inode.i_op.stati = &stati;
     ip->vfs_inode.i_op.writei = &writei;
     ip->vfs_inode.i_op.iunlockput = &iunlockput;
+    ip->vfs_inode.i_op.isdirempty = &isdirempty;
 
     //cprintf("in iget end before release\n");
 
@@ -484,7 +489,6 @@ itrunc(struct vfs_inode *vfs_ip) {
             ip->addrs[i] = 0;
         }
     }
-  }
 
     if (ip->addrs[NDIRECT]) {
         bp = bread(ip->vfs_inode.dev, ip->addrs[NDIRECT]);
@@ -588,10 +592,22 @@ writei(struct vfs_inode *vfs_ip, char *src, uint off, uint n) {
 //PAGEBREAK!
 // Directories
 
+// Is the directory dp empty except for "." and ".." ?
 int
-namecmp(const char *s, const char *t)
+isdirempty(struct vfs_inode *vfs_dp)
 {
-  return strncmp(s, t, DIRSIZ);
+  int off;
+  struct dirent de;
+  struct inode * dp = container_of(vfs_dp, struct inode, vfs_inode);
+
+  for(off=2*sizeof(de); off<dp->size; off+=sizeof(de)) {
+    if(dp->vfs_inode.i_op.readi(&dp->vfs_inode, (char*)&de, off, sizeof(de)) != sizeof(de))
+      panic("isdirempty: readi");
+    if(de.inum != 0)
+      return 0;
+  }
+
+  return 1;
 }
 
 // Look for a directory entry in a directory.
@@ -602,8 +618,6 @@ dirlookup(struct vfs_inode *vfs_dp, char *name, uint *poff) {
     struct dirent de;
     struct inode * dp = container_of(vfs_dp, struct inode, vfs_inode);
 
-    //cprintf(" in dirlookup\n");
-
     if (dp->vfs_inode.type != T_DIR)
         panic("dirlookup not DIR");
 
@@ -612,7 +626,7 @@ dirlookup(struct vfs_inode *vfs_dp, char *name, uint *poff) {
             panic("dirlookup read");
         if (de.inum == 0)
             continue;
-        if (namecmp(name, de.name) == 0) {
+        if (vfs_namecmp(name, de.name) == 0) {
             // entry matches path element
             if (poff)
                 *poff = off;
@@ -658,45 +672,6 @@ dirlink(struct vfs_inode *vfs_dp, char *name, uint inum) {
 
 //PAGEBREAK!
 // Paths
-
-// Copy the next path element from path into name.
-// Return a pointer to the element following the copied one.
-// The returned path has no leading slashes,
-// so the caller can check *path=='\0' to see if the name is the last one.
-// If no name to remove, return 0.
-//
-// Examples:
-//   skipelem("a/bb/c", name) = "bb/c", setting name = "a"
-//   skipelem("///a//bb", name) = "bb", setting name = "a"
-//   skipelem("a", name) = "", setting name = "a"
-//   skipelem("", name) = skipelem("////", name) = 0
-//
-static char *
-skipelem(char *path, char *name) {
-    char *s;
-    int len;
-
-    //cprintf(" in skipelem\n");
-
-    while (*path == '/')
-        path++;
-    if (*path == 0)
-        return 0;
-    s = path;
-    while (*path != '/' && *path != 0)
-        path++;
-    len = path - s;
-    if (len >= DIRSIZ)
-        memmove(name, s, DIRSIZ);
-    else {
-        memmove(name, s, len);
-        name[len] = 0;
-    }
-    while (*path == '/')
-        path++;
-    return path;
-}
-
 struct vfs_inode *
 initprocessroot(struct mount **mnt) {
     //cprintf("before getinitialrootmount\n");
@@ -710,113 +685,113 @@ initprocessroot(struct mount **mnt) {
 // If parent != 0, return the inode for the parent and copy the final
 // path element into name, which must have room for DIRSIZ bytes.
 // Must be called inside a transaction since it calls iput().
-static struct vfs_inode *
-namex(char *path, int nameiparent, char *name, struct mount **mnt) {
-    struct vfs_inode *ip, *next;
-    struct mount *curmount;
-    struct mount *nextmount;
-  uint mntinum;
-
-    //cprintf(" in namex\n");
-
-    if (*path == '/') {
-        curmount = mntdup(getrootmount());
-        ip = iget(ROOTDEV, ROOTINO);
-    } else {
-        curmount = mntdup(myproc()->cwdmount);
-        ip = idup(myproc()->cwd);
-    }
-
-    while ((path = skipelem(path, name)) != 0) {
-        ilock(ip);
-        if (ip->type != T_DIR) {
-            iunlockput(ip);
-            mntput(curmount);
-            return 0;
-        }
-        if (nameiparent && *path == '\0') {
-            // Stop one level early.
-            iunlock(ip);
-            *mnt = curmount;
-            return ip;
-        }
-
-        if ((next = dirlookup(ip, name, 0)) == 0) {
-            iunlockput(ip);
-            mntput(curmount);
-            return 0;
-        }
-
-        mntinum=ip->inum;
-        iunlockput(ip);
-
-	if ((!namecmp(name, "..")) && 
-	(curmount->dev != ROOTDEV) && 
-	(mntinum == ROOTINO)) {
-	nextmount = mntdup(curmount->parent);
-	mntinum = dirlookup(curmount->mountpoint, "..", 0)->inum;
-	} else {
-	nextmount = mntlookup(next, curmount);
-	mntinum = ROOTINO;
-	}
-
-	if (nextmount) {
-	    mntput(curmount);
-	    curmount = nextmount;
-
-	    iput(next);
-	    next = iget(curmount->dev, mntinum);
-	}
-
-        ip = next;
-    }
-  if(nameiparent){
-    iput(ip);
-    mntput(curmount);
-    return 0;
-  }
-
-  *mnt = curmount;
-  return ip;
-}
-
-struct vfs_inode *
-namei(char *path) {
-    char name[DIRSIZ];
-    struct mount *mnt;
-    struct vfs_inode *ip = namex(path, 0, name, &mnt);
-
-    //cprintf(" in namei\n");
-
-    if (ip != 0) {
-        mntput(mnt);
-    }
-
-    return ip;
-}
-
-struct vfs_inode *
-nameiparent(char *path, char *name) {
-    struct mount *mnt;
-    struct vfs_inode *ip = namex(path, 1, name, &mnt);
-    if (ip != 0) {
-        mntput(mnt);
-    }
-
-    return ip;
-}
-
-struct vfs_inode *
-nameiparentmount(char *path, char *name, struct mount **mnt) {
-    //cprintf(" in nameiparentmount\n");
-
-    return namex(path, 1, name, mnt);
-}
-
-struct vfs_inode *
-nameimount(char *path, struct mount **mnt) {
-    //cprintf(" in nameimount\n");
-
-    char name[DIRSIZ];
-    return namex(path, 0, name, mnt);
-}
+//static struct vfs_inode *
+//namex(char *path, int nameiparent, char *name, struct mount **mnt) {
+//    struct vfs_inode *ip, *next;
+//    struct mount *curmount;
+//    struct mount *nextmount;
+//  uint mntinum;
+//
+//    //cprintf(" in namex\n");
+//
+//    if (*path == '/') {
+//        curmount = mntdup(getrootmount());
+//        ip = iget(ROOTDEV, ROOTINO);
+//    } else {
+//        curmount = mntdup(myproc()->cwdmount);
+//        ip = idup(myproc()->cwd);
+//    }
+//
+//    while ((path = skipelem(path, name)) != 0) {
+//        ilock(ip);
+//        if (ip->type != T_DIR) {
+//            iunlockput(ip);
+//            mntput(curmount);
+//            return 0;
+//        }
+//        if (nameiparent && *path == '\0') {
+//            // Stop one level early.
+//            iunlock(ip);
+//            *mnt = curmount;
+//            return ip;
+//        }
+//
+//        if ((next = dirlookup(ip, name, 0)) == 0) {
+//            iunlockput(ip);
+//            mntput(curmount);
+//            return 0;
+//        }
+//
+//        mntinum=ip->inum;
+//        iunlockput(ip);
+//
+//	if ((!namecmp(name, "..")) &&
+//	(curmount->dev != ROOTDEV) &&
+//	(mntinum == ROOTINO)) {
+//	nextmount = mntdup(curmount->parent);
+//	mntinum = dirlookup(curmount->mountpoint, "..", 0)->inum;
+//	} else {
+//	nextmount = mntlookup(next, curmount);
+//	mntinum = ROOTINO;
+//	}
+//
+//	if (nextmount) {
+//	    mntput(curmount);
+//	    curmount = nextmount;
+//
+//	    iput(next);
+//	    next = iget(curmount->dev, mntinum);
+//	}
+//
+//        ip = next;
+//    }
+//  if(nameiparent){
+//    iput(ip);
+//    mntput(curmount);
+//    return 0;
+//  }
+//
+//  *mnt = curmount;
+//  return ip;
+//}
+//
+//struct vfs_inode *
+//namei(char *path) {
+//    char name[DIRSIZ];
+//    struct mount *mnt;
+//    struct vfs_inode *ip = namex(path, 0, name, &mnt);
+//
+//    //cprintf(" in namei\n");
+//
+//    if (ip != 0) {
+//        mntput(mnt);
+//    }
+//
+//    return ip;
+//}
+//
+//struct vfs_inode *
+//nameiparent(char *path, char *name) {
+//    struct mount *mnt;
+//    struct vfs_inode *ip = namex(path, 1, name, &mnt);
+//    if (ip != 0) {
+//        mntput(mnt);
+//    }
+//
+//    return ip;
+//}
+//
+//struct vfs_inode *
+//nameiparentmount(char *path, char *name, struct mount **mnt) {
+//    //cprintf(" in nameiparentmount\n");
+//
+//    return namex(path, 1, name, mnt);
+//}
+//
+//struct vfs_inode *
+//nameimount(char *path, struct mount **mnt) {
+//    //cprintf(" in nameimount\n");
+//
+//    char name[DIRSIZ];
+//    return namex(path, 0, name, mnt);
+//}

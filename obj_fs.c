@@ -33,8 +33,25 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-//static struct vfs_inode *
-//        iget(uint dev, uint inum);
+void _print_hex(const char *s)
+{
+    while(*s)
+        cprintf("%d", (unsigned char) *s++);
+    cprintf("\n");
+}
+
+int             obj_dirlink(struct vfs_inode*, char*, uint);
+struct vfs_inode*   obj_dirlookup(struct vfs_inode*, char*, uint*);
+struct vfs_inode*   obj_idup(struct vfs_inode*);
+void            obj_ilock(struct vfs_inode*);
+void            obj_iput(struct vfs_inode*);
+void            obj_iunlock(struct vfs_inode*);
+void            obj_iunlockput(struct vfs_inode*);
+void            obj_iupdate(struct vfs_inode*);
+int             obj_readi(struct vfs_inode*, char*, uint, uint);
+void            obj_stati(struct vfs_inode*, struct stat*);
+int             obj_writei(struct vfs_inode*, char*, uint, uint);
+int             obj_isdirempty (struct vfs_inode*);
 
 // Read the super block.
 void
@@ -134,10 +151,115 @@ void inode_name(char* output, uint inum) {
     output[strlen(prefix) + sizeof(uint) + 1] = 0;  // null terminator
 }
 
-//void obj_fsinit(uint dev) {
-//    // TODO: to implement
-//
-//}
+void file_name(char* output, uint inum) {
+    for (uint i = 0; i < sizeof(uint) + 1; ++i) {
+        output[i] = (inum % 127);
+        inum /= 127;
+    }
+    output[sizeof(uint) + 1] = 0;  // null terminator
+}
+
+void
+obj_mkfs_ialloc(short type) {
+    int inum = new_inode_number();
+    struct obj_dinode di;
+    memset(&di, 0, sizeof(di));
+    di.vfs_dinode.type = type;
+    di.vfs_dinode.nlink = 0;
+    di.data_object_name[0] = 0; //not initialized
+    char iname[INODE_NAME_LENGTH];
+    inode_name(iname, inum);
+    if (log_add_object(&di, sizeof(di), iname) != NO_ERR) {
+        panic("ialloc: failed adding inode to disk");
+    }
+}
+
+void obj_mkfs() {
+    init_obj_fs();
+    init_objects_cache();
+}
+
+void obj_fsinit(uint dev) {
+    struct vfs_inode *root_inode, *ip;
+    struct dirent de;
+    char iname[INODE_NAME_LENGTH];
+    struct obj_dinode di;
+    char oname[MAX_OBJECT_NAME_LENGTH];
+    uint off = 0;
+
+    /* Initiate root dir */
+    cprintf("Before adding root dir object\n");
+    if (log_add_object(0, 0, ROOT_ID) != NO_ERR) {
+        panic("obj_fsinit: failed adding root object to disk");
+    }
+
+    /* Initiate inode for root dir */
+    memset(&di, 0, sizeof(di));
+    di.vfs_dinode.type = T_DIR;
+    di.vfs_dinode.nlink = 0;
+    di.data_object_name[0] = 0; //not initialized
+    inode_name(iname, OBJ_ROOTINO);
+
+    cprintf("Before adding inode root dir object\n");
+    if (log_add_object(&di, sizeof(di), iname) != NO_ERR) {
+        panic("ialloc: failed adding inode to disk");
+    }
+    cprintf("After adding inode root dir object\n");
+
+    root_inode = obj_iget(dev, OBJ_ROOTINO);
+    cprintf("After get inode root dir object\n");
+
+    strncpy(de.name, ".", DIRSIZ);
+    de.inum = OBJ_ROOTINO;
+    cprintf("Before write . to inode root dir object\n");
+
+    if (obj_writei(root_inode, (char *) &de, off, sizeof(de)) != sizeof(de)) {
+        panic("Couldn't create root dir in obj fs");
+    }
+    cprintf("After write . to inode root dir object\n");
+
+    off += sizeof(de);
+    strncpy(de.name, "..", DIRSIZ);
+    de.inum = OBJ_ROOTINO;
+    cprintf("Before write .. to inode root dir object\n");
+
+    if (obj_writei(root_inode, (char *) &de, off, sizeof(de)) != sizeof(de)) {
+        panic("Couldn't create root dir in obj fs");
+    }
+    cprintf("After write .. to inode root dir object\n");
+
+    /* For tries, TODO: need to move this logic to obj mkfs (and create one) */
+    ip = obj_ialloc(dev, T_FILE);
+    file_name(oname, ip->inum);
+    cprintf("Before adding o1 object, inum: %d\n", ip->inum);
+    _print_hex(oname);
+    if (log_add_object(0, 0, oname) != NO_ERR) {
+        panic("ialloc: failed adding object to disk");
+    }
+    cprintf("After adding o1 object\n");
+
+    off += sizeof(de);
+    strncpy(de.name, "o1", DIRSIZ);
+    de.inum = ip->inum;
+    if (obj_writei(root_inode, (char *) &de, off, sizeof(de)) != sizeof(de)) {
+        panic("Couldn't create root dir in obj fs");
+    }
+
+    ip = obj_ialloc(dev, T_DIR);
+    file_name(oname, ip->inum);
+    cprintf("Before adding o2 object, inum: %d\n", ip->inum);
+
+    if (log_add_object(0, 0, oname) != NO_ERR) {
+        panic("ialloc: failed adding object to disk");
+    }
+
+    off += sizeof(de);
+    strncpy(de.name, "o2", DIRSIZ);
+    de.inum = ip->inum;
+    if (obj_writei(root_inode, (char *) &de, off, sizeof(de)) != sizeof(de)) {
+        panic("Couldn't create root dir in obj fs");
+    }
+}
 
 //PAGEBREAK!
 // Allocate an inode on device dev.
@@ -147,6 +269,8 @@ struct vfs_inode *
 obj_ialloc(uint dev, short type) {
     int inum = new_inode_number();
     struct obj_dinode di;
+
+    cprintf("inum in obj_alloc: %d\n", inum);
     memset(&di, 0, sizeof(di));
     di.vfs_dinode.type = type;
     di.vfs_dinode.nlink = 0;
@@ -215,12 +339,21 @@ obj_iget(uint dev, uint inum) {
     ip->vfs_inode.inum = inum;
     ip->vfs_inode.ref = 1;
     ip->vfs_inode.valid = 0;
-    ip->data_object_name[0] = 0; //not initialized
-
+//    ip->data_object_name[0] = 0; //not initialized
+    file_name(ip->data_object_name, inum);
     /* Initiate inode operations for obj fs */
     ip->vfs_inode.i_op.idup = &obj_idup;
     ip->vfs_inode.i_op.iupdate = &obj_iupdate;
     ip->vfs_inode.i_op.iput = &obj_iput;
+    ip->vfs_inode.i_op.dirlink = &obj_dirlink;
+    ip->vfs_inode.i_op.dirlookup = &obj_dirlookup;
+    ip->vfs_inode.i_op.ilock = &obj_ilock;
+    ip->vfs_inode.i_op.iunlock = &obj_iunlock;
+    ip->vfs_inode.i_op.readi = &obj_readi;
+    ip->vfs_inode.i_op.stati = &obj_stati;
+    ip->vfs_inode.i_op.writei = &obj_writei;
+    ip->vfs_inode.i_op.iunlockput = &obj_iunlockput;
+    ip->vfs_inode.i_op.isdirempty = &obj_isdirempty;
 
     release(&obj_icache.lock);
 
@@ -252,6 +385,7 @@ obj_ilock(struct vfs_inode *vfs_ip) {
 
     if (ip->vfs_inode.valid == 0) {
         inode_name(iname, ip->vfs_inode.inum);
+
         if (cache_get_object(iname, &di) != NO_ERR) {
             panic("inode doesn't exists in the disk");
         }
@@ -380,7 +514,7 @@ obj_readi(struct vfs_inode *vfs_ip, char *dst, uint off, uint n) {
 //    char data[size];
     char data[1000];
     if (cache_get_object(ip->data_object_name, data) != NO_ERR) {
-        panic("readi failed reading object content");
+        panic("obj_readi failed reading object content");
     }
     memmove(dst, data + off, n);
     return n;
@@ -394,6 +528,8 @@ obj_writei(struct vfs_inode *vfs_ip, char *src, uint off, uint n) {
     struct obj_inode * ip = container_of(vfs_ip, struct obj_inode, vfs_inode);
     uint size = 0;
 
+    cprintf("in obj_writei try to write to ip->data_object_name: %s\n", ip->data_object_name);
+    _print_hex(ip->data_object_name);
     if (ip->vfs_inode.type == T_DEV) {
         if (ip->vfs_inode.major < 0 || ip->vfs_inode.major >= NDEV || !devsw[ip->vfs_inode.major].write)
             return -1;
@@ -420,6 +556,8 @@ obj_writei(struct vfs_inode *vfs_ip, char *src, uint off, uint n) {
 //    TODO: need to read/write file in chunks, because there is no space in the stack for MAX_INODE_OBJECT_DATA
 //    char data[size];
     char data[1000];
+
+    cprintf("try to write to ip->data_object_name: %s\n", ip->data_object_name);
     if (cache_get_object(ip->data_object_name, data) != NO_ERR) {
         panic("obj_writei failed reading object data");
     }
@@ -431,9 +569,25 @@ obj_writei(struct vfs_inode *vfs_ip, char *src, uint off, uint n) {
 //PAGEBREAK!
 // Directories
 
+// Is the directory dp empty except for "." and ".." ?
 int
-obj_namecmp(const char *s, const char *t) {
-    return strncmp(s, t, DIRSIZ);
+obj_isdirempty(struct vfs_inode *vfs_dp) {
+    int off;
+    struct dirent de;
+    uint size;
+    struct obj_inode * dp = container_of(vfs_dp, struct obj_inode, vfs_inode);
+
+    if (cache_object_size(dp->data_object_name, &size) != NO_ERR) {
+        panic("obj_isdirempty failed getting inode data object size");
+    }
+    for(off=2*sizeof(de); off<size; off+=sizeof(de)){
+        if(dp->vfs_inode.i_op.readi(&dp->vfs_inode, (char*)&de, off, sizeof(de)) != sizeof(de))
+            panic("obj_isdirempty: readi");
+        if(de.inum != 0)
+            return 0;
+    }
+
+    return 1;
 }
 
 // Look for a directory entry in a directory.
@@ -460,7 +614,7 @@ obj_dirlookup(struct vfs_inode *vfs_dp, char *name, uint *poff) {
             panic("obj_dirlookup read");
         if (de.inum == 0)
             continue;
-        if (obj_namecmp(name, de.name) == 0) {
+        if (vfs_namecmp(name, de.name) == 0) {
             // entry matches path element
             if (poff)
                 *poff = off;
@@ -513,41 +667,6 @@ obj_dirlink(struct vfs_inode *vfs_dp, char *name, uint inum) {
 //PAGEBREAK!
 // Paths
 
-// Copy the next path element from path into name.
-// Return a pointer to the element following the copied one.
-// The returned path has no leading slashes,
-// so the caller can check *path=='\0' to see if the name is the last one.
-// If no name to remove, return 0.
-//
-// Examples:
-//   skipelem("a/bb/c", name) = "bb/c", setting name = "a"
-//   skipelem("///a//bb", name) = "bb", setting name = "a"
-//   skipelem("a", name) = "", setting name = "a"
-//   skipelem("", name) = skipelem("////", name) = 0
-//
-static char *
-obj_skipelem(char *path, char *name) {
-    char *s;
-    int len;
-
-    while (*path == '/')
-        path++;
-    if (*path == 0)
-        return 0;
-    s = path;
-    while (*path != '/' && *path != 0)
-        path++;
-    len = path - s;
-    if (len >= DIRSIZ)
-        memmove(name, s, DIRSIZ);
-    else {
-        memmove(name, s, len);
-        name[len] = 0;
-    }
-    while (*path == '/')
-        path++;
-    return path;
-}
 
 struct vfs_inode *
 obj_initprocessroot(struct mount **mnt) {
@@ -560,95 +679,41 @@ obj_initprocessroot(struct mount **mnt) {
 // If parent != 0, return the inode for the parent and copy the final
 // path element into name, which must have room for DIRSIZ bytes.
 // Must be called inside a transaction since it calls iput().
-static struct vfs_inode *
-obj_namex(char *path, int nameiparent, char *name, struct mount **mnt) {
-    struct vfs_inode *ip, *next;
-    struct mount *curmount;
-    struct mount *nextmount;
 
-    if (*path == '/') {
-        curmount = mntdup(getrootmount());
-        ip = obj_iget(ROOTDEV, ROOTINO);
-    } else {
-        curmount = mntdup(myproc()->cwdmount);
-        ip = obj_idup(myproc()->cwd);
-    }
-
-    while ((path = obj_skipelem(path, name)) != 0) {
-        obj_ilock(ip);
-        if (ip->type != T_DIR) {
-            obj_iunlockput(ip);
-            mntput(curmount);
-            return 0;
-        }
-        if (nameiparent && *path == '\0') {
-            // Stop one level early.
-            obj_iunlock(ip);
-            *mnt = curmount;
-            return ip;
-        }
-
-        if ((next = obj_dirlookup(ip, name, 0)) == 0) {
-            obj_iunlockput(ip);
-            mntput(curmount);
-            return 0;
-        }
-
-        obj_iunlockput(ip);
-        if ((nextmount = mntlookup(next, curmount)) != 0) {
-            mntput(curmount);
-            curmount = nextmount;
-
-            obj_iput(next);
-            next = obj_iget(curmount->dev, ROOTINO);
-        }
-
-        ip = next;
-    }
-    if (nameiparent) {
-        obj_iput(ip);
-        mntput(curmount);
-        return 0;
-    }
-
-    *mnt = curmount;
-    return ip;
-}
-
-struct vfs_inode *
-obj_namei(char *path) {
-    char name[DIRSIZ];
-    struct mount *mnt;
-    struct vfs_inode *ip = obj_namex(path, 0, name, &mnt);
-
-    if (ip != 0) {
-        mntput(mnt);
-    }
-
-    return ip;
-}
-
-struct vfs_inode *
-obj_nameiparent(char *path, char *name) {
-    struct mount *mnt;
-    struct vfs_inode *ip = obj_namex(path, 1, name, &mnt);
-
-    if (ip != 0) {
-        mntput(mnt);
-    }
-
-    return ip;
-}
-
-struct vfs_inode *
-obj_nameiparentmount(char *path, char *name, struct mount **mnt) {
-
-    return obj_namex(path, 1, name, mnt);
-}
-
-struct vfs_inode *
-obj_nameimount(char *path, struct mount **mnt) {
-
-    char name[DIRSIZ];
-    return obj_namex(path, 0, name, mnt);
-}
+//struct vfs_inode *
+//obj_namei(char *path) {
+//    char name[DIRSIZ];
+//    struct mount *mnt;
+//    struct vfs_inode *ip = obj_namex(path, 0, name, &mnt);
+//
+//    if (ip != 0) {
+//        mntput(mnt);
+//    }
+//
+//    return ip;
+//}
+//
+//struct vfs_inode *
+//obj_nameiparent(char *path, char *name) {
+//    struct mount *mnt;
+//    struct vfs_inode *ip = obj_namex(path, 1, name, &mnt);
+//
+//    if (ip != 0) {
+//        mntput(mnt);
+//    }
+//
+//    return ip;
+//}
+//
+//struct vfs_inode *
+//obj_nameiparentmount(char *path, char *name, struct mount **mnt) {
+//
+//    return obj_namex(path, 1, name, mnt);
+//}
+//
+//struct vfs_inode *
+//obj_nameimount(char *path, struct mount **mnt) {
+//
+//    char name[DIRSIZ];
+//    return obj_namex(path, 0, name, mnt);
+//}

@@ -112,11 +112,11 @@ bget(uint dev, uint blockno)
 void
 devicerw(struct inode *device, struct buf *b)
 {
-    // cprintf("in devicerw\n");
+     cprintf("in devicerw\n");
   if ((b->flags & B_DIRTY) == 0) {
-    readi(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
+      device->vfs_inode.i_op.readi(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
   } else {
-    writei(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
+      device->vfs_inode.i_op.writei(&device->vfs_inode, (char *) b->data, BSIZE*b->blockno, BSIZE);
   }
   b->flags |= B_VALID;
   b->flags &= ~B_DIRTY;

@@ -37,10 +37,10 @@ filewrite(struct vfs_file *f, char *addr, int n)
         n1 = max;
 
       begin_op();
-      ilock(f->ip);
-      if ((r = writei(f->ip, addr + i, f->off, n1)) > 0)
+      f->ip->i_op.ilock(f->ip);
+      if ((r = f->ip->i_op.writei(f->ip, addr + i, f->off, n1)) > 0)
         f->off += r;
-      iunlock(f->ip);
+      f->ip->i_op.iunlock(f->ip);
       end_op();
 
       if(r < 0)

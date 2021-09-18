@@ -226,7 +226,7 @@ umount(struct mount *mnt) {
 
     release(&mount_holder.mnt_list_lock);
 
-    iput(oldmountpoint);
+    oldmountpoint->i_op.iput(oldmountpoint);
     deviceput(olddev);
     return 0;
 }
@@ -290,7 +290,7 @@ shallowcopyactivemounts(struct mount **newcwdmount) {
             head = newentry;
         }
         newentry->mnt.ref = 1;
-        newentry->mnt.mountpoint = idup(entry->mnt.mountpoint);
+        newentry->mnt.mountpoint = entry->mnt.mountpoint->i_op.idup(entry->mnt.mountpoint);
         newentry->mnt.parent = 0;
         newentry->mnt.dev = entry->mnt.dev;
         deviceget(newentry->mnt.dev);

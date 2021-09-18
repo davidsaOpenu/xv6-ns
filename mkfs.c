@@ -242,7 +242,6 @@ ialloc(ushort type)
   bzero(&din, sizeof(din));
   din.vfs_dinode.type = xshort(type);
   din.vfs_dinode.nlink = xshort(1);
-  // TODO: make changes to work with objfs
   din.size = xint(0);
   winode(inum, &din);
   return inum;

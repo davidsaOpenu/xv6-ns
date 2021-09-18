@@ -10,6 +10,7 @@
 #define SUPER_BLOCK_ID "\x01"
 #define OBJECT_TABLE_ID "\x02"
 #define ROOT_ID "\x03"
+#define OBJ_ROOTINO 3
 
 struct objsuperblock {
     uint storage_device_size;
@@ -56,6 +57,7 @@ struct obj_dinode {
  * 1 for null terminator
  */
 #define INODE_NAME_LENGTH (5 + sizeof(uint) + 1 + 1)
+
 
 //int             dirlink(struct inode*, char*, uint);
 //struct inode*   dirlookup(struct inode*, char*, uint*);

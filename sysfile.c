@@ -16,7 +16,9 @@
 #include "fcntl.h"
 #include "cgroup.h"
 #include "device.h"
+#include "vfs_fs.h"
 //#include "cgfs.h"
+#include "mount.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -105,7 +107,7 @@ sys_write(void)
   if(f->type == FD_CG)
     return cg_write(f, p, n);
   else
-    return filewrite(f, p, n);
+    return f->f_op.filewrite(f, p, n);
 }
 
 int
@@ -155,67 +157,43 @@ sys_link(void)
     return -1;
 
   begin_op();
-  if((ip = namei(old)) == 0){
+  if((ip = vfs_namei(old)) == 0){
     end_op();
     return -1;
   }
 
-  ilock(ip);
+  ip->i_op.ilock(ip);
   if(ip->type == T_DIR){
-    iunlockput(ip);
+    ip->i_op.iunlockput(ip);
     end_op();
     return -1;
   }
 
   ip->nlink++;
-  iupdate(ip);
-  iunlock(ip);
+  ip->i_op.iupdate(ip);
+  ip->i_op.iunlock(ip);
 
-  if((dp = nameiparent(new, name)) == 0)
+  if((dp = vfs_nameiparent(new, name)) == 0)
     goto bad;
-  ilock(dp);
-  if(dp->dev != ip->dev || dirlink(dp, name, ip->inum) < 0){
-    iunlockput(dp);
+  dp->i_op.ilock(dp);
+  if(dp->dev != ip->dev || dp->i_op.dirlink(dp, name, ip->inum) < 0){
+    dp->i_op.iunlockput(dp);
     goto bad;
   }
-  iunlockput(dp);
-  iput(ip);
+  dp->i_op.iunlockput(dp);
+  ip->i_op.iput(ip);
 
   end_op();
 
   return 0;
 
 bad:
-  ilock(ip);
+  ip->i_op.ilock(ip);
   ip->nlink--;
-  iupdate(ip);
-  iunlockput(ip);
+  ip->i_op.iupdate(ip);
+  ip->i_op.iunlockput(ip);
   end_op();
   return -1;
-}
-
-// Is the directory dp empty except for "." and ".." ?
-static int
-isdirempty(struct vfs_inode *dp)
-{
-//  int off;
-//  struct dirent de;
-
-  // TODO: from itay changes
-//  uint size;
-//  if (cache_object_size(dp->data_object_name, &size) != NO_ERR) {
-//      panic("isdirempty failed getting inode data object size");
-//  }
-
-// TODO: need to make the sutiable func for objfs
-
-//  for(off=2*sizeof(de); off<dp->size; off+=sizeof(de)){
-//    if(readi(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
-//      panic("isdirempty: readi");
-//    if(de.inum != 0)
-//      return 0;
-//  }
-  return 1;
 }
 
 //PAGEBREAK!
@@ -235,46 +213,46 @@ sys_unlink(void)
   int delete_cgroup_res = cgroup_delete(path, "unlink");
   if(delete_cgroup_res == -1)
   {
-      if((dp = nameiparent(path, name)) == 0){
+      if((dp = vfs_nameiparent(path, name)) == 0){
         end_op();
         return -1;
       }
 
-      ilock(dp);
+      dp->i_op.ilock(dp);
 
       // Cannot unlink "." or "..".
-      if(namecmp(name, ".") == 0 || namecmp(name, "..") == 0)
+      if(vfs_namecmp(name, ".") == 0 || vfs_namecmp(name, "..") == 0)
         goto bad;
 
-      if((ip = dirlookup(dp, name, &off)) == 0)
+      if((ip = dp->i_op.dirlookup(dp, name, &off)) == 0)
         goto bad;
 
-      ilock(ip);
+      ip->i_op.ilock(ip);
 
       if(ip->nlink < 1)
         panic("unlink: nlink < 1");
-      if(ip->type == T_DIR && !isdirempty(ip)){
-        iunlockput(ip);
+      if(ip->type == T_DIR && !ip->i_op.isdirempty(ip)){
+        ip->i_op.iunlockput(ip);
         goto bad;
       }
 
       if (doesbackdevice(ip) == 1) {
-        iunlockput(ip);
+        ip->i_op.iunlockput(ip);
         goto bad;
       }
 
       memset(&de, 0, sizeof(de));
-      if(writei(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
+      if(dp->i_op.writei(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
         panic("unlink: writei");
       if(ip->type == T_DIR){
         dp->nlink--;
-        iupdate(dp);
+        dp->i_op.iupdate(dp);
       }
-      iunlockput(dp);
+      dp->i_op.iunlockput(dp);
 
       ip->nlink--;
-      iupdate(ip);
-      iunlockput(ip);
+      ip->i_op.iupdate(ip);
+      ip->i_op.iunlockput(ip);
   }
   if(delete_cgroup_res == -2){
       end_op();
@@ -285,7 +263,7 @@ sys_unlink(void)
   return 0;
 
 bad:
-  iunlockput(dp);
+  dp->i_op.iunlockput(dp);
   end_op();
   return -1;
 }
@@ -297,31 +275,36 @@ createmount(char *path, short type, short major, short minor, struct mount **mnt
   struct vfs_inode *ip, *dp;
   char name[DIRSIZ];
 
-  if((dp = nameiparentmount(path, name, mnt)) == 0)
+  if((dp = vfs_nameiparentmount(path, name, mnt)) == 0)
     return 0;
 
-  ilock(dp);
+  dp->i_op.ilock(dp);
 
-  if((ip = dirlookup(dp, name, &off)) != 0){
+  if((ip = dp->i_op.dirlookup(dp, name, &off)) != 0){
 
-    iunlockput(dp);
+    dp->i_op.iunlockput(dp);
 
-    ilock(ip);
+    ip->i_op.ilock(ip);
 
     if(type == T_FILE && ip->type == T_FILE)
       return ip;
-    iunlockput(ip);
+    ip->i_op.iunlockput(ip);
 
     mntput(*mnt);
 
     return 0;
   }
 
+  if (IS_OBJ_DEVICE(dp->dev)) {
+      if((ip = obj_ialloc(dp->dev, type)) == 0)
+          panic("create: ialloc");
 
-  if((ip = ialloc(dp->dev, type)) == 0)
-    panic("create: ialloc");
+  } else {
+      if((ip = ialloc(dp->dev, type)) == 0)
+          panic("create: ialloc");
+  }
 
-  ilock(ip);
+  ip->i_op.ilock(ip);
   ip->major = major;
   ip->minor = minor;
   ip->nlink = 1;
@@ -330,18 +313,18 @@ createmount(char *path, short type, short major, short minor, struct mount **mnt
   if(type == T_DIR){  // Create . and .. entries.
     dp->nlink++;  // for ".."
 
-    iupdate(dp);
+    dp->i_op.iupdate(dp);
 
     // No ip->nlink++ for ".": avoid cyclic ref count.
-    if(dirlink(ip, ".", ip->inum) < 0 || dirlink(ip, "..", dp->inum) < 0)
+    if(dp->i_op.dirlink(ip, ".", ip->inum) < 0 || dp->i_op.dirlink(ip, "..", dp->inum) < 0)
       panic("create dots");
 
   }
 
-  if(dirlink(dp, name, ip->inum) < 0)
+  if(dp->i_op.dirlink(dp, name, ip->inum) < 0)
     panic("create: dirlink");
 
-  iunlockput(dp);
+  dp->i_op.iunlockput(dp);
 
   return ip;
 }
@@ -389,14 +372,14 @@ sys_open(void)
       return -1;
     }
   } else {
-    if((ip = nameimount(path, &mnt)) == 0){
+    if((ip = vfs_nameimount(path, &mnt)) == 0){
       end_op();
       return -1;
     }
 
-    ilock(ip);
+    ip->i_op.ilock(ip);
     if(ip->type == T_DIR && omode != O_RDONLY){
-      iunlockput(ip);
+      ip->i_op.iunlockput(ip);
       mntput(mnt);
       end_op();
       return -1;
@@ -406,13 +389,13 @@ sys_open(void)
   if((f = vfs_filealloc()) == 0 || (fd = fdalloc(f)) < 0){
     if(f)
       vfs_fileclose(f);
-    iunlockput(ip);
+    ip->i_op.iunlockput(ip);
     mntput(mnt);
     end_op();
     return -1;
   }
 
-  iunlock(ip);
+  ip->i_op.iunlock(ip);
   end_op();
 
   f->type = FD_INODE;
@@ -429,11 +412,13 @@ sys_open(void)
 
   /* Initiate file operations for obj fs */
   if (IS_OBJ_DEVICE(f->ip->dev)) {
-//      f->f_op.filewrite = &obj_filewrite;
+      /* file op */
+      f->f_op.filewrite = &obj_filewrite;
   }
 
-  /* Initiate file operations for obj fs */
+  /* Initiate file operations for regular fs */
   else {
+      /* file op */
       f->f_op.filewrite = &filewrite;
   }
 
@@ -464,7 +449,8 @@ sys_mkdir(void)
       end_op();
       return -1;
     }
-    iunlockput(ip);
+    ip->i_op.iunlockput(ip);
+      cprintf("inum in mkdir: %d\n", ip->inum);
   }
   end_op();
   return 0;
@@ -485,7 +471,7 @@ sys_mknod(void)
     end_op();
     return -1;
   }
-  iunlockput(ip);
+  ip->i_op.iunlockput(ip);
   end_op();
   return 0;
 }
@@ -509,25 +495,31 @@ sys_chdir(void)
     safestrcpy(curproc->cwdp, cgp->cgroup_dir_path, sizeof(cgp->cgroup_dir_path));
     return 0;
   }
-  if((ip = nameimount(path, &mnt)) == 0){
+  if((ip = vfs_nameimount(path, &mnt)) == 0){
     end_op();
     return -1;
   }
-  ilock(ip);
+  ip->i_op.ilock(ip);
   if(ip->type != T_DIR){
-    iunlockput(ip);
+    ip->i_op.iunlockput(ip);
     end_op();
     return -1;
   }
-  iunlock(ip);
+  ip->i_op.iunlock(ip);
   if(curproc->cwd)
-    iput(curproc->cwd);
+      curproc->cwd->i_op.iput(curproc->cwd);
   if(curproc->cwdmount)
     mntput(curproc->cwdmount);
   end_op();
   curproc->cwdmount = mnt;
   curproc->cwd = ip;
+  cprintf("in chdir, inum: %d, dev: %d\n", ip->inum, ip->dev);
+    cprintf("in chdir, cwdmount, dev mount: %d\n", curproc->cwdmount->dev);
+    if (IS_OBJ_DEVICE(ip->dev)) {
+        cprintf("IS OBJ DEVICE in chdir!!!\n");
+    }
   format_path(curproc->cwdp, path);
+    cprintf("curproc->cwdp: %s, path: %s\n", curproc->cwdp, path);
   return 0;
 }
 

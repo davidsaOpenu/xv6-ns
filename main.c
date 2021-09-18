@@ -60,8 +60,9 @@ struct sleeplock loglock;
 static void
 objfsinit(void) {
     cprintf("in objfsinit\n");
-    init_obj_fs();
-    init_objects_cache();
+    obj_mkfs();
+//    init_obj_fs();
+//    init_objects_cache();
 }
 
 // Other CPUs jump here from entryother.S.

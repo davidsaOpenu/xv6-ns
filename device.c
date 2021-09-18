@@ -45,6 +45,7 @@ devinit(void) {
 void
 objdevinit(uint dev) {
     cprintf("in objdevinit\n");
+//    TODO: when changing the superblock, need to update the sb in objdev..
     if (dev < NOBJDEVS) {
         cprintf("in if in objdevinit\n");
            memcpy(&dev_holder.objdev[dev].sb, memory_storage, sizeof(dev_holder.objdev[dev].sb));
@@ -105,6 +106,7 @@ getorcreateobjdevice() {
     dev_holder.objdev[emptydevice].ref = 1;
     release(&dev_holder.lock);
     objdevinit(emptydevice);
+    obj_fsinit(OBJ_TO_DEV(emptydevice));
     cprintf("in getobjdev - device num: %d\n", emptydevice);
     return OBJ_TO_DEV(emptydevice);
 }
@@ -132,7 +134,7 @@ deviceput(uint dev) {
         if (dev_holder.loopdevs[dev].ref == 1) {
             release(&dev_holder.lock);
 
-            iput(dev_holder.loopdevs[dev].ip);
+            dev_holder.loopdevs[dev].ip->i_op.iput(dev_holder.loopdevs[dev].ip);
             invalidateblocks(LOOP_DEVICE_TO_DEV(dev));
 
             acquire(&dev_holder.lock);
@@ -199,7 +201,7 @@ getsuperblock(uint dev) {
         } else {
             return &dev_holder.loopdevs[loopdev].sb.vfs_sb;
         }
-    } else if (IS_OBJ_DEVICE(dev)){
+    } else if (IS_OBJ_DEVICE(dev)) {
         uint objdev = DEV_TO_OBJ_DEVICE(dev);
         if (objdev >= NOBJDEVS) {
             panic("could not find obj superblock for device: device number to high");
@@ -212,6 +214,7 @@ getsuperblock(uint dev) {
     } else if (dev < NIDEDEVS) {
         return &dev_holder.idesb[dev].vfs_sb;
     } else {
+        cprintf("could not find superblock for device, dev: %d\n", dev);
         panic("could not find superblock for device");
     }
 }

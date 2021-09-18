@@ -5,6 +5,9 @@
 int
 main(int argc, char *argv[])
 {
+    int fd;
+    struct stat st;
+
     printmounts();
     printdevices();
 
@@ -20,11 +23,22 @@ main(int argc, char *argv[])
     printf(1, "objtest: after mount\n");
 
     printf(1, "objtest: before open\n");
-    if (open("new", 0) < 0) {
+    if ((fd = open("new", 0)) < 0) {
         printf(2, "objtest: cannot open new\n");
         exit(0);
     }
     printf(1, "objtest: after open\n");
+    if(fstat(fd, &st) < 0){
+        printf(2, "ls: cannot stat new\n");
+        close(fd);
+        exit(0);
+    }
+
+    printf(1, "objtest: after fstat\n");
+    if(chdir("new") < 0) {
+        printf(2, "objtest: failed to chdir to new\n");
+    }
+    printf(1, "objtest: after chdir\n");
 
     exit(0);
 }

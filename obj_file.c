@@ -34,10 +34,10 @@ obj_filewrite(struct vfs_file *f, char *addr, int n) {
             if (n1 > max)
                 n1 = max;
 
-            obj_ilock(f->ip);
-            if ((r = obj_writei(f->ip, addr + i, f->off, n1)) > 0)
+            f->ip->i_op.ilock(f->ip);
+            if ((r = f->ip->i_op.writei(f->ip, addr + i, f->off, n1)) > 0)
                 f->off += r;
-            obj_iunlock(f->ip);
+            f->ip->i_op.iunlock(f->ip);
 
             if (r < 0)
                 break;

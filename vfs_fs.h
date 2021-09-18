@@ -1,18 +1,11 @@
 #ifndef XV6_VFS_FS_H
 #define XV6_VFS_FS_H
 
-//struct file_system_type;
 #include "types.h"
-
-//struct vfs_inode* vfs_idup(struct vfs_inode *ip);
-//void              vfs_iput(struct vfs_inode *ip);
-
-//typedef unsigned int size_t;
 
 
 struct vfs_superblock {
     uint ninodes;      // Number of inodes.
-//  struct file_system_type * type;
 };
 
 // On-disk inode structure

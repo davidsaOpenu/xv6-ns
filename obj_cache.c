@@ -203,7 +203,6 @@ uint cache_object_size(const char* name, uint* output) {
 }
 
 uint cache_get_object(const char* name, void* output) {
-    cprintf("in cache_get_object\n");
     acquiresleep(&cachelock);
     for(struct obj_cache_entry* e = obj_cache.head.prev;
         e != &obj_cache.head;

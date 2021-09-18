@@ -156,20 +156,20 @@ sys_ioctl(void)
     return -1;
   }
 
-  ilock(ip);
+  ip->i_op.ilock(ip);
 
   if( ip->type != T_DEV ){
-      iunlockput(ip);
+      ip->i_op.iunlockput(ip);
       return -1;
   }
 
   if(ip->major >= NDEV){
-     iunlockput(ip);
+     ip->i_op.iunlockput(ip);
      return -1;
   }
 
   if(ip->minor >= MAX_TTY){
-     iunlockput(ip);
+     ip->i_op.iunlockput(ip);
      return -1;
   }
 
@@ -205,14 +205,14 @@ sys_ioctl(void)
     break;
   case TTYGETS:
     ret = tty_gets(ip, command);
-    iunlock(ip);
+    ip->i_op.iunlock(ip);
     return ret;
   default:
-    iunlock(ip);
+    ip->i_op.iunlock(ip);
     return -1;
   }
 
- iunlock(ip);
+ ip->i_op.iunlock(ip);
  return 0;
 }
 
