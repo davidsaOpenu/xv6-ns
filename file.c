@@ -138,12 +138,14 @@ filewrite(struct file *f, char *addr, int n)
       if(n1 > max)
         n1 = max;
 
-      begin_op();
+      if(f->ip->type != T_DEV)
+        begin_op();
       ilock(f->ip);
       if ((r = writei(f->ip, addr + i, f->off, n1)) > 0)
         f->off += r;
       iunlock(f->ip);
-      end_op();
+      if(f->ip->type != T_DEV)
+        end_op();
 
       if(r < 0)
         break;
