@@ -73,6 +73,7 @@ static void unsafe_cgroup_erase(struct cgroup * cgroup, struct proc * proc)
             while (cgroup != 0) {
                 cgroup->num_of_procs--;
                 cgroup->current_mem -= proc->sz;
+                cgroup->current_page -= PGROUNDUP(proc->sz)/PGSIZE;
                 if (cgroup->num_of_procs == 0)
                     cgroup->populated = 0;
                 cgroup = cgroup->parent;
@@ -329,6 +330,16 @@ void cgroup_initialize(struct cgroup * cgroup,
     // By default a group has limit of KERNBASE memory.
     set_max_mem(cgroup, KERNBASE);
 
+    cgroup->mem_stat_file_dirty = 0;
+    cgroup->mem_stat_file_dirty_aggregated = 0;
+    cgroup->mem_stat_pgfault = 0;
+    cgroup->mem_stat_pgmajfault = 0;
+
+    // By default a group has minimum 0 memory.
+    set_min_mem(cgroup, 0);
+    cgroup->current_page = 0;
+    cgroup->to_protect = 0;
+    
     cgroup->cpu_account_frame = 0;
     cgroup->cpu_percent = 0;
     cgroup->cpu_time = 0;
@@ -392,6 +403,9 @@ int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc)
 
     // Erase the proc from the other cgroup.
     if (proc->cgroup) {
+        if (protect_memory(proc->cgroup, cgroup, proc->sz)!=0) {
+            return -1;
+        }
         unsafe_cgroup_erase(proc->cgroup, proc);
     }
 
@@ -407,12 +421,62 @@ int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc)
         cgroup->num_of_procs++;
         cgroup->populated = 1;
         cgroup->current_mem += proc->sz;
+        cgroup->current_page += PGROUNDUP(proc->sz)/PGSIZE;
         cgroup = cgroup->parent;
     }
     return 0;
 }
 
-void cgroup_erase(struct cgroup * cgroup, struct proc * proc)
+int protect_memory(struct cgroup* src, struct cgroup* dst, int proc_size) {
+    
+    decrese_cgroup_protect_memory(dst, proc_size);
+    if (increse_cgroup_protect_memory(src, proc_size) == 0)
+        return 0;
+    else 
+        increse_cgroup_protect_memory(dst,proc_size);
+    return 1;
+}
+
+void decrese_cgroup_protect_memory(struct cgroup* cgroup, int proc_size)
+{
+    if (cgroup == cgroup_root())
+        return;
+
+    if (cgroup->mem_controller_enabled && cgroup->to_protect>0) {
+        int pg = PGROUNDUP(proc_size)/PGSIZE;
+        int use_pg = cgroup->current_page + pg;
+        int need_protect = PGROUNDUP(cgroup->min_mem)/PGSIZE - use_pg;
+        if (need_protect <= 0) {
+            decrese_protect_counter(cgroup->to_protect);
+            cgroup->to_protect = 0;
+        }        
+        else {
+            decrese_protect_counter(cgroup->to_protect - need_protect);
+            cgroup->to_protect = need_protect;
+        }
+    }
+}
+
+int increse_cgroup_protect_memory(struct cgroup* cgroup, int proc_size)
+{
+   if (cgroup == cgroup_root())
+        return 0;
+
+    int ret = 0;
+    if (cgroup->mem_controller_enabled) {
+        int pg = PGROUNDUP(proc_size) / PGSIZE;
+        int use_pg = cgroup->current_page - pg;
+        int need_protect = PGROUNDUP(cgroup->min_mem) / PGSIZE - use_pg;
+        if (need_protect > 0) {
+            ret = increse_protect_counter(need_protect- cgroup->to_protect);
+            if (ret==0)
+                cgroup->to_protect = need_protect;
+        }
+    }
+    return ret;
+}
+
+void cgroup_erase(struct cgroup* cgroup, struct proc* proc)
 {
     acquire(&cgtable.lock);
     unsafe_cgroup_erase(cgroup, proc);
@@ -838,12 +902,50 @@ int set_max_mem(struct cgroup* cgroup, unsigned int limit) {
 
   // Set the limit if it is within allowed parameters.
   // 0 is used for testing.
-  if (limit >= 0 && limit <= KERNBASE) {
+  if (limit >= 0 && limit <= KERNBASE && limit >= cgroup->min_mem) {
     cgroup->max_mem = limit;
     return 1;
   }
 
   return 0;
+}
+
+int set_min_mem(struct cgroup* cgroup, unsigned int limit) {
+    // If no cgroup found, return error.
+    if (cgroup == 0)
+        return -1;
+
+    // Set the limit if it is within allowed parameters.
+    // 0 is used for testing.
+    if (limit >= 0 && limit <= KERNBASE && limit <= cgroup->max_mem) {
+        if (set_protect_mem(cgroup, PGROUNDUP(limit) / PGSIZE) == 0) {
+            cgroup->min_mem = limit;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int set_protect_mem(struct cgroup* cgroup, unsigned int limit) {
+    if (cgroup == cgroup_root())
+       return 0;
+    int protect = limit - cgroup->current_page;
+
+    if (protect <= 0){//actualy we dont need to protect memory
+        if (cgroup->to_protect > 0) {// we need to releas all protectd memory
+            decrese_protect_counter(cgroup->to_protect);
+            cgroup->to_protect = 0;
+        }
+    }
+    else {// we do need to protect memory
+            if (increse_protect_counter(protect - cgroup->to_protect) == 0) //there is enugh memory to protect or we decreas
+                cgroup->to_protect = protect;
+            else
+                return -1;
+    }
+
+    return 0;
 }
 
 int unsafe_enable_mem_controller(struct cgroup* cgroup) {
@@ -856,6 +958,11 @@ int unsafe_enable_mem_controller(struct cgroup* cgroup) {
   if (cgroup->mem_controller_enabled) {
     return 0;
   }
+
+  int protect = PGROUNDUP(cgroup->min_mem)/PGSIZE - cgroup->current_page;
+  if (protect > 0)
+      if (increse_protect_counter(protect) != 0)
+          return -1;
 
   if (cgroup->mem_controller_avalible) {
     // Set memory controller to enabled.
@@ -893,6 +1000,9 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
 
   // Set memory controller to disabled.
   cgroup->mem_controller_enabled = 0;
+  // set limits to default
+  set_min_mem(cgroup, 0);
+  set_max_mem(cgroup, KERNBASE);
 
   // Set memory controller to unavalible in all child cgroups.
   for (int i = 1;
@@ -900,6 +1010,12 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
     i++)
     if (cgtable.cgroups[i].parent == cgroup)
       cgtable.cgroups[i].mem_controller_avalible = 0;
+  
+  decrese_protect_counter(cgroup->to_protect);
+  cgroup->to_protect = 0;
+
+  decrese_protect_counter(cgroup->to_protect);
+  cgroup->to_protect = 0;
 
   return 0;
 }
@@ -918,4 +1034,39 @@ int disable_mem_controller(struct cgroup* cgroup)
   int res = unsafe_disable_mem_controller(cgroup);
   release(&cgtable.lock);
   return res;
+}
+
+void cgroup_mem_stat_file_dirty_incr(struct cgroup* cgroup)
+{
+    if (cgroup != cgroup_root() && cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_file_dirty++;
+    }
+}
+
+void cgroup_mem_stat_file_dirty_decr(struct cgroup* cgroup)
+{
+    if (cgroup != cgroup_root() && cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_file_dirty--;
+    }
+}
+
+void cgroup_mem_stat_file_dirty_aggregated_incr(struct cgroup* cgroup)
+{
+    if (cgroup != cgroup_root() && cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_file_dirty_aggregated++;
+    }
+}
+
+void cgroup_mem_stat_pgfault_incr(struct cgroup* cgroup)
+{
+    if (cgroup != cgroup_root() && cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_pgfault++;
+    }
+}
+
+void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup)
+{
+    if (cgroup != cgroup_root() && cgroup != 0 && cgroup->populated == 1) {
+        cgroup->mem_stat_pgmajfault++;
+    }
 }
