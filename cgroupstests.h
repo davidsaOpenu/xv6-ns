@@ -6,6 +6,7 @@
 
 enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 
+#define KERNBASE "2147483648" //for memory controler test
 
 #define CGROUP                          "cgroup"
 #define ROOT_CGROUP                     "/cgroup"
@@ -30,8 +31,11 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 #define TEST_1_SET_FRZ                  "/cgroup/test1/cgroup.freeze"
 #define TEST_1_MEM_CURRENT              "/cgroup/test1/memory.current"
 #define TEST_1_MEM_MAX                  "/cgroup/test1/memory.max"
+#define TEST_1_MEM_MIN                  "/cgroup/test1/memory.min"
 #define TEST_1_MEM_STAT                 "/cgroup/test1/memory.stat"
 
+#define TEST_2_CGROUP_SUBTREE_CONTROL   "/cgroup/test2/cgroup.subtree_control"
+#define TEST_2_MEM_MIN                  "/cgroup/test2/memory.min"
 #define ROOT_CGROUP_PROCS               "/cgroup/cgroup.procs"
 
 #define TEMP_FILE "temp_file"

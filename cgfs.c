@@ -28,9 +28,12 @@
 #define SET_FRZ 14
 #define MEM_CUR 15
 #define MEM_MAX 16
-#define MEM_STAT 17
+#define MEM_MIN 17
+#define MEM_STAT 18
 
+// TODO: refactor - move to defs.h
 #define min(x, y) (x) > (y) ? (y) : (x)
+// TODO: refactor - move to defs.h (also change the name)
 #define abs(x) (x) > 0 ? (x) : (0)
 
 // Is static to save space in the stack
@@ -243,6 +246,8 @@ static int get_file_name_constant(char * filename)
       return MEM_CUR;
     else if (strcmp(filename, CGFS_MEM_MAX) == 0)
       return MEM_MAX;
+    else if (strcmp(filename, CGFS_MEM_MIN) == 0)
+        return MEM_MIN;
     else if (strcmp(filename, CGFS_MEM_STAT) == 0)
       return MEM_STAT;
 
@@ -256,7 +261,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
 
     if (type == CG_FILE){
 
-        char writable;
+        int writable = 1;
         int filename_const = get_file_name_constant(filename);
 
         /* Check that the file to be opened is one of the filesystem files and
@@ -272,6 +277,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case SET_CPU:
             case SET_FRZ:
             case MEM_MAX:
+            case MEM_MIN:
                 writable = 1;
                 break;
 
@@ -350,10 +356,21 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
               f->mem.max.max = cgp->max_mem;
               break;
 
+            case MEM_MIN:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->mem.min.active = cgp->mem_controller_enabled;
+                f->mem.min.min = cgp->min_mem;
+                break;
+
             case MEM_STAT:
                 if (cgp == cgroup_root())
                     return -1;
                 f->mem.stat.active = cgp->mem_controller_enabled;
+                f->mem.stat.file_dirty = cgp->mem_stat_file_dirty;
+                f->mem.stat.file_dirty_aggregated = cgp->mem_stat_file_dirty_aggregated;
+                f->mem.stat.pgfault = cgp->mem_stat_pgfault;
+                f->mem.stat.pgmajfault = cgp->mem_stat_pgmajfault;
                 break;
         }
 
@@ -382,7 +399,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
         f->type = FD_CG;
         f->off = 0;
         f->readable = !(omode & O_WRONLY);
-        f->writable = 0;
+        f->writable = 0;cprintf("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
         f->cgp = cgp;
         *f->cgfilename = 0;
 
@@ -644,13 +661,52 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
-        } else if (filename_const == MEM_STAT) {
-            uint stattext_size = strlen("empty file") + 2;
-            char *stattext = buf;
-            memset(stattext, '\0', stattext_size);
-            char *stattextp = stattext;
+        }
+        else if (filename_const == MEM_MIN) {
+            char max_buf[10] = { 0 };
+            char* maxtext = buf;
+            char* maxtextp = maxtext;
 
-            copy_and_move_buffer(&stattextp, "empty file", strlen("empty file"));
+            utoa(max_buf, f->mem.min.min);
+
+            copy_and_move_buffer(&maxtextp, max_buf, strlen(max_buf));
+            copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
+
+            r = copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
+        }
+        else if (filename_const == MEM_STAT) {
+            char file_dirty_buf[10] = {0};
+            char file_dirty_aggregated_buf[10] = {0};
+            char pgfault_buf[10] = {0};
+            char pgmajfault_buf[10] = {0};
+
+            uint stattext_size = strlen("file_dirty - ") +
+                    utoa(file_dirty_buf, f->mem.stat.file_dirty) + 1
+                    + strlen("file_dirty_aggregated - ") +
+                    utoa(file_dirty_aggregated_buf, f->mem.stat.file_dirty_aggregated) + 1 +
+                    strlen("pgfault - ") +
+                    utoa(pgfault_buf, f->mem.stat.pgfault) + 1 +
+                    strlen("pgmajfault - ") +
+                    utoa(pgmajfault_buf, f->mem.stat.pgmajfault) + 2;
+
+            char *stattext = buf;
+            char *stattextp = stattext;
+            memset(stattext, '\0', stattext_size);
+
+            copy_and_move_buffer(&stattextp, "file_dirty - ", strlen("file_dirty - "));
+            copy_and_move_buffer(&stattextp, file_dirty_buf, strlen(file_dirty_buf));
+            copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+            copy_and_move_buffer(&stattextp, "file_dirty_aggregated - ", strlen("file_dirty_aggregated - "));
+            copy_and_move_buffer(&stattextp, file_dirty_aggregated_buf, strlen(file_dirty_aggregated_buf));
+            copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+            copy_and_move_buffer(&stattextp, "pgfault - ", strlen("pgfault - "));
+            copy_and_move_buffer(&stattextp, pgfault_buf, strlen(pgfault_buf));
+            copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+            copy_and_move_buffer(&stattextp, "pgmajfault - ", strlen("pgmajfault - "));
+            copy_and_move_buffer(&stattextp, pgmajfault_buf, strlen(pgmajfault_buf));
             copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
@@ -712,6 +768,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
             if (f->cgp->mem_controller_enabled) {
               copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MAX);
+              copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MIN);
             }
         }
 
@@ -735,8 +792,8 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
     int r = 0;
     int filename_const = get_file_name_constant(f->cgfilename);
 
-    if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0 || n > MAX_BUF)
-        return -1;
+    if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0 || n > MAX_BUF){cprintf("\n  %d %d %d\n ",f->writable, *f->cgp->cgroup_dir_path, n > MAX_BUF);
+        return -1;}
 
     if (filename_const == CGROUP_PROCS) {
         buf[n] = 0;
@@ -976,7 +1033,33 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
 
         r = n;
     }
+    if (filename_const == MEM_MIN &&
+        f->cgp->mem_controller_enabled) {
+        char min_string[32] = { 0 };
+        unsigned int min = -1;
+        int i = 0;
 
+        while (*addr && *addr != ',' && *addr != '\0' && i < sizeof(min_string)) {
+            min_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        min_string[i] = '\0';
+        i = 0;
+
+        // Update min.
+        min = atoi(min_string);
+        if (-1 == min) {
+            return -1;
+        }
+
+        // Update min memory field if the paramter is within allowed values.
+        int test = set_min_mem(f->cgp, min);
+        if (test == 0 || test == -1)
+            return -1;
+        f->mem.min.min = min;        
+        r = n;
+    }
     return r;
 }
 
