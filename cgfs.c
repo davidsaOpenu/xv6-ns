@@ -28,7 +28,8 @@
 #define SET_FRZ 14
 #define MEM_CUR 15
 #define MEM_MAX 16
-#define MEM_STAT 17
+#define MEM_MIN 17
+#define MEM_STAT 18
 
 #define min(x, y) (x) > (y) ? (y) : (x)
 #define abs(x) (x) > 0 ? (x) : (0)
@@ -243,6 +244,8 @@ static int get_file_name_constant(char * filename)
       return MEM_CUR;
     else if (strcmp(filename, CGFS_MEM_MAX) == 0)
       return MEM_MAX;
+    else if (strcmp(filename, CGFS_MEM_MIN) == 0)
+        return MEM_MIN;
     else if (strcmp(filename, CGFS_MEM_STAT) == 0)
       return MEM_STAT;
 
@@ -256,7 +259,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
 
     if (type == CG_FILE){
 
-        char writable;
+        int writable = 1;
         int filename_const = get_file_name_constant(filename);
 
         /* Check that the file to be opened is one of the filesystem files and
@@ -272,6 +275,7 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
             case SET_CPU:
             case SET_FRZ:
             case MEM_MAX:
+            case MEM_MIN:
                 writable = 1;
                 break;
 
@@ -349,6 +353,13 @@ int unsafe_cg_open(cg_file_type type, char * filename, struct cgroup * cgp, int 
               f->mem.max.active = cgp->mem_controller_enabled;
               f->mem.max.max = cgp->max_mem;
               break;
+
+            case MEM_MIN:
+                if (cgp == cgroup_root())
+                    return -1;
+                f->mem.min.active = cgp->mem_controller_enabled;
+                f->mem.min.min = cgp->min_mem;
+                break;
 
             case MEM_STAT:
                 if (cgp == cgroup_root())
@@ -644,7 +655,20 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
             copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
 
             r = copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
-        } else if (filename_const == MEM_STAT) {
+        }
+        else if (filename_const == MEM_MIN) {
+            char max_buf[10] = { 0 };
+            char* maxtext = buf;
+            char* maxtextp = maxtext;
+
+            utoa(max_buf, f->mem.min.min);
+
+            copy_and_move_buffer(&maxtextp, max_buf, strlen(max_buf));
+            copy_and_move_buffer(&maxtextp, "\n", strlen("\n"));
+
+            r = copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
+        }
+        else if (filename_const == MEM_STAT) {
             uint stattext_size = strlen("empty file") + 2;
             char *stattext = buf;
             memset(stattext, '\0', stattext_size);
@@ -712,6 +736,7 @@ int unsafe_cg_read(cg_file_type type, struct file * f, char * addr, int n)
 
             if (f->cgp->mem_controller_enabled) {
               copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MAX);
+              copy_and_move_buffer_max_len(&bufp, CGFS_MEM_MIN);
             }
         }
 
@@ -976,7 +1001,33 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
 
         r = n;
     }
+    if (filename_const == MEM_MIN &&
+        f->cgp->mem_controller_enabled) {
+        char min_string[32] = { 0 };
+        unsigned int min = -1;
+        int i = 0;
 
+        while (*addr && *addr != ',' && *addr != '\0' && i < sizeof(min_string)) {
+            min_string[i] = *addr;
+            i++;
+            addr++;
+        }
+        min_string[i] = '\0';
+        i = 0;
+
+        // Update min.
+        min = atoi(min_string);
+        if (-1 == min) {
+            return -1;
+        }
+
+        // Update min memory field if the paramter is within allowed values.
+        int test = set_min_mem(f->cgp, min);
+        if (test == 0 || test == -1)
+            return -1;
+        f->mem.min.min = min;        
+        r = n;
+    }
     return r;
 }
 
