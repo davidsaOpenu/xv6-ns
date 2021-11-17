@@ -21,7 +21,8 @@ struct {
   struct spinlock lock;
   int use_lock;
   int page_cnt;
-  struct run *freelist;
+  int page_protect;//protected memory for cgroup that declerat mem_min
+  struct run* freelist;
 } kmem;
 
 // Initialization happens in two phases.
@@ -76,6 +77,41 @@ kfree(char *v)
   kmem.page_cnt++;
   if(kmem.use_lock)
     release(&kmem.lock);
+}
+
+int increse_protect_counter(int num) {
+
+    if (num < 0) {
+        num *= -1;
+        return decrese_protect_counter(num);
+    }
+
+    int ret = 1;
+    if (kmem.use_lock)
+        acquire(&kmem.lock);
+
+    if (num + kmem.page_protect <= kmem.page_cnt) {
+        kmem.page_protect += num;
+        ret = 0;
+    }
+
+    if (kmem.use_lock)
+        release(&kmem.lock);
+    return ret;
+}
+
+int decrese_protect_counter(int num) {
+
+    if (kmem.use_lock)
+        acquire(&kmem.lock);
+
+    kmem.page_protect -= num;
+
+    if (kmem.use_lock)
+        release(&kmem.lock);
+
+    return 0;
+
 }
 
 // Allocate one 4096-byte page of physical memory.
