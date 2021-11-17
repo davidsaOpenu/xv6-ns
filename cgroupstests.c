@@ -904,6 +904,167 @@ TEST(test_limiting_mem)
   ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
+TEST(test_setting_mem_min)
+{
+    // Buffer for saving current memory written in limit
+    char saved_mem[12];
+
+    // Enable memory controller
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Copy the current saved memory and remove newline at the end
+    strcpy(saved_mem, read_file(TEST_1_MEM_MIN, 0));
+    saved_mem[strlen(saved_mem) - 1] = '\0';
+
+    // Update memory limit
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "100\n"));
+
+    // Restore memory limit to original
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, saved_mem));
+
+    // Check changes
+    ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), saved_mem, strlen(saved_mem)));
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_min_over_max_mem)
+{
+    // Buffer for saving current memory written in limit
+    char saved_mem[12];
+
+    // Enable memory controller
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Copy the current saved memory-max and remove newline at the end
+    strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
+    saved_mem[strlen(saved_mem) - 1] = '\0';
+
+
+    // Update memory max
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+
+    // Update memory min over max
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "101"));
+
+    // Update memory min
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "100\n"));
+
+    // Restore memory limit to original
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "0"));
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "0\n"));
+    ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_cant_protect_to_much_2_cgroups)
+{
+ 
+    // Enable memory controllers
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "+mem"));
+
+    // Protect all memory for cgroup1
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "232280064"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "232280064\n"));
+
+    // Try to protect memory for cgroup2
+    ASSERT_FALSE(write_file(TEST_2_MEM_MIN, "2000000"));
+
+    // Update memory min
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Update memory min over max
+    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_2_MEM_MIN, 0), "100\n"));
+
+    // Restore memory limit to original
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "0"));
+    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "0"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "0\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_2_MEM_MIN, 0), "0\n"));
+
+    // Disable memory controllers
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "-mem"));
+}
+
+TEST(test_mem_limit_minus_and_over_kernelbase)
+{
+    // Buffer for saving current memory written in limit
+    char saved_mem[12];
+
+    // Enable memory controller
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Copy the current saved memory-max and remove newline at the end
+    strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
+    saved_mem[strlen(saved_mem) - 1] = '\0';
+
+    // Update memory limit
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "50"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+    // Limit memory by minus
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "-100"));
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "-100"));
+
+    // Check for no changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+
+    // Limit memory by over kernel base
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "2147483649"));
+    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "2147483649"));
+
+    // Check for no changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+    // Update memory limit
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "100\n"));
+
+    // Restore memory limit to original
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "0"));
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "0\n"));
+    ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
 TEST(test_cant_move_over_mem_limit)
 {
   // Buffer for saving current memory written in limit
@@ -1150,6 +1311,10 @@ int main(int argc, char * argv[])
     run_test(test_mem_current);
     run_test(test_correct_mem_account_of_growth_and_shrink);
     run_test(test_limiting_mem);
+    run_test(test_setting_mem_min);
+    run_test(test_min_over_max_mem);
+    run_test(test_cant_protect_to_much_2_cgroups);
+    run_test(test_mem_limit_minus_and_over_kernelbase);
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
     run_test(test_cant_grow_over_mem_limit);
