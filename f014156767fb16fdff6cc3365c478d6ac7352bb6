@@ -136,6 +136,132 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cfc6a9d9_52dd33b5",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "all of them are necessary?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07fdf663_b207e9f7",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 32,
+        "startChar": 77,
+        "endLine": 32,
+        "endChar": 81
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e129c289_f593651d",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "nit; space",
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50380e47_8cb19383",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 124,
+        "startChar": 66,
+        "endLine": 124,
+        "endChar": 68
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "248fdb78_924db953",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "let\u0027s add an explanation on what is exactly computed in those lines",
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b96898b_23eaccc0",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-22T21:24:52Z",
+      "side": 1,
+      "message": "let\u0027s get rid of code duplication here and in ll 150-156",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 64
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "efb9eb89_e2c3fd4e",
         "filename": "ioctltests.c",
         "patchSetId": 36
