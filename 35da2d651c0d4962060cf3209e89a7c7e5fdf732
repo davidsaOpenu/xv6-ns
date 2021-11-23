@@ -1,0 +1,237 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1daa4b6a_c30d2b26",
+        "filename": "printf.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "let\u0027s change it to num_chars+\u003dretval\n\nalso, plz consider to swap the usage of names num_chars\u003c-\u003eretval",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ee9e50b_9ec001ac",
+        "filename": "printf.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "those cases are simple. Can we get rid of those functions?",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 1
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4105eb0_b97ad756",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "Am I missing something? This line exits shell in case of the failed command.",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2071317e_e475624a",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "wrap the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "747cbf79_957dfd6f",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "wrap the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b86fcce4_38689037",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "wrap the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c51fb0f_48d4679a",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "wrap the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c32df4a7_330ca21f",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "replace this by wrapper that wraps the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e67722a_9ca56cd6",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "replace this by wrapper that wraps the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "783d840e_87cc112c",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "replace this by wrapper that wraps the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e11b7f71_a2641cc6",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "replace this by wrapper that wraps the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32ac0c02_f73f67d1",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "replace this by wrapper that wraps the call with ret val checker",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fe87303_66a11a65",
+        "filename": "usertests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1891,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 1,
+      "message": "removing exit calls imply a need to check return values, otherwise exit calls have to stay.",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1891,
+        "endChar": 85
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}

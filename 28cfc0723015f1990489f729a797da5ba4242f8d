@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfe0e3f1_f1a82c3f",
+        "filename": "usertests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:41:43Z",
+      "side": 0,
+      "message": "please note that exit(1) calls are used inconsistently. Some of them were removed as opposed to other calls like in line 1279",
+      "revId": "28cfc0723015f1990489f729a797da5ba4242f8d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
