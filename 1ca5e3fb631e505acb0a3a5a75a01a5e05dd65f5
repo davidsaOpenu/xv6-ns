@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6093c0f_c27f1cf3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-11-23T08:50:04Z",
+      "side": 1,
+      "message": "Looks good. Maybe worth squashing with 520500 (or separating from 520500 the \u0027shell\u0027 part)",
+      "revId": "1ca5e3fb631e505acb0a3a5a75a01a5e05dd65f5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
