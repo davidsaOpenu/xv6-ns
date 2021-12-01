@@ -65,6 +65,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2511056_e2adeabf",
+        "filename": "cgroupstests.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-12-01T18:17:45Z",
+      "side": 1,
+      "message": "what do yoy mean by leftover? The comment is suppose to explain how did we get to the next line of code. If you take the equation in the comment, isolate child_cpu_fraction and multiply in 100 (to convert to precentage) you get the next line of code.",
+      "parentUuid": "b3f4bfa9_b771570d",
+      "range": {
+        "startLine": 526,
+        "startChar": 0,
+        "endLine": 526,
+        "endChar": 123
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a31352d_fcad0b90",
@@ -78,6 +102,30 @@
       "writtenOn": "2021-11-22T07:30:44Z",
       "side": 1,
       "message": "leftover",
+      "range": {
+        "startLine": 529,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 123
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38901f8d_3380be18",
+        "filename": "cgroupstests.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-12-01T18:17:45Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "2a31352d_fcad0b90",
       "range": {
         "startLine": 529,
         "startChar": 0,
@@ -113,6 +161,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "42e4cd45_32f04e6f",
+        "filename": "cgroupstests.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-12-01T18:17:45Z",
+      "side": 1,
+      "message": "I don\u0027t see how would that give us the child cpu percentage. I uploaded an image explaining how did we get to the original equation (in the comment) in the case that \u0027parent_duration \u003e child_duration\u0027, you can see it in https://ibb.co/5FKfLNc",
+      "parentUuid": "d72571d4_fc97011c",
+      "range": {
+        "startLine": 524,
+        "startChar": 0,
+        "endLine": 533,
+        "endChar": 0
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8f0f30e0_98248205",
         "filename": "cgroupstests.c",
         "patchSetId": 36
@@ -124,6 +196,30 @@
       "writtenOn": "2021-11-22T07:30:44Z",
       "side": 1,
       "message": "the difference between 300 and 33 is the order of magnitude. \none will expect to see same difference between percentages \nguess it\u0027s related to the wrong formula in test_child_cpu_precent",
+      "range": {
+        "startLine": 566,
+        "startChar": 0,
+        "endLine": 577,
+        "endChar": 50
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "756b3c72_94e1c402",
+        "filename": "cgroupstests.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1019062
+      },
+      "writtenOn": "2021-12-01T18:17:45Z",
+      "side": 1,
+      "message": "I don\u0027t think the difference is the magnitude. You need to remember that the parent process weight is 100 because that\u0027s the weight of a process. So the difference is that in the first test the child weight is 3 times the parent weight and in the second test the parent weight is 3 times the child\u0027s test",
+      "parentUuid": "8f0f30e0_98248205",
       "range": {
         "startLine": 566,
         "startChar": 0,
