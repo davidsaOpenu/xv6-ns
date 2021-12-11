@@ -324,6 +324,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88d9edcf_38b97117",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-11T12:23:58Z",
+      "side": 1,
+      "message": "The cpu_period_time is summed from all the CPUs, so in order to calc the percent we need to also divide by the number of CPUs",
+      "parentUuid": "07fdf663_b207e9f7",
+      "range": {
+        "startLine": 32,
+        "startChar": 77,
+        "endLine": 32,
+        "endChar": 81
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e129c289_f593651d",
@@ -425,6 +449,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "24cd8ef0_33722406",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-11T12:23:58Z",
+      "side": 1,
+      "message": "We already have an explanation:\n\"// New frame\"\n and \"Update \"per cpu\" cpu time.\"",
+      "parentUuid": "248fdb78_924db953",
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7b96898b_23eaccc0",
         "filename": "cpu_account.c",
         "patchSetId": 36
@@ -436,6 +478,30 @@
       "writtenOn": "2021-11-22T21:24:52Z",
       "side": 1,
       "message": "let\u0027s get rid of code duplication here and in ll 150-156",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 64
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62fde6f0_dff48626",
+        "filename": "cpu_account.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-11T12:23:58Z",
+      "side": 1,
+      "message": "The location of the locks differ in the two places.\nI think it\u0027s an overkill to make this a MACRO and I don\u0027t think it deserves being a function of its own, especially when it messes around with locks a lot",
+      "parentUuid": "7b96898b_23eaccc0",
       "range": {
         "startLine": 204,
         "startChar": 0,
@@ -623,6 +689,30 @@
       "writtenOn": "2021-11-22T08:07:07Z",
       "side": 1,
       "message": "requests are handled by the switch in line 176",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 3
+      },
+      "revId": "f014156767fb16fdff6cc3365c478d6ac7352bb6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3ec1a7b_dcea1955",
+        "filename": "sysproc.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-11T12:23:58Z",
+      "side": 1,
+      "message": "Moving these conditions to the switch causes a deadlock in test_cpu_weight",
+      "parentUuid": "ce341244_b95315de",
       "range": {
         "startLine": 146,
         "startChar": 0,
