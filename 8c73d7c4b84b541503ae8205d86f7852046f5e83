@@ -1,0 +1,158 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5aafa06_5ff68c7c",
+        "filename": "cgfs.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "let\u0027s move to defs and as you said about abs, seems we have to change it.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 34
+      },
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b115a183_f1528ad0",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "when this condition becomes true?",
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28b52af1_fdd0a239",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "whether worth to move it to a file common to all tests?\nMaybe we need to refactor tests and move other methods as well?\nOpen a refactoring ticket (AI: davidsa)",
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb367773_0119c15a",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "@Baruch, as you suggested let\u0027s make this look better",
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "569b7018_bb7162ce",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 1158,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "- indentation\n- reason why we are forking a child (counts pf only for the child)\n- let\u0027s rename bufs to reflect the stage of the test",
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56cb13aa_e751f9bf",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "memset",
+      "range": {
+        "startLine": 1176,
+        "startChar": 7,
+        "endLine": 1177,
+        "endChar": 26
+      },
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef476773_e7316ea4",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "// wait for a parent process to read",
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71ab2501_3b4d171c",
+        "filename": "cgroupstests.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T08:53:18Z",
+      "side": 1,
+      "message": "let\u0027s make this line shorter",
+      "range": {
+        "startLine": 1211,
+        "startChar": 6,
+        "endLine": 1211,
+        "endChar": 133
+      },
+      "revId": "8c73d7c4b84b541503ae8205d86f7852046f5e83",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
