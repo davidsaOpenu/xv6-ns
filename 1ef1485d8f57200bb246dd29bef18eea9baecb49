@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37f518c7_b28d6ab9",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T09:40:37Z",
+      "side": 1,
+      "message": "lets consider removinng/merging into the following one",
+      "revId": "1ef1485d8f57200bb246dd29bef18eea9baecb49",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9988979b_7d53c77a",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2021-12-27T09:40:37Z",
+      "side": 1,
+      "message": "enuresis min is less then max",
+      "revId": "1ef1485d8f57200bb246dd29bef18eea9baecb49",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
