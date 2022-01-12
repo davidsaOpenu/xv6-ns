@@ -36,6 +36,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4629f604_e136d696",
+        "filename": "printf.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f60b0373_8339272d",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce98803e_91594dac",
@@ -49,6 +67,30 @@
       "writtenOn": "2022-01-06T07:56:55Z",
       "side": 1,
       "message": "if strlen exists we can use it, if not worth to implement\n\nwrite(fd, str, stplen(str))",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 16
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32b8628a_a1629c29",
+        "filename": "printf.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce98803e_91594dac",
       "range": {
         "startLine": 46,
         "startChar": 0,
@@ -82,6 +124,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "982c152a_d76b74cb",
+        "filename": "printf.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ee9e50b_9ec001ac",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 1
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b48edf0_137bb84b",
@@ -105,6 +171,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c5c33b3_c88326d7",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b48edf0_137bb84b",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 57
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4105eb0_b97ad756",
@@ -118,6 +208,24 @@
       "writtenOn": "2021-11-23T08:41:43Z",
       "side": 1,
       "message": "Am I missing something? This line exits shell in case of the failed command.",
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df3e2e3e_1ce3c69e",
+        "filename": "sh.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "this line exures that shell will exit with correct return status (exit 1 instead of exit 0)",
+      "parentUuid": "c4105eb0_b97ad756",
       "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
@@ -474,6 +582,30 @@
       "side": 1,
       "message": "print SUCCESS and expect for SUCCESS in runtests.exp (proc usertests {argv})",
       "parentUuid": "2fe87303_66a11a65",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1891,
+        "endChar": 85
+      },
+      "revId": "35da2d651c0d4962060cf3209e89a7c7e5fdf732",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51725552_1ea5f35c",
+        "filename": "usertests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1891,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-01-12T07:30:55Z",
+      "side": 1,
+      "message": "lets remove the printing part (of SUCCESS) from the exectest and \nthe part of \"expect for SUCCESS in runtests.exp\" seems obsolete since we are checking the command exit status in runtests.exp",
+      "parentUuid": "22832520_07dcd1e1",
       "range": {
         "startLine": 1847,
         "startChar": 0,
