@@ -6,6 +6,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "elf.h"
+#include "cgroup.h"
 
 extern char data[];  // defined by kernel.ld
 pde_t *kpgdir;  // for use in scheduler()
@@ -219,33 +220,41 @@ loaduvm(pde_t *pgdir, char *addr, struct inode *ip, uint offset, uint sz)
 // Allocate page tables and physical memory to grow process from oldsz to
 // newsz, which need not be page aligned.  Returns new size or 0 on error.
 int
-allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
+allocuvm(pde_t* pgdir, uint oldsz, uint newsz, struct cgroup* cgroup)
 {
-  char *mem;
-  uint a;
+    char* mem;
+    uint a;
+    int set_cnt = 0;
 
-  if(newsz >= KERNBASE)
-    return 0;
-  if(newsz < oldsz)
-    return oldsz;
+    if (newsz >= KERNBASE)
+        return 0;
+    if (newsz < oldsz)
+        return oldsz;
 
-  a = PGROUNDUP(oldsz);
-  for(; a < newsz; a += PGSIZE){
-    mem = kalloc();
-    if(mem == 0){
-      cprintf("allocuvm out of memory\n");
-      deallocuvm(pgdir, newsz, oldsz);
-      return 0;
+    a = PGROUNDUP(oldsz);
+    for (; a < newsz; a += PGSIZE) {
+
+        if (dec_protect_mem(cgroup) == 0) {
+            set_cnt++;
+        }
+
+        mem = kalloc();
+        if (mem == 0) {
+            cprintf("allocuvm out of memory\n");
+            deallocuvm(pgdir, newsz, oldsz);
+            inc_protect_mem(cgroup, set_cnt);
+            return 0;
+        }
+        memset(mem, 0, PGSIZE);
+        if (mappages(pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W | PTE_U) < 0) {
+            cprintf("allocuvm out of memory (2)\n");
+            deallocuvm(pgdir, newsz, oldsz);
+            kfree(mem);
+            inc_protect_mem(cgroup, set_cnt);
+            return 0;
+        }
     }
-    memset(mem, 0, PGSIZE);
-    if(mappages(pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0){
-      cprintf("allocuvm out of memory (2)\n");
-      deallocuvm(pgdir, newsz, oldsz);
-      kfree(mem);
-      return 0;
-    }
-  }
-  return newsz;
+    return newsz;
 }
 
 // Deallocate user pages to bring the process size from oldsz to
@@ -276,6 +285,24 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
     }
   }
   return newsz;
+}
+
+int
+dec_protect_mem(struct cgroup* cgroup)
+{
+
+    if (cgroup != cgroup_root() && cgroup->mem_controller_enabled && cgroup->protected_mem > 0) {
+        decrese_protect_counter(1);
+        cgroup->protected_mem -= 1;
+        return 0;
+    }
+
+    return 1;
+}
+
+void inc_protect_mem(struct cgroup* cgroup, int n) {
+    increse_protect_counter(n);
+    cgroup->protected_mem += n;
 }
 
 // Free a page table and all the physical memory pages
@@ -389,4 +416,3 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
 // Blank page.
 //PAGEBREAK!
 // Blank page.
-
