@@ -205,6 +205,7 @@ growproc(int n)
 {
   uint sz;
   struct proc* curproc = myproc();
+  struct cgroup* cgroup = curproc->cgroup;
 
   // In case trying to grow process's memory over memory limit, and
   // given memory controller is enabled, return failure
@@ -216,7 +217,7 @@ growproc(int n)
 
   sz = curproc->sz;
   if (n > 0) {
-    if ((sz = allocuvm(curproc->pgdir, sz, sz + n)) == 0)
+    if ((sz = allocuvm(curproc->pgdir, sz, sz + n, cgroup)) == 0)
       return -1;
   }
   else if (n < 0) {
@@ -226,13 +227,35 @@ growproc(int n)
   curproc->sz = sz;
 
   // Update memory usage in cgroup and its ancestors
-  struct cgroup* cgroup = curproc->cgroup;
   do {
     cgroup->current_mem += n;
-  } while ((cgroup = cgroup->parent));
+    } while ((cgroup = cgroup->parent));
+
+  if (n<0)
+    update_protect_mam(curproc->cgroup, sz, sz + n);
 
   switchuvm(curproc);
   return 0;
+}
+
+void
+update_protect_mam(struct cgroup* cgroup, int oldsz, int newsz)
+{
+
+    if (cgroup == cgroup_root())
+        return;
+
+    int proc_page = PGROUNDUP(oldsz) - PGROUNDUP(newsz);
+    cgroup->current_page -= proc_page;
+    if (cgroup->mem_controller_enabled) {
+        int min = PGROUNDUP(cgroup->min_mem)/PGSIZE;
+        int protect = min - cgroup->current_page;
+
+        if (protect > 0) {//we need to protect memory
+            increse_protect_counter(protect - cgroup->to_protect);
+            cgroup->to_protect = protect;
+        }
+    }
 }
 
 // Create a new process copying p as the parent.
@@ -335,6 +358,8 @@ void kill_proc(struct proc* p, struct proc* reaper) {
    if (p->state == SLEEPING)
     p->state = RUNNABLE;
    p->parent = reaper;
+   cgroup_erase(p->cgroup, p);
+   update_protect_mam(p->cgroup, p->sz, 0);
 }
 
 /*Kill all the processes inside the namespace of a given process, called parent
