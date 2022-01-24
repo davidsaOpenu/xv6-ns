@@ -70,11 +70,16 @@ struct cgroup
     int is_frozen; /*Indicates whether cgroup is frozen. */
 
     unsigned int current_mem; /*The current amount of memory used by the group.*/
-    unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
+    unsigned int current_page; /*The current amount of memory used by the group in pages.*/
+
     unsigned int mem_stat_file_dirty; /* Amount of cached filesystem data that was modified but not yet written back to disk */
     unsigned int mem_stat_file_dirty_aggregated; /* Total number of cached filesystem data that was modified and written back to disk */
     unsigned int mem_stat_pgfault;/*Number of page faults incurred when the kernel dos not needs to read the data from disk*/
     unsigned int mem_stat_pgmajfault;/*Number of page faults incurred and the kernel actually needs to read the data from disk*/
+
+    unsigned int max_mem; /*The maximum memory allowed for a group to use.*/
+    unsigned int min_mem; /*Amount of memory that protected for this cgroup.*/
+    unsigned int protected_mem; /*How meny pages of memory we need to protect for this group (e.g. min_mem - current_page).*/
 
     unsigned long long cpu_time;
     unsigned int cpu_period_time;
@@ -168,6 +173,14 @@ int cgroup_insert(struct cgroup * cgroup, struct proc * proc);
  * Return value is void.
  */
 void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
+
+/**
+ * These functions update protect memory counter after moveing process from src cgroup to dst cgroup.
+ * Return 0 for sucsses, 1 if there is no memory to protect for the "src" cgroup.
+ */
+int protect_memory(struct cgroup* src, struct cgroup* dst, int proc_size);
+int calc_dec_dst_protect_pg(struct cgroup* cgroup, int pg);
+int calc_inc_src_protect_pg(struct cgroup* cgroup, int pg);
 
 /**
  * These functions enable the cpu controller of a cgroup.
@@ -408,10 +421,27 @@ int frz_grp(struct cgroup * cgroup, int frz);
 /**
  *This function sets the maximum amount of memory.
  *Receives cgroup pointer parameter "cgroup" and integer "limit".
- *Sets the number of maximum allowed amount of memory in the cgroup to be "limit".
+ *Sets the maximum allowed amount of memory in the cgroup to be "limit".
  *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
  */
 int set_max_mem(struct cgroup* cgp, unsigned int limit);
+
+/**
+ *This function sets the minimum amount of memory.
+ *Receives cgroup pointer parameter "cgroup" and integer "limit".
+ *Sets the minimum amount of memory in the cgroup to be "limit".
+ *calls set_protect_mem that ask mmu to protecet pages for cgroup.
+ *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ */
+int set_min_mem(struct cgroup* cgp, unsigned int limit);
+
+/**
+ *This function sets the amount of memory pages that protected for cgroup.
+ *Receives cgroup pointer parameter "cgroup" and integer "pages".
+ *Increas/decreas the number of protected memory by "pages".
+ *Returns 0 upon successes, -1 upon failure.
+ */
+int set_protect_mem(struct cgroup* cgroup, unsigned int pages);
 
 /**
  * These functions enables the memory controller of a cgroup.
