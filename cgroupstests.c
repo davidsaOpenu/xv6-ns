@@ -382,6 +382,7 @@ TEST(test_opening_and_closing_cgroup_files)
     ASSERT_TRUE(open_close_file(TEST_1_SET_FRZ));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
+    ASSERT_TRUE(open_close_file(TEST_1_MEM_MIN));
     ASSERT_TRUE(open_close_file(TEST_1_MEM_STAT));
 }
 
@@ -403,6 +404,7 @@ TEST(test_reading_cgroup_files)
     ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
+    ASSERT_TRUE(read_file(TEST_1_MEM_MIN, 1));
     ASSERT_TRUE(read_file(TEST_1_MEM_STAT, 1));
 }
 
@@ -908,35 +910,240 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
 
 TEST(test_limiting_mem)
 {
+  // This test only updates min max values without any verification if the limits apply on the cgroup memory
+
   // Buffer for saving current memory written in limit
-  char saved_mem[12];
+  char default_max[12];
+  char default_min[12];
 
   // Enable memory controller
   ASSERT_TRUE(enable_controller(MEM_CNT));
 
-  // Copy the current saved memory and remove newline at the end
-  strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
-  saved_mem[strlen(saved_mem) - 1] = '\0';
+  // read MEM_MAX and MEM_MIN values
+  strcpy(default_max, read_file(TEST_1_MEM_MAX, 0));
+  strcpy(default_min, read_file(TEST_1_MEM_MIN, 0));
+
+  // Check default limit is correct
+  ASSERT_FALSE(strncmp(default_max, KERNBASE, strlen(default_max)));
+  ASSERT_FALSE(strncmp(default_min, "0", strlen(default_min)));
 
   // Update memory limit
   ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "90"));
 
   // Check changes
   ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+  ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "90\n"));
 
   // Restore memory limit to original
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, default_max));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, default_min));
 
   // Check changes
-  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), default_max, strlen(default_max)));
+  ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), default_min, strlen(default_min)));
+
+  // Update again memory limit
+  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "90"));
+
+  // Check changes
+  ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+  ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "90\n"));
+
+  // Disable memory controller
+  ASSERT_TRUE(disable_controller(MEM_CNT));
+  // Enable memory controller
+  ASSERT_TRUE(enable_controller(MEM_CNT));
+  // Verify limit return to default
+  ASSERT_FALSE(strcmp(default_max, read_file(TEST_1_MEM_MAX, 0)));
+  ASSERT_FALSE(strcmp(default_min, read_file(TEST_1_MEM_MIN, 0)));
 
   // Disable memory controller
   ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
+TEST(test_ensure_mem_min_is_less_then_mem_max)
+{
+  // Mem_max mast to be grater then mem_min
+
+    // Enable memory controller
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Update memory max
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+
+    // Try to update memory min over max this have to fail
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "101"));
+
+    // Update memory min
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "100\n"));
+
+    // Try to update memory max smaller then min this have to fail
+    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "99"));
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_cant_use_protected_memory)
+{
+    // Try to set mem min for cgroup2 or grows procses sizw
+    // These should fail since we protect all memory mem for cgroup1
+
+    // Enable memory controllers
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "+mem"));
+
+    char buf [12];
+    itoa(buf, MEM_SIZE);
+
+    // Protect all memory for cgroup1
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+
+    // Check changes
+    ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), buf, strlen(buf)));
+
+    // Try to protect memory for cgroup2 this need to fail
+    ASSERT_FALSE(write_file(TEST_2_MEM_MIN, buf));
+
+    // Attempt to grow process memory, notice this operation should fail and return -1.
+    ASSERT_UINT_EQ((int)sbrk(MEM_SIZE), -1);
+
+    // Decreas memory min for cgroup1
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+
+    // Update memory min for cgroup2
+    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "100"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_2_MEM_MIN, 0), "100\n"));
+
+    // Restore memory limit to original
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "0"));
+    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "0"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "0\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_2_MEM_MIN, 0), "0\n"));
+
+    // Disable memory controllers
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "-mem"));
+}
+
+TEST(test_release_protected_memory_after_delete_cgroup)
+{
+
+    // Create temp cgroup and enable memory controllers
+    ASSERT_FALSE(mkdir(TEST_TMP));
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+    ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
+
+    char buf [12];
+    itoa(buf, MEM_SIZE);
+
+    // Protect all memory for tmpcgroup
+    ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+
+    // Check changes
+    ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
+
+    // Try to protect memory for cgroup1 this need to fail
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
+
+    ASSERT_FALSE(unlink(TEST_TMP));
+
+    // Try to protect memory for cgroup1
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+
+    // Disable memory controllers
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_cant_move_under_mem_limit)
+{
+    // Attempt to transfer a process that has allocated MEM_SIZE bytes from one cgroup to another.
+    // The attempt should fail since there is no enough memory to protect for the source cgroup.
+    char buf [12];
+    itoa(buf, MEM_SIZE);
+
+    // Enable memory controllers
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Protect all memory for cgroup1
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+
+    // Check changes
+    ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), buf, strlen(buf)));
+
+    ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
+
+    // Save current process memory size.
+    int proc_mem = getmem();
+    int grow = MEM_SIZE - proc_mem;
+
+    ASSERT_FALSE((int)sbrk(grow) == -1);
+
+    // Try return the process to root cgroup this heve to faile
+    ASSERT_FALSE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+    ASSERT_FALSE((int)sbrk(-grow) == -1);
+    ASSERT_TRUE(move_proc(ROOT_CGROUP_PROCS, getpid()));
+
+    // Disable memory controllers
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
+TEST(test_mem_limit_negative_and_over_kernelbase)
+{
+    // Buffer for saving current memory written in limit
+    char saved_mem[12];
+
+    // Enable memory controller
+    ASSERT_TRUE(enable_controller(MEM_CNT));
+
+    // Copy the current saved memory-max and remove newline at the end
+    strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
+    saved_mem[strlen(saved_mem) - 1] = '\0';
+
+    // Update memory limit
+    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "50"));
+
+    // Check changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+    // Limit memory by minus
+    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "-100"));
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "-100"));
+
+    // Check for no changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+
+    // Limit memory by over kernel base
+    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, MORE_THEN_KERNBASE));
+    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, MORE_THEN_KERNBASE));
+
+    // Check for no changes
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
+    ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
+
+    // Disable memory controller
+    ASSERT_TRUE(disable_controller(MEM_CNT));
+}
+
 TEST(test_cant_move_over_mem_limit)
 {
-  // Buffer for saving current memory written in limit
   char saved_mem[12];
 
   // Enable memory controller
@@ -1277,6 +1484,11 @@ int main(int argc, char * argv[])
     run_test(test_mem_current);
     run_test(test_correct_mem_account_of_growth_and_shrink);
     run_test(test_limiting_mem);
+    run_test(test_ensure_mem_min_is_less_then_mem_max);
+    run_test(test_cant_use_protected_memory);
+    run_test(test_release_protected_memory_after_delete_cgroup);
+    run_test(test_cant_move_under_mem_limit);
+    run_test(test_mem_limit_negative_and_over_kernelbase);
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
     run_test(test_cant_grow_over_mem_limit);
@@ -1294,3 +1506,4 @@ int main(int argc, char * argv[])
         exit(0);
     }
 }
+
