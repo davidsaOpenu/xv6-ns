@@ -101,6 +101,11 @@ void proc_unlock();
  */
 struct cgroup *proc_get_cgroup(void);
 
+/**
+ * Update number of memory pages to protect for cgroup after dealloc memory .
+ */
+void update_protect_mem(struct cgroup* cgroup, int oldsz, int newsz);
+
 // Process memory is laid out contiguously, low addresses first:
 //   text
 //   original data and bss
