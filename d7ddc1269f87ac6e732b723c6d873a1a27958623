@@ -1,0 +1,226 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3062e6e_207415e4",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "calculate pages",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96fdedd0_faf0484d",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "lets add an explanation when this condition might happen",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cca51e41_8d4dba82",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ea8e736_33d819a9",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "( x - y )",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6858cf0_8f73481c",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "root has no memory controller -\u003e fail",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03bfec48_77638c14",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "When updating the documentation, let\u0027s add few lines of suggestion how to perform the recalculation in case of nested cgroups.",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa038981_7834c558",
+        "filename": "cgroup.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "rm",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9772731c_1a1fc74f",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "in pages",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "591e027b_e6951dc0",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "rm",
+      "range": {
+        "startLine": 425,
+        "startChar": 11,
+        "endLine": 425,
+        "endChar": 17
+      },
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f62051d_10bac380",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "rm",
+      "range": {
+        "startLine": 433,
+        "startChar": 11,
+        "endLine": 433,
+        "endChar": 17
+      },
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46204e49_ab5d58cc",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "of memory pages",
+      "range": {
+        "startLine": 438,
+        "startChar": 32,
+        "endLine": 438,
+        "endChar": 47
+      },
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2138da0_b164773e",
+        "filename": "cgroup.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-14T07:48:59Z",
+      "side": 1,
+      "message": "rm",
+      "revId": "d7ddc1269f87ac6e732b723c6d873a1a27958623",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
