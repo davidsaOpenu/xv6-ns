@@ -1,0 +1,244 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9558652b_34bb1126",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "// this test only updates min max values without any verification if the limits apply on the cgroup memory",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3f30245_90a19b90",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 920,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "read MEM_MAX and MEM_MIN values and remove newline...",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df21c8d4_b71ae018",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "less",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40a17240_a1c79747",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 976,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "same as beofre",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "208448b8_a77005de",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1013,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "let\u0027s revise this",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b097a3a4_23de4a85",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "release",
+      "range": {
+        "startLine": 1057,
+        "startChar": 5,
+        "endLine": 1057,
+        "endChar": 53
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29431134_444a6234",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1089,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "// Attempt to transfer a process that has allocated MEM_SIZE bytes from one cgroup to another. The attempt should fail since there is no enough memory to protect is the target cgroup (e.i. the another one).",
+      "range": {
+        "startLine": 1089,
+        "startChar": 49,
+        "endLine": 1089,
+        "endChar": 50
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01bb4940_851192d0",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "s/minus/negative",
+      "range": {
+        "startLine": 1120,
+        "startChar": 5,
+        "endLine": 1120,
+        "endChar": 45
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4916f9e_b3cd4730",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1141,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "MAX",
+      "range": {
+        "startLine": 1141,
+        "startChar": 28,
+        "endLine": 1141,
+        "endChar": 42
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e407af94_2c9dee4e",
+        "filename": "cgroupstests.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "let\u0027s revise those lines",
+      "range": {
+        "startLine": 1160,
+        "startChar": 1,
+        "endLine": 1169,
+        "endChar": 86
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fe96c90_bc4eb641",
+        "filename": "proc.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "shouldn\u0027t we also specify the cgroup to update the memory amount that was deallocated?",
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d4ce66a_a22051a7",
+        "filename": "proc.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-02-28T07:54:50Z",
+      "side": 1,
+      "message": "mem",
+      "range": {
+        "startLine": 107,
+        "startChar": 20,
+        "endLine": 107,
+        "endChar": 23
+      },
+      "revId": "e42435d70f78604deb4c959e63e609c8b4d50846",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
