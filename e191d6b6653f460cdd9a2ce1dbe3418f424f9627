@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c21ad737_9419a8b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-05-13T04:02:18Z",
+      "side": 1,
+      "message": "Thanks for working on this. Looks great. Just 2 nits as following",
+      "revId": "e191d6b6653f460cdd9a2ce1dbe3418f424f9627",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21b0ce26_5985dcd7",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-05-13T04:02:18Z",
+      "side": 1,
+      "message": "It took me a sec to understand that CNT is a counter. Let\u0027s stress the point in some way\n\nCNT\u003d\u003eNUM\n  or\nCNT\u003d\u003eCOUNTER\n  or\nAdding a comment with explanation\n  or \nanything better",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 34
+      },
+      "revId": "e191d6b6653f460cdd9a2ce1dbe3418f424f9627",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f15bdb6e_fde6a7b9",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-05-13T04:02:18Z",
+      "side": 1,
+      "message": "leftover?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 2
+      },
+      "revId": "e191d6b6653f460cdd9a2ce1dbe3418f424f9627",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
