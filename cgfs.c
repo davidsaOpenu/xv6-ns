@@ -11,18 +11,6 @@
 #define MAX_CGROUP_DIR_ENTRIES 64
 #define MAX_STR 64
 #define MAX_BUF 4096
-#define CGROUP_FILE_NAMES_CNT (18)
-
-/*
-typedef (*read_file_func_p)(struct file *, char *, int);
-
-read_file_func_p func_p[CGROUP_FILE_NAMES_CNT] = {
-    read_file_cg_procs,
-    read_file_cg_subtree,
-
-    
-};
-*/
 
 // TODO: refactor - move to defs.h
 #define min(x, y) (x) > (y) ? (y) : (x)
