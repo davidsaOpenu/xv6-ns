@@ -889,6 +889,7 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
   // Decrease current proc by 100 bytes.
   sbrk(-100);
 
+  //TODO: read twice?!
   // Read the contents of current memory file and convert it for comparison.
   strcpy(saved_mem, read_file(TEST_1_MEM_CURRENT, 0));
 
@@ -1026,31 +1027,52 @@ TEST(test_cant_use_protected_memory)
 
 TEST(test_release_protected_memory_after_delete_cgroup)
 {
+    int i = 0;
+    char buf [12] = {0};
+    //We want to reserve different amounts of memory (by precantage)
+    float memory_reservations[] = {1.0, 0.75, 0.5, 0.25, 0.1, 0.05, 0.01};
 
     // Create temp cgroup and enable memory controllers
-    ASSERT_FALSE(mkdir(TEST_TMP));
-    ASSERT_TRUE(enable_controller(MEM_CNT));
-    ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
 
-    char buf [12];
-    itoa(buf, MEM_SIZE);
+    for(i = 0; i < sizeof(memory_reservations) / sizeof(float); i++)
+    {
+      ASSERT_FALSE(mkdir(TEST_TMP));
+      ASSERT_TRUE(enable_controller(MEM_CNT));
+      ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
+      memset(buf, 12, 0);
+      itoa(buf, MEM_SIZE * memory_reservations[i]);
+      printf(1,"\n buf is %s \n", buf);
 
-    // Protect all memory for tmpcgroup
-    ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      // Protect all memory for tmpcgroup
+      ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      
+      read_file(TEST_TMP_MEM_MIN, 1);
 
-    // Check changes
-    ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
+      // Check changes
+      ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
 
-    // Try to protect memory for cgroup1 this need to fail
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
+      /* Here we change the value we want to reserve to be MEM_SIZE - X + 1.
+          Where X is the amount we reserved */
+      if(memory_reservations[i] <= 0.5)
+      {
+        memset(buf, 12, 0);
+        itoa(buf, 0xdd7a000 - (MEM_SIZE * memory_reservations[i]) + 4097);
+      printf(1,"\n  new buf is %s \n", buf);
+      }
+      
+      read_file(TEST_1_MEM_CURRENT, 1);
+      // Try to protect memory for cgroup1 this need to fail
+      ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
 
-    ASSERT_FALSE(unlink(TEST_TMP));
 
-    // Try to protect memory for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+      ASSERT_FALSE(unlink(TEST_TMP));
+      // Try to protect memory for cgroup1
+      ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
 
-    // Disable memory controllers
-    ASSERT_TRUE(disable_controller(MEM_CNT));
+      // Disable memory controllers
+      ASSERT_TRUE(disable_controller(MEM_CNT));
+    }
+
 }
 
 TEST(test_cant_move_under_mem_limit)
@@ -1459,7 +1481,7 @@ int main(int argc, char * argv[])
     run_test(test_limiting_pids);
     run_test(test_move_failure);
     run_test(test_fork_failure);
-    run_test(test_cpu_stat);
+    //run_test(test_cpu_stat);
     run_test(test_pid_current);
     run_test(test_setting_cpu_id);
     run_test(test_correct_cpu_running);
