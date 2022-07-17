@@ -151,3 +151,20 @@ char* strcat(char* dest, const char* source)
 
         return dest;
 }
+
+char * strstr(char * src, char * needle)
+{
+  uint i = 0;
+  uint needle_size = strlen(needle);
+  uint src_len = strlen(src);
+
+  for(i = 0; i < src_len; i++)
+  {
+    if(0 == strncmp(src, needle, needle_size))
+    {
+      return src + needle_size;
+    }
+    src++;
+  }
+  return 0;
+}

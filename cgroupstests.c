@@ -3,6 +3,8 @@
 #include "user.h"
 #include "test.h"
 #include "param.h"
+#include "mmu.h"
+
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
@@ -11,6 +13,20 @@ char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
 char suppress = 0;
 
 int failed = 0;
+
+char temp_path_g[MAX_PATH_LENGTH] ={0};
+
+//######################################## Helper functions#######################
+
+//Parse memory.stat info and fetch "kernel" value
+int get_kernel_total_memory(char * mem_stat_info)
+{
+  char * kernel_value = 0;
+
+  kernel_value = strstr(mem_stat_info, (char *)"kernel - ");
+
+  return atoi(kernel_value);
+}
 
 // Return if controller type is valid.
 int is_valid_controller_type(int controller_type) {
@@ -88,6 +104,7 @@ char* read_file(const char* file, int print)
   if (read(fd, buf, 256) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to read file: %s\n", file);
+    close_file(fd);
     return 0;
   }
 
@@ -104,15 +121,19 @@ char* read_file(const char* file, int print)
 
 // Write into a file. If succesful returns 1, otherwise 0.
 int write_file(const char* file, char* text) {
-  int fd = open_file(file);
   char buf[256];
+  int fd = open_file(file);
 
+  if(!fd)
+    return 0;
+  
   empty_string(buf, 256);
   strcpy(buf, text);
-
+  
   if (write(fd, buf, sizeof(buf)) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to write into file %s\n", file);
+    close_file(fd);
     return 0;
   }
 
@@ -128,6 +149,7 @@ int write_new_file(const char* file, char* text) {
    }
 
    if (!write_file(file, text)) {
+     close_file(fd);
      return 0;
    }
 
@@ -247,6 +269,7 @@ int temp_write(int num) {
   itoa(buf, num);
 
   if (!write_file(TEMP_FILE, buf)) {
+    close_file(fd);
     return 0;
   }
 
@@ -269,7 +292,7 @@ int temp_delete() {
 }
 
 //return the value for a given entry from the bufer
-//entry mast contains all characters before the value include white-spase
+//entry must contain all characters before the value include white-space
 int get_val(char *buf, char *entry){
 
   do{
@@ -1026,31 +1049,53 @@ TEST(test_cant_use_protected_memory)
 
 TEST(test_release_protected_memory_after_delete_cgroup)
 {
+    int i = 0;
+    char buf [12] = {0};
+    char * mem_str_buf = 0;
+    uint kernel_total_mem = 0;
+    //We want to reserve different amounts of memory (by precantage)
+    float memory_reservations[] = {1.0, 0.75, 0.5, 0.25, 0.1, 0.05, 0.01};
 
     // Create temp cgroup and enable memory controllers
-    ASSERT_FALSE(mkdir(TEST_TMP));
-    ASSERT_TRUE(enable_controller(MEM_CNT));
-    ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
+    for(i = 0; i < sizeof(memory_reservations) / sizeof(float); i++)
+    {
+      ASSERT_FALSE(mkdir(TEST_TMP));
+      ASSERT_TRUE(enable_controller(MEM_CNT));
+      ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
 
-    char buf [12];
-    itoa(buf, MEM_SIZE);
+      // get total amount of memory from memory controller core file (memory.stat) 
+      mem_str_buf = read_file(TEST_1_MEM_STAT, 0);
+      kernel_total_mem = get_kernel_total_memory(mem_str_buf);
 
-    // Protect all memory for tmpcgroup
-    ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      memset(buf, 12, 0);
+      itoa(buf,  kernel_total_mem * memory_reservations[i]);
 
-    // Check changes
-    ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
+      // Protect portion of memory for tmpcgroup
+      ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      
+      // Check changes
+      ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
 
-    // Try to protect memory for cgroup1 this need to fail
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
+      /* Here we change the value we want to reserve to be the remnent of the memory.
+      The formula: (total kernel's memory) - X + (page size) + 1.
+      - X is the amount we reserved
+      - page size is to force an upper rounding on the bytes value to the start of the next page 
+      - +1 is to proceed to the next page (in case we got a round value divided by 4k)*/
+      memset(buf, 12, 0);
+      itoa(buf,  kernel_total_mem - 
+              (kernel_total_mem * memory_reservations[i]) + PGSIZE + 1);
+      
+      // Try to protect memory for cgroup1 this need to fail
+      ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
 
-    ASSERT_FALSE(unlink(TEST_TMP));
+      ASSERT_FALSE(unlink(TEST_TMP));
+      // Try to protect memory for cgroup1
+      ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
 
-    // Try to protect memory for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+      // Disable memory controllers
+      ASSERT_TRUE(disable_controller(MEM_CNT));
+    }
 
-    // Disable memory controllers
-    ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
 TEST(test_cant_move_under_mem_limit)
@@ -1422,7 +1467,7 @@ TEST (test_mem_stat) {
         int pgmajfault_after = get_val(effect_write_second_file, "pgmajfault - ");
         ASSERT_TRUE(pgmajfault_after - pgmajfault_befor >= 2);
 
-        // check the effect of pgfaul
+        // check the effect of pgfault
         // The second write to file c was before closing and file d was after closing,
         // so we need more pgfaults besides what the writing itself causes
         int grow_pgfoult_after_first = get_val(effect_write_first_file, "pgfault - ") - get_val(befor_all , "pgfault - ");
@@ -1442,6 +1487,106 @@ TEST (test_mem_stat) {
         ASSERT_TRUE(temp_delete());
     }
 }
+
+
+TEST (test_nested_cgroups)
+{
+  char * mem_str_buf = 0;
+  uint kernel_total_mem = 0;
+  uint depth_cnt = 1;
+  char min_val[12] = {0};
+  //char max_val[12] = {0};
+  char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char current_nesting_index = '0';
+  uint current_nested_cgroup_length = 0;
+
+
+  mem_str_buf = read_file(TEST_1_MEM_STAT, 0);
+  kernel_total_mem = get_kernel_total_memory(mem_str_buf);
+
+  printf(1, "\nkernel total memory: %x \n", kernel_total_mem);
+
+  //initialize the nested cgroup path
+  strcpy(current_nested_cgroup, ROOT_CGROUP);
+  strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+
+  /* Create the root nested cgroup and enable the memory controller
+    The controller should propagate to all the nested cgroups  */
+  ASSERT_FALSE(mkdir(current_nested_cgroup));
+
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+  
+
+  for(depth_cnt = 1; depth_cnt < 10; depth_cnt++)
+  {
+    /* define the min-max values for the current cgroup */
+    memset(min_val, 12, 0);
+    itoa(min_val, kernel_total_mem / 10);
+
+    // Protect portion of memory for the current nested cgroup
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
+    ASSERT_TRUE(write_file(temp_path_g, min_val));
+    read_file(temp_path_g, 1);
+
+    //create another nested cgroup (mem controller should be enabled)
+    current_nesting_index++;
+    strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+    current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+    ASSERT_FALSE(mkdir(current_nested_cgroup));
+    
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+    
+  }
+
+  //check if we can allocate now more memory in the last cgroup
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+  
+  //allocate 25% of kernel space - should fail
+  memset(min_val, 12, 0);
+  itoa(min_val, kernel_total_mem / 4);
+  ASSERT_FALSE(write_file(temp_path_g, min_val));
+
+
+  memset(min_val, 12, 0);
+  itoa(min_val, 0);
+  current_nested_cgroup_length = strlen(current_nested_cgroup);
+
+  /* disable memory controllers, set min back to 0 and delete cgroups
+    Here we do it backwards - reversed tro the last loop */
+  for(depth_cnt = 0; depth_cnt < 10; depth_cnt++)
+  {
+    // set min value to 0 (just in case) 
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    ASSERT_TRUE(write_file(temp_path_g, min_val));
+
+    // disable mem controller
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    write_file(temp_path_g, "-mem");
+
+    //delete nested cgroup
+    ASSERT_FALSE(unlink(current_nested_cgroup));
+
+    current_nested_cgroup_length -= TEST_NESTED_CGROUP_PATH_SIZE;
+    current_nested_cgroup[current_nested_cgroup_length] = 0;
+  }
+  
+}
+
 
 int main(int argc, char * argv[])
 {
@@ -1474,6 +1619,7 @@ int main(int argc, char * argv[])
     run_test(test_cant_use_protected_memory);
     run_test(test_release_protected_memory_after_delete_cgroup);
     run_test(test_cant_move_under_mem_limit);
+    run_test(test_nested_cgroups);
     run_test(test_mem_limit_negative_and_over_kernelbase);
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
