@@ -3,6 +3,8 @@
 #include "user.h"
 #include "test.h"
 #include "param.h"
+#include "mmu.h"
+
 #include "cgroupstests.h"
 
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
@@ -11,6 +13,19 @@ char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
 char suppress = 0;
 
 int failed = 0;
+
+
+//######################################## Helper functions#######################
+
+//Parse memory.stat info and fetch "kernel" value
+int get_kernel_total_memory(char * mem_stat_info)
+{
+  char * kernel_value = 0;
+
+  kernel_value = strstr(mem_stat_info, (char *)"kernel - ");
+
+  return atoi(kernel_value);
+}
 
 // Return if controller type is valid.
 int is_valid_controller_type(int controller_type) {
@@ -88,6 +103,8 @@ char* read_file(const char* file, int print)
   if (read(fd, buf, 256) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to read file: %s\n", file);
+    
+    close_file(fd);
     return 0;
   }
 
@@ -104,15 +121,20 @@ char* read_file(const char* file, int print)
 
 // Write into a file. If succesful returns 1, otherwise 0.
 int write_file(const char* file, char* text) {
-  int fd = open_file(file);
   char buf[256];
+  int fd = open_file(file);
 
+  if(!fd)
+    return 0;
+  
   empty_string(buf, 256);
   strcpy(buf, text);
-
+  
   if (write(fd, buf, sizeof(buf)) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to write into file %s\n", file);
+    
+    close_file(fd);
     return 0;
   }
 
@@ -128,6 +150,7 @@ int write_new_file(const char* file, char* text) {
    }
 
    if (!write_file(file, text)) {
+     close_file(fd);
      return 0;
    }
 
@@ -247,6 +270,7 @@ int temp_write(int num) {
   itoa(buf, num);
 
   if (!write_file(TEMP_FILE, buf)) {
+    close_file(fd);
     return 0;
   }
 
@@ -269,7 +293,7 @@ int temp_delete() {
 }
 
 //return the value for a given entry from the bufer
-//entry mast contains all characters before the value include white-spase
+//entry must contain all characters before the value include white-space
 int get_val(char *buf, char *entry){
 
   do{
@@ -1026,31 +1050,52 @@ TEST(test_cant_use_protected_memory)
 
 TEST(test_release_protected_memory_after_delete_cgroup)
 {
+    int i = 0;
+    char buf [12] = {0};
+    char * mem_str_buf = 0;
+    uint kernel_total_mem = 0;
+    //We want to reserve different amounts of memory (by precantage)
+    float memory_reservations[] = {1.0, 0.75, 0.5, 0.25, 0.1, 0.05, 0.01};
 
     // Create temp cgroup and enable memory controllers
-    ASSERT_FALSE(mkdir(TEST_TMP));
-    ASSERT_TRUE(enable_controller(MEM_CNT));
-    ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
+    for(i = 0; i < sizeof(memory_reservations) / sizeof(float); i++)
+    {
+      ASSERT_FALSE(mkdir(TEST_TMP));
+      ASSERT_TRUE(enable_controller(MEM_CNT));
+      ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
 
-    char buf [12];
-    itoa(buf, MEM_SIZE);
+      // get total amount of memory from memory controller core file (memory.stat) 
+      mem_str_buf = read_file(TEST_1_MEM_STAT, 0);
+      kernel_total_mem = get_kernel_total_memory(mem_str_buf);
 
-    // Protect all memory for tmpcgroup
-    ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      memset(buf, 12, 0);
+      itoa(buf,  kernel_total_mem * memory_reservations[i]);
+      //printf(1,"\n buf is %s \n", buf);
 
-    // Check changes
-    ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
+      // Protect portion of memory for tmpcgroup
+      ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      
+      // Check changes
+      ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
 
-    // Try to protect memory for cgroup1 this need to fail
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
+      /* Here we change the value we want to reserve to be MEM_SIZE - X + 1.
+          Where X is the amount we reserved */
+      memset(buf, 12, 0);
+      itoa(buf,  kernel_total_mem - 
+              (kernel_total_mem * memory_reservations[i]) + PGSIZE + 1);
+      //printf(1,"\n buf is %s \n", buf);
+      
+      // Try to protect memory for cgroup1 this need to fail
+      ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
 
-    ASSERT_FALSE(unlink(TEST_TMP));
+      ASSERT_FALSE(unlink(TEST_TMP));
+      // Try to protect memory for cgroup1
+      ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
 
-    // Try to protect memory for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+      // Disable memory controllers
+      ASSERT_TRUE(disable_controller(MEM_CNT));
+    }
 
-    // Disable memory controllers
-    ASSERT_TRUE(disable_controller(MEM_CNT));
 }
 
 TEST(test_cant_move_under_mem_limit)
@@ -1422,7 +1467,7 @@ TEST (test_mem_stat) {
         int pgmajfault_after = get_val(effect_write_second_file, "pgmajfault - ");
         ASSERT_TRUE(pgmajfault_after - pgmajfault_befor >= 2);
 
-        // check the effect of pgfaul
+        // check the effect of pgfault
         // The second write to file c was before closing and file d was after closing,
         // so we need more pgfaults besides what the writing itself causes
         int grow_pgfoult_after_first = get_val(effect_write_first_file, "pgfault - ") - get_val(befor_all , "pgfault - ");

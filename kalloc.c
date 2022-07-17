@@ -114,6 +114,12 @@ int decrese_protect_counter(int num) {
 
 }
 
+//Returns the number of available memory in the kernel
+uint get_total_memory()
+{
+  return kmem.page_cnt;
+}
+
 // Allocate one 4096-byte page of physical memory.
 // Returns a pointer that the kernel can use.
 // Returns 0 if the memory cannot be allocated.
