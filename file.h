@@ -74,6 +74,7 @@ struct file {
             uint file_dirty_aggregated;
             uint pgfault;
             uint pgmajfault;
+            uint kernel;
           } stat;
           struct {
             char active;
