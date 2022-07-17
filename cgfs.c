@@ -6,6 +6,7 @@
 #include "param.h"
 #include "spinlock.h"
 #include "types.h"
+#include "mmu.h"
 
 #define MAX_PID_LENGTH 5
 #define MAX_CGROUP_DIR_ENTRIES 64
@@ -370,6 +371,7 @@ static int unsafe_cg_open_file(char * filename, struct cgroup * cgp, int omode)
             f->mem.stat.file_dirty_aggregated = cgp->mem_stat_file_dirty_aggregated;
             f->mem.stat.pgfault = cgp->mem_stat_pgfault;
             f->mem.stat.pgmajfault = cgp->mem_stat_pgmajfault;
+            f->mem.stat.kernel = get_total_memory() * PGSIZE;
             break;
         // for any other type we do nothing (no special handling)
         default:
@@ -683,6 +685,7 @@ static int read_file_mem_stat(struct file * f, char * addr, int n)
     char file_dirty_aggregated_buf[10] = {0};
     char pgfault_buf[10] = {0};
     char pgmajfault_buf[10] = {0};
+    char kernel_buf[10] = {0};
 
     uint stattext_size = strlen("file_dirty - ") +
             utoa(file_dirty_buf, f->mem.stat.file_dirty) + 1
@@ -691,7 +694,9 @@ static int read_file_mem_stat(struct file * f, char * addr, int n)
             strlen("pgfault - ") +
             utoa(pgfault_buf, f->mem.stat.pgfault) + 1 +
             strlen("pgmajfault - ") +
-            utoa(pgmajfault_buf, f->mem.stat.pgmajfault) + 2;
+            utoa(pgmajfault_buf, f->mem.stat.pgmajfault) + 2 +
+            strlen("kernel - ") +
+            utoa(kernel_buf, f->mem.stat.kernel);
 
     char *stattext = buf;
     char *stattextp = stattext;
@@ -711,6 +716,10 @@ static int read_file_mem_stat(struct file * f, char * addr, int n)
 
     copy_and_move_buffer(&stattextp, "pgmajfault - ", strlen("pgmajfault - "));
     copy_and_move_buffer(&stattextp, pgmajfault_buf, strlen(pgmajfault_buf));
+    copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+
+    copy_and_move_buffer(&stattextp, "kernel -  ", strlen("kernel - "));
+    copy_and_move_buffer(&stattextp, kernel_buf, strlen(kernel_buf));
     copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
 
     return copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
@@ -1171,6 +1180,7 @@ static int write_file_mem_min(struct file * f, char * addr, int n)
     unsigned int min = -1;
     int i = 0;
 
+    cprintf("\n! here: %s \n", addr);
     while (*addr && *addr != ',' && *addr != '\0' && i < sizeof(min_string)) {
         min_string[i] = *addr;
         i++;
@@ -1199,7 +1209,10 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
     cgroup_file_name_t filename_const = get_file_name_constant(f->cgfilename);
 
     if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0 || n > MAX_BUF)
+    {
+        cprintf("\n here2 !!! %d \n", addr);
         return -1;
+    }
 
     if (filename_const == CGROUP_PROCS)
     {
