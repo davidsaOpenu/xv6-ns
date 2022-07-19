@@ -103,6 +103,8 @@ char* read_file(const char* file, int print)
   if (read(fd, buf, 256) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to read file: %s\n", file);
+    
+    close_file(fd);
     return 0;
   }
 
@@ -119,15 +121,20 @@ char* read_file(const char* file, int print)
 
 // Write into a file. If succesful returns 1, otherwise 0.
 int write_file(const char* file, char* text) {
-  int fd = open_file(file);
   char buf[256];
+  int fd = open_file(file);
 
+  if(!fd)
+    return 0;
+  
   empty_string(buf, 256);
   strcpy(buf, text);
-
+  
   if (write(fd, buf, sizeof(buf)) < 0) {
     if (suppress == 0)
       printf(1, "\nFailed to write into file %s\n", file);
+    
+    close_file(fd);
     return 0;
   }
 
@@ -143,6 +150,7 @@ int write_new_file(const char* file, char* text) {
    }
 
    if (!write_file(file, text)) {
+     close_file(fd);
      return 0;
    }
 
@@ -262,6 +270,7 @@ int temp_write(int num) {
   itoa(buf, num);
 
   if (!write_file(TEMP_FILE, buf)) {
+    close_file(fd);
     return 0;
   }
 
@@ -1161,6 +1170,8 @@ TEST(test_mem_limit_negative_and_over_kernelbase)
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
 
     // Limit memory by minus
+    printf(1, "result: %d \n", write_file(TEST_1_MEM_MAX, "-100"));
+    printf(1, "result2: %d \n", write_file(TEST_1_MEM_MIN, "-100"));
     ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "-100"));
     ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "-100"));
 
