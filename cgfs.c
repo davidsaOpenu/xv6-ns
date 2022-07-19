@@ -1180,7 +1180,6 @@ static int write_file_mem_min(struct file * f, char * addr, int n)
     unsigned int min = -1;
     int i = 0;
 
-    cprintf("\n! here: %s \n", addr);
     while (*addr && *addr != ',' && *addr != '\0' && i < sizeof(min_string)) {
         min_string[i] = *addr;
         i++;
@@ -1209,11 +1208,8 @@ int unsafe_cg_write(struct file * f, char * addr, int n)
     cgroup_file_name_t filename_const = get_file_name_constant(f->cgfilename);
 
     if (f->writable == 0 || *f->cgp->cgroup_dir_path == 0 || n > MAX_BUF)
-    {
-        cprintf("\n here2 !!! %d \n", addr);
         return -1;
-    }
-
+    
     if (filename_const == CGROUP_PROCS)
     {
         r = write_file_cg_procs(f, addr, n);
