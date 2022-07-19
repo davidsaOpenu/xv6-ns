@@ -1,0 +1,492 @@
+ioctltests
+tty0 detached 
+
+tty0 connected
+Console connected
+tty0 disconnected 
+tty0 detatched 
+ioctl TESTS PASS:
+$ echo $?
+0
+$ cgroupstests
+[RUNNING] test_mount_cgroup_fs[DONE] test_mount_cgroup_fs   
+[RUNNING] test_creating_cgroups[DONE] test_creating_cgroups   
+[RUNNING] test_opening_and_closing_cgroup_files[DONE] test_opening_and_closing_cgroup_files   
+[RUNNING] test_reading_cgroup_files
+Contents of /cgroup/test1/cgroup.procs: 
+
+Contents of /cgroup/test1/cgroup.controllers: 
+cpu
+pid
+set
+mem
+
+Contents of /cgroup/test1/cgroup.subtree_control: 
+
+Contents of /cgroup/test1/cgroup.events: 
+populated - 0
+frozen - 0
+
+Contents of /cgroup/test1/cgroup.max.descendants: 
+64
+
+Contents of /cgroup/test1/cgroup.max.depth: 
+64
+
+Contents of /cgroup/test1/cgroup.stat: 
+nr_descendants - 0
+nr_dying_descendants - 0
+
+Contents of /cgroup/test1/cpu.max: 
+max - 4294967295
+period - 100000
+
+Contents of /cgroup/test1/cpu.weight: 
+weight - 0
+
+Contents of /cgroup/test1/cpu.stat: 
+usage_usec - 0
+user_usec - 0
+system_usec - 0
+
+Contents of /cgroup/test1/pid.max: 
+max - 64
+
+Contents of /cgroup/test1/pid.current: 
+num_of_procs - 0
+
+Contents of /cgroup/test1/cpuset.cpus: 
+use_cpu - 0
+
+Contents of /cgroup/test1/cgroup.freeze: 
+0
+
+Contents of /cgroup/test1/memory.current: 
+0
+
+Contents of /cgroup/test1/memory.max: 
+2147483648
+
+Contents of /cgroup/test1/memory.min: 
+0
+
+Contents of /cgroup/test1/memory.stat: 
+file_dirty - 0
+file_dirty_aggregated - 0
+pgfault - 0
+pgmajfault - 0
+kernel - 232267776
+
+[DONE] test_reading_cgroup_files
+[RUNNING] test_memory_stat_content_valid[DONE] test_memory_stat_content_valid   
+[RUNNING] test_cpu_stat_content_valid[DONE] test_cpu_stat_content_valid   
+[RUNNING] test_moving_process[DONE] test_moving_process   
+[RUNNING] test_enable_and_disable_all_controllers[DONE] test_enable_and_disable_all_controllers   
+[RUNNING] test_limiting_pids[DONE] test_limiting_pids   
+[RUNNING] test_move_failure[DONE] test_move_failure   
+[RUNNING] test_fork_failure[DONE] test_fork_failure   
+[RUNNING] test_pid_current[DONE] test_pid_current   
+[RUNNING] test_setting_cpu_id[DONE] test_setting_cpu_id   
+[RUNNING] test_correct_cpu_running[DONE] test_correct_cpu_running   
+[RUNNING] test_no_run[DONE] test_no_run   
+[RUNNING] test_mem_stat[DONE] test_mem_stat   
+[RUNNING] test_setting_freeze[DONE] test_setting_freeze   
+[RUNNING] test_frozen_not_running[DONE] test_frozen_not_running   
+[RUNNING] test_mem_current[DONE] test_mem_current   
+[RUNNING] test_correct_mem_account_of_growth_and_shrink[DONE] test_correct_mem_account_of_growth_and_shrink   
+[RUNNING] test_limiting_mem[DONE] test_limiting_mem   
+[RUNNING] test_ensure_mem_min_is_less_then_mem_max[DONE] test_ensure_mem_min_is_less_then_mem_max   
+[RUNNING] test_cant_use_protected_memoryallocuvm out of memory
+[DONE] test_cant_use_protected_memory   
+[RUNNING] test_release_protected_memory_after_delete_cgroup[DONE] test_release_protected_memory_after_delete_cgroup   
+[RUNNING] test_cant_move_under_mem_limit[DONE] test_cant_move_under_mem_limit   
+[RUNNING] test_mem_limit_negative_and_over_kernelbaseresult: 0 
+result2: 0 
+[DONE] test_mem_limit_negative_and_over_kernelbase   
+[RUNNING] test_cant_move_over_mem_limit[DONE] test_cant_move_over_mem_limit   
+[RUNNING] test_cant_fork_over_mem_limit[DONE] test_cant_fork_over_mem_limit   
+[RUNNING] test_cant_grow_over_mem_limit[DONE] test_cant_grow_over_mem_limit   
+[RUNNING] test_limiting_cpu_max_and_period[DONE] test_limiting_cpu_max_and_period   
+[RUNNING] test_setting_max_descendants_and_max_depth[DONE] test_setting_max_descendants_and_max_depth   
+[RUNNING] test_deleting_cgroups[DONE] test_deleting_cgroups   
+[RUNNING] test_umount_cgroup_fs[DONE] test_umount_cgroup_fs   
+[RUNNING] test_kernel_freem_mem
+Free Memory Pages:
+  counter: 56644
+  list:    56644
+  errors:  0
+[DONE] test_kernel_freem_mem
+[    CGROUPTESTS PASSED    ]
+$ echo $?
+0
+$ pouch start c1
+Pouch: c1 starting
+$ pid
+PID: 2
+$ pouch connect c1
+
+tty0 connected
+pid
+PID: 1
+$ pouch disconnect
+Console connected
+pid
+PID: 2
+$ ls c1
+c1             2 44 24
+$ pouch destroy c1
+Pouch: c1 destroyed
+$ zombie!
+ls c1
+ls: cannot open c1
+cd baddirname_itdoesntexist
+$ cannot cd baddirname_itdoesntexist
+$ echo $?
+-2
+$ thereisnosuchcommand
+exec thereisnosuchcommand failed
+$ echo $?
+1
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+$ zombie!
+pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+$ zombie!
+pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+zombie!
+Pouch: c1 destroyed
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+zombie!
+Pouch: c1 destroyed
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+zombie!
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+zombie!
+Pouch: c1 destroyed
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+$ zombie!
+pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+zombie!
+Pouch: c1 destroyed
+$ pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+$ zombie!
+pouch start c1
+Pouch: c1 starting
+$ pouch destroy c1
+Pouch: c1 destroyed
+zombie!
+$ mkdir /cgroup/c5
+$ echo $?
+0
+$ pouch start c5
+Pouch: c5 starting
+cgroup already exists
+Pouch: Failed to create cgroup with the given name. Consider another container name: c5 
+$ pouch start c1
+Pouch: c1 starting
+$ pouch start c2
+Pouch: c2 starting
+$ pouch start c3
+Pouch: c3 starting
+$ pouch start c4
+Pouch: cannot create more containers
+$ pouch list all
+     Pouch containers:
+1. c1 : started 
+2. c2 : started 
+3. c3 : started 
+$ pouch connect c1
+
+tty0 connected
+pouch list all
+
+Pouch commands inside containers:
+       pouch disconnect 
+          : disconnect a currently connected container
+       pouch info
+          : query information about currently connected container
+$ echo $?
+0
+$ pouch disconnect
+Console connected
+pid
+PID: 2
+$ pouch disconnect c6
+Pouch: no container is connected
+$ pouch disconnect
+
+Pouch commands outside containers:
+       pouch start {name}
+          : starts a new container
+          - {name} : container name
+       pouch connect {name}
+          : connect already started container
+          - {name} : container name
+       pouch destroy {name}
+          : destroy a container
+          - {name} : container name
+       pouch info {name}
+          : query information about a container
+          - {name} : container name
+       pouch list all
+          : displays state of all created containers
+      
+containers cgroups:
+       pouch cgroup {cname} {state-object} [value]
+          : limit given cgroup state-object
+          - {name} : container name
+          - {state-object} : cgroups state-object. Refer spec.
+          - [value] : argument for the state-object, multiple values delimited by ','
+$ echo $?
+0
+$ pid
+PID: 2
+$ pouch info
+
+Pouch commands outside containers:
+       pouch start {name}
+          : starts a new container
+          - {name} : container name
+       pouch connect {name}
+          : connect already started container
+          - {name} : container name
+       pouch destroy {name}
+          : destroy a container
+          - {name} : container name
+       pouch info {name}
+          : query information about a container
+          - {name} : container name
+       pouch list all
+          : displays state of all created containers
+      
+containers cgroups:
+       pouch cgroup {cname} {state-object} [value]
+          : limit given cgroup state-object
+          - {name} : container name
+          - {state-object} : cgroups state-object. Refer spec.
+          - [value] : argument for the state-object, multiple values delimited by ','
+$ echo $?
+0
+$ pouch info c6
+There is no container: c6 in a started stage
+$ pouch cgroup c1 cpu.max 10000,20000
+Pouch: c1 cgroup applied 
+cat /cgroup/c1/cpu.max
+$ max - 10000
+period - 20000
+pidns_tests
+$ Running all pidns tests
+zombie!
+zombie!
+Pidns tests passed successfully
+$ echo $?
+0
+$ mounttest
+Running all mounttest
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+umounta: umount returned -1
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+mounttest tests passed successfully
+$ echo $?
+0
+$ mkdir test_dir_mount_test
+$ echo $?
+0
+$ mount internal_fs_a test_dir_mount_test
+sb: size 80 nblocks 34 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 45
+$ echo $?
+0
+$ ls test_dir_mount_test
+.              1 1 1024
+..             1 1 1024
+test1          2 2 3
+ttt            1 3 48
+b              1 5 32
+devicefilestor 2 6 6
+umountwithop   2 7 0
+$ echo $?
+0
+$ umount test_dir_mount_test
+$ echo $?
+0
+$ rm test_dir_mount_test
+$ echo $?
+0
+$ usertests
+usertests starting
+printftest starting
+hello world!?#~$&*()-=+\][{}|/
+check integer 53 number
+check pointer address EF94
+check hexa number 0x35
+check double percent %
+unknown type %z
+string is null test (null)
+printftest passed
+arg test passed
+createdelete test
+createdelete ok
+linkunlink test
+linkunlink ok
+concreate test
+concreate ok
+fourfiles test
+fourfiles ok
+sharedfd test
+sharedfd ok
+bigarg test
+bigarg test ok
+bigwrite test
+bigwrite ok
+bigarg test
+bigarg test ok
+bss test
+bss test ok
+sbrk test
+pid 225 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80000000--kill proc
+pid 226 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x8000c350--kill proc
+pid 227 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x800186a0--kill proc
+pid 228 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800249f0--kill proc
+pid 229 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80030d40--kill proc
+pid 230 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x8003d090--kill proc
+pid 231 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x800493e0--kill proc
+pid 232 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80055730--kill proc
+pid 233 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80061a80--kill proc
+pid 234 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x8006ddd0--kill proc
+pid 235 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x8007a120--kill proc
+pid 236 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80086470--kill proc
+pid 237 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x800927c0--kill proc
+pid 238 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x8009eb10--kill proc
+pid 239 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800aae60--kill proc
+pid 240 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800b71b0--kill proc
+pid 241 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800c3500--kill proc
+pid 242 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800cf850--kill proc
+pid 243 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800dbba0--kill proc
+pid 244 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x800e7ef0--kill proc
+pid 245 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x800f4240--kill proc
+pid 246 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80100590--kill proc
+pid 247 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x8010c8e0--kill proc
+pid 248 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80118c30--kill proc
+pid 249 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80124f80--kill proc
+pid 250 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x801312d0--kill proc
+pid 251 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x8013d620--kill proc
+pid 252 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80149970--kill proc
+pid 253 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80155cc0--kill proc
+pid 254 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x80162010--kill proc
+pid 255 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x8016e360--kill proc
+pid 256 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x8017a6b0--kill proc
+pid 257 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80186a00--kill proc
+pid 258 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x80192d50--kill proc
+pid 259 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x8019f0a0--kill proc
+pid 260 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x801ab3f0--kill proc
+pid 261 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x801b7740--kill proc
+pid 262 usertests: trap 14 err 5 on cpu 0 eip 0x3451 addr 0x801c3a90--kill proc
+pid 263 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x801cfde0--kill proc
+pid 264 usertests: trap 14 err 5 on cpu 1 eip 0x3451 addr 0x801dc130--kill proc
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+allocuvm out of memory
+sbrk test OK
+validate test
+validate ok
+open test
+open test ok
+small file test
+creat small succeeded; ok
+writes ok
+open small succeeded ok
+read succeeded ok
+small file test ok
+big files test
+big files ok
+many creates, followed by unlink test
+many creates, followed by unlink; ok
+openiput test
+openiput test ok
+exitiput test
+exitiput test ok
+iput test
+iput test ok
+mem test
+allocuvm out of memory
+mem ok
+pipe1 ok
+preempt: kill... wait... preempt ok
+exitwait ok
+rmdot test
+rmdot ok
+fourteen test
+fourteen ok
+bigfile test
+bigfile test ok
+subdir test
+subdir ok
+linktest
+linktest ok
+unlinkread test
+unlinkread ok
+dir vs file
+dir vs file OK
+empty file name
+empty file name OK
+fork test
+fork test OK
+bigdir test
+bigdir ok
+Free Memory Pages:
+  counter: 56239
+  list:    56239
+  errors:  0
+memtest: memory ok
+uio test
+pid 713 usertests: trap 13 err 0 on cpu 0 eip 0x3a27 addr 0x801c3a90--kill proc
+uio test done
+exitrctest ok
+exec test
+ALL TESTS PASSED
+$ echo $?
+0
+$ 
