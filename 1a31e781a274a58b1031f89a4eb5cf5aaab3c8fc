@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "785b49d9_29e87be0",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-07-22T08:30:48Z",
+      "side": 1,
+      "message": "what is your take on changing enable_controller to receive as a parameter a cgroup file name?",
+      "revId": "1a31e781a274a58b1031f89a4eb5cf5aaab3c8fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3bebccc_60198110",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-07-22T08:30:48Z",
+      "side": 1,
+      "message": "better to use enable_controller.",
+      "revId": "1a31e781a274a58b1031f89a4eb5cf5aaab3c8fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97443271_ded4a1d3",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-07-22T08:30:48Z",
+      "side": 1,
+      "message": "not anymore",
+      "range": {
+        "startLine": 1046,
+        "startChar": 17,
+        "endLine": 1046,
+        "endChar": 20
+      },
+      "revId": "1a31e781a274a58b1031f89a4eb5cf5aaab3c8fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
