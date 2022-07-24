@@ -58,6 +58,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d940ae15_2193e32d",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2022-07-24T16:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b0ce26_5985dcd7",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 34
+      },
+      "revId": "e191d6b6653f460cdd9a2ce1dbe3418f424f9627",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f15bdb6e_fde6a7b9",
@@ -95,6 +119,30 @@
       "side": 1,
       "message": "done. removed in PS#4",
       "parentUuid": "f15bdb6e_fde6a7b9",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 2
+      },
+      "revId": "e191d6b6653f460cdd9a2ce1dbe3418f424f9627",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb023aad_cc9a1d07",
+        "filename": "cgfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2022-07-24T16:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62874bb4_b34266e5",
       "range": {
         "startLine": 16,
         "startChar": 0,
