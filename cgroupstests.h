@@ -49,4 +49,10 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 
 #define TEMP_FILE "temp_file"
 
+#define TESTED_NESTED_CGROUP_CHILD          ("/nested")
+#define TEST_NESTED_MEM_MAX                 ("/memory.max")
+#define TEST_NESTED_MEM_MIN                 ("/memory.min")
+#define TEST_NESTED_SUBTREE_CONTROL         ("/cgroup.subtree_control")
+#define TEST_NESTED_CURRENT_MEM             ("/memory.current")
+#define TEST_NESTED_CGROUP_PATH_SIZE        (8)
 #endif

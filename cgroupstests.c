@@ -14,6 +14,7 @@ char suppress = 0;
 
 int failed = 0;
 
+char temp_path_g[MAX_PATH_LENGTH] ={0};
 
 //######################################## Helper functions#######################
 
@@ -1492,6 +1493,106 @@ TEST (test_mem_stat) {
     }
 }
 
+
+TEST (test_nested_cgroups)
+{
+  char * mem_str_buf = 0;
+  uint kernel_total_mem = 0;
+  uint depth_cnt = 1;
+  char min_val[12] = {0};
+  //char max_val[12] = {0};
+  char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char current_nesting_index = '0';
+  uint current_nested_cgroup_length = 0;
+
+
+  mem_str_buf = read_file(TEST_1_MEM_STAT, 0);
+  kernel_total_mem = get_kernel_total_memory(mem_str_buf);
+
+  printf(1, "\nkernel total memory: %x \n", kernel_total_mem);
+
+  //initialize the nested cgroup path
+  strcpy(current_nested_cgroup, ROOT_CGROUP);
+  strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+
+  /* Create the root nested cgroup and enable the memory controller
+    The controller should propagate to all the nested cgroups  */
+  ASSERT_FALSE(mkdir(current_nested_cgroup));
+
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+  
+
+  for(depth_cnt = 1; depth_cnt < 10; depth_cnt++)
+  {
+    /* define the min-max values for the current cgroup */
+    memset(min_val, 12, 0);
+    itoa(min_val, kernel_total_mem / 10);
+
+    // Protect portion of memory for the current nested cgroup
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
+    ASSERT_TRUE(write_file(temp_path_g, min_val));
+    read_file(temp_path_g, 1);
+
+    //create another nested cgroup (mem controller should be enabled)
+    current_nesting_index++;
+    strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+    current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+    ASSERT_FALSE(mkdir(current_nested_cgroup));
+    
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+    
+  }
+
+  //check if we can allocate now more memory in the last cgroup
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+  
+  //allocate 25% of kernel space - should fail
+  memset(min_val, 12, 0);
+  itoa(min_val, kernel_total_mem / 4);
+  ASSERT_FALSE(write_file(temp_path_g, min_val));
+
+
+  memset(min_val, 12, 0);
+  itoa(min_val, 0);
+  current_nested_cgroup_length = strlen(current_nested_cgroup);
+
+  /* disable memory controllers, set min back to 0 and delete cgroups
+    Here we do it backwards - reversed tro the last loop */
+  for(depth_cnt = 0; depth_cnt < 10; depth_cnt++)
+  {
+    // set min value to 0 (just in case) 
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    ASSERT_TRUE(write_file(temp_path_g, min_val));
+
+    // disable mem controller
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    write_file(temp_path_g, "-mem");
+
+    //delete nested cgroup
+    ASSERT_FALSE(unlink(current_nested_cgroup));
+
+    current_nested_cgroup_length -= TEST_NESTED_CGROUP_PATH_SIZE;
+    current_nested_cgroup[current_nested_cgroup_length] = 0;
+  }
+  
+}
+
+
 int main(int argc, char * argv[])
 {
     // comment out for debug messages
@@ -1523,7 +1624,8 @@ int main(int argc, char * argv[])
     run_test(test_cant_use_protected_memory);
     run_test(test_release_protected_memory_after_delete_cgroup);
     run_test(test_cant_move_under_mem_limit);
-//    run_test(test_mem_limit_negative_and_over_kernelbase);
+    run_test(test_nested_cgroups);
+    run_test(test_mem_limit_negative_and_over_kernelbase);
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
     run_test(test_cant_grow_over_mem_limit);
