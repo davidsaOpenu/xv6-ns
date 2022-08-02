@@ -1484,6 +1484,11 @@ TEST (test_mem_stat) {
     }
 }
 
+  /* Create the root nested cgroup and enable the memory controller*/
+  /* create the 9 other nested groups. Enable memory controller in each of them because
+     it's not propagated from the parent cgroup */
+  //allocate 25% of kernel space - should fail (this should also fail for lesser values)
+    current_nested_cgroup_length -= sizeof(TESTED_NESTED_CGROUP_CHILD);
 int main(int argc, char * argv[])
 {
     // comment out for debug messages
