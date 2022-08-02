@@ -1511,15 +1511,15 @@ TEST (test_nested_cgroups)
   strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
   current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
 
-  /* Create the root nested cgroup and enable the memory controller
-    The controller should propagate to all the nested cgroups  */
+  /* Create the root nested cgroup and enable the memory controller*/
   ASSERT_FALSE(mkdir(current_nested_cgroup));
 
   strcpy(temp_path_g, current_nested_cgroup);
   strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
   ASSERT_TRUE(write_file(temp_path_g, "+mem"));
   
-
+  /* create the 9 other nested groups. Enable memory controller in each of them because
+     it's not propagated from the parent cgroup */
   for(depth_cnt = 1; depth_cnt < 10; depth_cnt++)
   {
     /* define the min-max values for the current cgroup */
@@ -1544,7 +1544,6 @@ TEST (test_nested_cgroups)
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
     ASSERT_TRUE(write_file(temp_path_g, "+mem"));
-    
   }
 
   //check if we can allocate now more memory in the last cgroup
@@ -1552,11 +1551,10 @@ TEST (test_nested_cgroups)
   strcpy(temp_path_g, current_nested_cgroup);
   strcat(temp_path_g, TEST_NESTED_MEM_MIN);
   
-  //allocate 25% of kernel space - should fail
+  //allocate 25% of kernel space - should fail (this should also fail for lesser values)
   memset(min_val, 12, 0);
   itoa(min_val, kernel_total_mem / 4);
   ASSERT_FALSE(write_file(temp_path_g, min_val));
-
 
   memset(min_val, 12, 0);
   itoa(min_val, 0);
@@ -1581,10 +1579,9 @@ TEST (test_nested_cgroups)
     //delete nested cgroup
     ASSERT_FALSE(unlink(current_nested_cgroup));
 
-    current_nested_cgroup_length -= TEST_NESTED_CGROUP_PATH_SIZE;
+    current_nested_cgroup_length -= sizeof(TESTED_NESTED_CGROUP_CHILD);
     current_nested_cgroup[current_nested_cgroup_length] = 0;
   }
-  
 }
 
 
