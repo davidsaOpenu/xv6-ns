@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a46c8331_4746c6c3",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-03T07:41:20Z",
+      "side": 1,
+      "message": "def.h contain defines for path length\n\nalso temp_path_g is used only in test_nested_cgroups.",
+      "range": {
+        "startLine": 17,
+        "startChar": 18,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "113ca484ca19f6a044ee9d179faaf7541cb19f18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5d4b8eb_5e7307e8",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1504,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-03T07:41:20Z",
+      "side": 1,
+      "message": "same as in line 17",
+      "range": {
+        "startLine": 1504,
+        "startChar": 29,
+        "endLine": 1504,
+        "endChar": 32
+      },
+      "revId": "113ca484ca19f6a044ee9d179faaf7541cb19f18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46457f80_5f63eb30",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-03T07:41:20Z",
+      "side": 1,
+      "message": "and here as in line 17",
+      "range": {
+        "startLine": 1550,
+        "startChar": 27,
+        "endLine": 1550,
+        "endChar": 30
+      },
+      "revId": "113ca484ca19f6a044ee9d179faaf7541cb19f18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f7a3c94_80d7bcb4",
+        "filename": "cgroupstests.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-03T07:41:20Z",
+      "side": 1,
+      "message": "In addition to what you have mentioned in the chat, worth also to verify that no memory can be reserved since mo more left.",
+      "revId": "113ca484ca19f6a044ee9d179faaf7541cb19f18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
