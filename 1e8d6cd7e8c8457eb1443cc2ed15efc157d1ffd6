@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3f8ef71_1ca2cf5a",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-26T08:20:44Z",
+      "side": 1,
+      "message": "nit space",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 4
+      },
+      "revId": "1e8d6cd7e8c8457eb1443cc2ed15efc157d1ffd6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b66ec2ba_6806d1c5",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-26T08:20:44Z",
+      "side": 1,
+      "message": "nit space",
+      "revId": "1e8d6cd7e8c8457eb1443cc2ed15efc157d1ffd6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8494e014_104b057e",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-26T08:20:44Z",
+      "side": 1,
+      "message": "let refresh the comment and explain:\n1) s/MEM)IZE/kernel memze.\n2) why PGSIZE was added? why +1?",
+      "revId": "1e8d6cd7e8c8457eb1443cc2ed15efc157d1ffd6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93ad3e54_1d329432",
+        "filename": "temp.log",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-26T08:20:44Z",
+      "side": 1,
+      "message": "lets remove the log",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 10
+      },
+      "revId": "1e8d6cd7e8c8457eb1443cc2ed15efc157d1ffd6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6be5696_024e1864",
+        "filename": "windows-debugging/gdbcommand",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-08-26T08:20:44Z",
+      "side": 1,
+      "message": "seems we already have them in windows-debugging-templates folder",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 0
+      },
+      "revId": "1e8d6cd7e8c8457eb1443cc2ed15efc157d1ffd6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
