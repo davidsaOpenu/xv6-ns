@@ -30,14 +30,17 @@ typedef struct device_lock {
 
 typedef struct tty {
   int flags;
+  struct spinlock lock;
 } tty;
+
 tty tty_table[MAX_TTY];
 
 static device_lock cons;
 
+
 static void consputc(int);
 
-static inline void update_pos(int pos) 
+static inline void update_pos(int pos)
 {
   outb(CRTPORT, 14);
   outb(CRTPORT+1, pos>>8);
@@ -295,6 +298,16 @@ ttyread(struct inode *ip, char *dst, int n)
   if(tty_table[ip->minor].flags & DEV_CONNECT){
     return consoleread(ip,dst,n);
   }
+
+  if(tty_table[ip->minor].flags & DEV_ATTACH)
+  {
+    iunlock(ip);
+    acquire(&tty_table[ip->minor].lock);
+    sleep(&tty_table[ip->minor], &tty_table[ip->minor].lock);
+    //after wakeup has been called
+    release(&tty_table[ip->minor].lock);
+    ilock(ip);
+  }
   return -1;
 }
 
@@ -332,6 +345,11 @@ consoleinit(void)
   devsw[CONSOLE_MAJOR].read = ttyread;
   tty_table[CONSOLE_MINOR].flags = DEV_CONNECT;
 
+  //To state that the console tty is also attached
+  //this will make the console sleep whilre we are connected to another tty.
+  tty_table[CONSOLE_MINOR].flags |= DEV_ATTACH;
+  initlock(&tty_table[CONSOLE_MINOR].lock, "ttyconsole");
+
   cons.locking = 1;
 
   ioapicenable(IRQ_KBD, 0);
@@ -350,6 +368,10 @@ ttyinit(void)
 void tty_disconnect(struct inode *ip) {
   tty_table[ip->minor].flags &=  ~(DEV_CONNECT);
   tty_table[CONSOLE_MINOR].flags |=  DEV_CONNECT;
+
+  //wakeup the console (it is sleeping now while being attached)
+  wakeup(&tty_table[CONSOLE_MINOR]);
+
   consoleclear();
   cprintf("Console connected\n");
 }
@@ -363,10 +385,14 @@ void tty_connect(struct inode *ip) {
  }
  consoleclear();
  cprintf("\ntty%d connected\n",ip->minor-(CONSOLE_MINOR+1));
+
+ //Wakeup the processes that slept on ttyread()
+ wakeup(&tty_table[ip->minor]);
 }
 
 void tty_attach(struct inode *ip) {
   tty_table[ip->minor].flags |= DEV_ATTACH;
+  initlock(&(tty_table[ip->minor].lock), "tty");
 }
 
 void tty_detach(struct inode *ip) {
