@@ -32,7 +32,7 @@ main(void)
   picinit();       // disable pic
   ioapicinit();    // another interrupt controller
   consoleinit();   // console hardware
-  ttyinit();
+  ttyinit();       // create additional ttys
   uartinit();      // serial port
   pinit();         // process table
   tvinit();        // trap vectors

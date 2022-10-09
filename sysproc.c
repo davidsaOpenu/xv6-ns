@@ -11,7 +11,6 @@
 #include "fcntl.h"
 #include "file.h"
 
-
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
