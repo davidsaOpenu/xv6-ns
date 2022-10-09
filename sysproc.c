@@ -11,7 +11,6 @@
 #include "fcntl.h"
 #include "file.h"
 
-
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -151,8 +150,13 @@ sys_ioctl(void)
   }
 
   ip = f->ip;
-
-  if(ip->minor == CONSOLE_MINOR){
+  /*
+  Note: if want to exculde minor device 0 which should mostly
+  be used for main devices or devices controller that doesn't support
+  ioctls.
+  Best practice is to test inode minor in the driver itself.
+  */
+  if(ip->minor <= 0){
     return -1;
   }
 

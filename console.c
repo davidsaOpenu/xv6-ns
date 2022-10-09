@@ -16,22 +16,10 @@
 #include "proc.h"
 #include "x86.h"
 #include "fcntl.h"
+#include "console.h"
 
-//PAGEBREAK: 50
-#define BACKSPACE 0x100
-#define CRTPORT 0x3d4
 static ushort *crt = (ushort*)P2V(0xb8000);  // CGA memory
 static int panicked = 0;
-
-typedef struct device_lock {
-  struct spinlock lock;
-  int locking;
-} device_lock;
-
-typedef struct tty {
-  int flags;
-  struct spinlock lock;
-} tty;
 
 tty tty_table[MAX_TTY];
 
