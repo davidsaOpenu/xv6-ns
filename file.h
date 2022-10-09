@@ -116,7 +116,4 @@ struct devsw {
 
 extern struct devsw devsw[];
 
-#define CONSOLE_MAJOR 1
-#define CONSOLE_MINOR 0
-
 #endif
