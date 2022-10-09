@@ -182,6 +182,9 @@ static int init_pouch_conf(){
     int ttyc_fd;
     char ttyc[] = "tty.cX";
 
+    //check if cname ttys already created
+    if(open("tty.c0", O_RDWR) > 0)
+        return 0;
     // Not including the console tty
     for(i=0; i < (MAX_TTY - 1); i++){
         ttyc[5] = '0' + i;
@@ -507,6 +510,7 @@ static int create_pouch_cgroup(char *cg_cname, char *cname){
 static int init_pouch_cgroup(){
 
     int cgroup_fd = -1;
+    //check if cgoup filesystem already created
     if((cgroup_fd = open("/cgroup", O_RDWR)) < 0){
 
         if(mkdir("/cgroup") != 0){
