@@ -19,5 +19,5 @@
 #define NNAMESPACE   20  // maximum number of namespaces
 #define MAX_PATH_LENGTH 512 // maximum path length allowed
 #define MAX_CGROUP_FILE_NAME_LENGTH 64 // maximum allowed length of cgroup file name
-
+#define DEVICE_NAME  17 // major:minor format which takes at most 17 bytes (8 bytes for each uint value)
 #endif

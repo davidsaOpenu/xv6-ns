@@ -20,6 +20,10 @@ typedef struct device_lock {
 typedef struct tty {
   int flags;
   struct spinlock lock;
+  uint ttyread_operations_counter;
+  uint ttywrite_operations_counter;
+  uint tty_bytes_read;
+  uint tty_bytes_written;
 } tty;
 
 
