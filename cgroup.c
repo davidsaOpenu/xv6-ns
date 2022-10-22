@@ -29,6 +29,18 @@ void cgroup_unlock()
     release(&cgtable.lock);
 }
 
+static void dev_id_to_name(uint major, uint minor, char * buf)
+{
+    char * temp_ptr = buf;
+
+    itoa(buf, major);
+    temp_ptr += strlen(buf);
+    //put the device major:minor delimiter
+    temp_ptr[0] = ':';
+    temp_ptr ++;
+    itoa(temp_ptr, minor);
+}
+
 static struct cgroup * unsafe_get_cgroup_by_path(char * path)
 {
     char fpath[MAX_PATH_LENGTH];
@@ -354,6 +366,10 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->cpu_nr_throttled = 0;
     cgroup->cpu_throttled_usec = 0;
     cgroup->cpu_is_throttled_period = 0;
+
+    /* IO statistics initialization */
+    memset(cgroup->io_stats, 0, sizeof(cgroup_io_device_statistics_t));
+    cgroup->used_devices = 0;
 }
 
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
@@ -1063,3 +1079,125 @@ void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup)
         cgroup->mem_stat_pgmajfault++;
     }
 }
+
+/* add IO device to the cgroup's available IO device array */
+void cgroup_add_io_device(struct cgroup * cgroup_ptr, struct inode * node)
+{
+    uint major = 0;
+    uint minor = 0;
+    int i = 0;
+    char device_name[DEVICE_NAME] = {0};
+
+    if (cgroup_ptr != cgroup_root() && cgroup_ptr != 0 && cgroup_ptr->populated == 1)
+    {
+        /* TODO: not sure if this necessary (we can't just exit this function because
+        of the fact that we exceeded the amount of available IO devices per cgroup) */
+        if(cgroup_ptr->used_devices > NDEV)
+        {
+            panic("Can't add more IO devices to cgroup");
+        }
+
+        cgroup_ptr->used_devices ++;
+
+        /* set the device name */
+        major = node->major;
+        minor = node->minor;
+
+        //write the device name in the format ("major:minor")
+        dev_id_to_name(major, minor, device_name);
+
+        /* The same entry in io_stats should be empty */
+        strncpy(cgroup_ptr->io_stats[i].dev_name, device_name, DEVICE_NAME);
+        cgroup_ptr->io_stats[i].major = major;
+        cgroup_ptr->io_stats[i].minor = minor;
+    }
+}
+
+/* remove IO device from the cgroup's available IO device array */
+void cgroup_remove_io_device(struct cgroup * cgroup_ptr, struct inode * node)
+{
+    int major = -1;
+    int minor = -1;
+
+    // Note: most of the times the remove_io_device will be issued from the root cgroup
+
+    if (cgroup_ptr == cgroup_root() || cgroup_ptr == 0 || cgroup_ptr->populated != 1)
+        return;
+
+    if(cgroup_ptr->used_devices == 0)
+    {
+        panic("No available IO devices in cgroup to remove");
+    }
+
+    major = node->major;
+    minor = node->minor;
+
+    for(int i = 0; i < NDEV; i++)
+    {
+        // Note: we assume that io_stats is initialized when cgroup is initialized
+        if((major == cgroup_ptr->io_stats[i].major) && (minor == cgroup_ptr->io_stats[i].minor))
+        {
+            // clear the io statistics structure - it's irrelevant now
+            memset(&(cgroup_ptr->io_stats[i]), 0, sizeof(cgroup_io_device_statistics_t));
+            cgroup_ptr->used_devices --;
+        }
+    }
+}
+
+void set_cgroup_io_stat(struct file *f)
+{
+    if(f == (void *)0)
+        panic("Invalid file handler (NULL), can't set io stats");
+
+    for(int i = 0; i < NDEV; i++)
+        f->io.devices_stats[i] = (cgroup_io_device_statistics_t *)0;
+}
+
+void get_cgroup_io_stat(struct file *f, struct cgroup * cgp)
+{
+    struct dev_stat device_stat = {0};
+    int dev_major = 0;
+    int dev_minor = 0;
+    int cnt = 0;
+
+    if(f == (void *)0)
+        panic("Invalid file handler (NULL), can't set io stats");
+ 
+    if(cgp == (void *)0)
+        panic("Invalid cgroup (NULL), can't set io stats");
+
+    for(int i = 0; i < NDEV; i++)
+    {
+        /* Note: counting on i-nodes in this case is problematic.
+        The problem is that if the user closes
+        the inode then, it might be used by other file/device.
+        This will lead to failure (so we can't rely on inodes).
+        That's why io_stats was introduced. 
+        */
+
+        dev_major = cgp->io_stats[i].major;
+        dev_minor = cgp->io_stats[i].minor;
+        if(0 == dev_major || (cgp->io_stats[i].dev_name == (char *)0))
+        {  continue; }
+
+        if(cnt >= cgp->used_devices)
+            break;
+        
+        /* get the stats of the IO device from its driver via minor/major nuimbers */
+        devsw[dev_major].stat(dev_minor, &device_stat);
+
+        /* copy the stats to the cgroup structure of the cgroup interface (IO_STAT)
+           Note: The cgroup's io_stats are ordered via indexes
+        */
+        memmove((struct dev_stat *) &(cgp->io_stats[i].device_stats), &device_stat,
+                 sizeof(struct dev_stat));
+
+        //set also the cgroup's io stats pointers in the file structure
+        f->io.devices_stats[cnt] = &(cgp->io_stats[i]);
+
+        // clear just in case we have garbage here (we are reusing the struct)
+        memset(&device_stat, 0, sizeof(struct dev_stat));
+        cnt ++;
+    }
+}
+
