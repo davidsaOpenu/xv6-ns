@@ -375,6 +375,55 @@ proc cgroupstests {argv} {
     assert_on_exit_status
 }
 
+# - xv6 cgroup IO stats tests
+proc cgroup_io_states_test {} {
+    set timeout -1
+
+    send "pouch start temp\n"
+    assert_on_exit_status
+    sleep 1
+    send "cat /cgroup/temp/io.stat\n"
+    expect {
+        "1:1 rbytes=0 wbytes=0 rios=0 wios=0"
+    }
+
+    send "pouch connect temp\n"
+    expect {
+        "tty0 connected"
+    }
+
+    sleep 1
+    send "cat /cgroup/temp/io.stat\n"
+    expect {
+        "1:1 rbytes=25 wbytes=0 rios=25 wios=0"
+    }
+
+    send "echo 12345678901234567890\n"
+    send "cat /cgroup/temp/io.stat\n"
+    expect {
+        "1:1 rbytes=76 wbytes=64 rios=76 wios=7"
+    }
+
+    send "pouch disconnect\n"
+    expect {
+       "Console connected"
+    }
+
+    sleep 1
+    send "pouch destroy temp\n"
+    assert_on_exit_status
+
+    send "pouch start test\n"
+    send "cat /cgroup/test/io.stat\n"
+    sleep 1
+    expect {
+        "1:1 rbytes=93 wbytes=106 rios=93 wios=11"
+    }
+
+    send "pouch destroy test\n"
+    assert_on_exit_status
+}
+
 # - xv6 pidns tests
 # @argv - file name for logging
 proc pidns_tests {argv} {
@@ -433,6 +482,7 @@ expect "$ "
 
 set running [ioctl_syscall_test $argv]
 set running [cgroupstests $argv]
+set running [cgroup_io_states_test]
 
 #basic tests
 set running [pouch_start_test $argv]

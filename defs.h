@@ -14,6 +14,9 @@ struct sleeplock;
 struct stat;
 struct superblock;
 struct cgroup;
+struct devsw;
+struct dev_stat;
+struct cgroup_io_device_statistics_s;
 
 // bio.c
 void            binit(void);
@@ -226,7 +229,7 @@ void            timerinit(void);
 void            idtinit(void);
 extern uint     ticks;
 void            tvinit(void);
-extern struct spinlock tickslock;
+extern struct   spinlock tickslock;
 
 // uart.c
 void            uartinit(void);
@@ -253,6 +256,8 @@ int             dec_protect_mem(struct cgroup* cgroup);
 
 // cgroup.c
 void            cginit(void);
+void            cgroup_add_io_device(struct cgroup * cgroup_ptr, struct inode * io_node);
+void            cgroup_remove_io_device(struct cgroup * cgroup_ptr, struct inode * io_node);
 
 // klib.c
 int             atoi(char * str);
