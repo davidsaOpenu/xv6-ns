@@ -10,7 +10,12 @@
 #include "ioctl_request.h"
 #include "fcntl.h"
 #include "file.h"
+<<<<<<< HEAD
 
+=======
+#include "console.h"
+#include "stat.h"
+>>>>>>> 731a5c0 (Add IO statistics support for cgroups)
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
