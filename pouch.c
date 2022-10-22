@@ -396,7 +396,6 @@ static int pouch_fork(char* container_name){
       if(pid == -1){
          panic("fork");
       }
-
       if(pid == 0) {
          if(tty_fd != -1){
             //attach stderr stdin stdout
@@ -499,6 +498,7 @@ static int create_pouch_cgroup(char *cg_cname, char *cname){
     char buf[256];
     memset(buf,'\0',256);
     strcpy(buf, "+cpu");
+
     if(write(cgroup_subtree_control_fd, buf, sizeof(buf)) < 0)
         return -1;
     if(close(cgroup_subtree_control_fd) < 0)
