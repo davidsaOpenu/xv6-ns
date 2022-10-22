@@ -6,7 +6,6 @@
 #include "defs.h"
 #include "param.h"
 #include "traps.h"
-#include "spinlock.h"
 #include "sleeplock.h"
 #include "fs.h"
 #include "file.h"
@@ -243,6 +242,20 @@ consoleintr(int (*getc)(void))
 }
 
 int
+ttystat(int minor, struct dev_stat * device_stats)
+{
+  if((void *)0 == device_stats)
+    panic("Invalid device statisitcs structre (NULL)");
+
+  device_stats->rbytes = tty_table[minor].tty_bytes_read;
+  device_stats->wbytes = tty_table[minor].tty_bytes_written;
+  device_stats->rios = tty_table[minor].ttyread_operations_counter;
+  device_stats->wios = tty_table[minor].ttywrite_operations_counter;
+
+  return 0;
+}
+
+int
 consoleread(struct inode *ip, char *dst, int n)
 {
   uint target;
@@ -271,6 +284,11 @@ consoleread(struct inode *ip, char *dst, int n)
     }
     *dst++ = c;
     --n;
+
+    /* increment number of bytes read on the specific tty */
+    /* TODO: make sure this operation shouldn't be atomic */
+    tty_table[ip->minor].tty_bytes_read ++;
+
     if(c == '\n')
       break;
   }
@@ -284,6 +302,10 @@ int
 ttyread(struct inode *ip, char *dst, int n)
 {
   if(tty_table[ip->minor].flags & DEV_CONNECT){
+    /* increment the number of read operations done (even if they
+    not succeeded)
+    */
+    tty_table[ip->minor].ttyread_operations_counter++;
     return consoleread(ip,dst,n);
   }
 
@@ -307,7 +329,11 @@ consolewrite(struct inode *ip, char *buf, int n)
   iunlock(ip);
   acquire(&cons.lock);
   for(i = 0; i < n; i++)
+  {
     consputc(buf[i] & 0xff);
+    /* increment the number of bytes written to a specific tty*/
+    tty_table[ip->minor].tty_bytes_written ++;
+  }
   release(&cons.lock);
   ilock(ip);
 
@@ -318,6 +344,9 @@ int
 ttywrite(struct inode *ip, char *buf, int n)
 {
   if(tty_table[ip->minor].flags & DEV_CONNECT){
+    /* increment the number of write operations executed on the
+    specific tty device (even if its not succeeded) */
+    tty_table[ip->minor].ttywrite_operations_counter ++;
     return consolewrite(ip,buf,n);
   }
   //2DO: should return -1 when write to tty fails - filewrite panics.
@@ -329,8 +358,10 @@ consoleinit(void)
 {
   initlock(&cons.lock, "console");
 
+  /* init the device driver callback functions*/
   devsw[CONSOLE_MAJOR].write = ttywrite;
   devsw[CONSOLE_MAJOR].read = ttyread;
+  devsw[CONSOLE_MAJOR].stat = ttystat;
   tty_table[CONSOLE_MINOR].flags = DEV_CONNECT;
 
   //To state that the console tty is also attached
@@ -350,6 +381,10 @@ ttyinit(void)
   // therefor the tty's minor will be after the console's
   for(int i = CONSOLE_MINOR+1; i < MAX_TTY; i++){
      tty_table[i].flags = 0;
+     tty_table[i].tty_bytes_read = 0;
+     tty_table[i].tty_bytes_written = 0;
+     tty_table[i].ttyread_operations_counter = 0;
+     tty_table[i].ttywrite_operations_counter = 0;
   }
 }
 
@@ -381,10 +416,16 @@ void tty_connect(struct inode *ip) {
 void tty_attach(struct inode *ip) {
   tty_table[ip->minor].flags |= DEV_ATTACH;
   initlock(&(tty_table[ip->minor].lock), "tty");
+
+  /* add the tty device to the current cgroup devices list */
+  cgroup_add_io_device(proc_get_cgroup(), ip);
 }
 
 void tty_detach(struct inode *ip) {
   tty_table[ip->minor].flags &= ~(DEV_ATTACH);
+ 
+  /* remove the tty device from the current cgroup devices list */
+  cgroup_remove_io_device(proc_get_cgroup(), ip);
 }
 
 int tty_gets(struct inode *ip, int command) {
