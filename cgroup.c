@@ -29,6 +29,18 @@ void cgroup_unlock()
     release(&cgtable.lock);
 }
 
+static void dev_id_to_name(uint major, uint minor, char * buf)
+{
+    char * temp_ptr = buf; 
+ 
+    itoa(buf, major);
+    temp_ptr += strlen(buf);
+    //put the device major:minor delimiter
+    temp_ptr[0] = ':';
+    temp_ptr ++;
+    itoa(temp_ptr, minor);
+}
+
 static struct cgroup * unsafe_get_cgroup_by_path(char * path)
 {
     char fpath[MAX_PATH_LENGTH];
@@ -354,6 +366,7 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->cpu_nr_throttled = 0;
     cgroup->cpu_throttled_usec = 0;
     cgroup->cpu_is_throttled_period = 0;
+
 }
 
 int cgroup_insert(struct cgroup * cgroup, struct proc * proc)
@@ -1063,3 +1076,123 @@ void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup)
         cgroup->mem_stat_pgmajfault++;
     }
 }
+
+/* add IO device to the cgroup's available IO device array */
+void cgroup_add_io_device(struct cgroup * cgroup_ptr, struct inode * node)
+{
+    uint major = 0;
+    uint minor = 0;
+    int i = 0;
+    char device_name[DEVICE_NAME] = {0};
+
+    if (cgroup_ptr != cgroup_root() && cgroup_ptr != 0 && cgroup_ptr->populated == 1)
+    {
+        /* TODO: not sure if this necessary (we can't just exit this function) */
+        if(cgroup_ptr->available_devices > NDEV)
+        {
+            panic("Can't add more IO devices to cgroup");
+        }
+
+        for(i = 0; i < NDEV; i++)
+        {
+            if(cgroup_ptr->io_devices_inodes[i] == (struct inode *)0)
+                break;
+        }
+
+        if(i == NDEV)
+            panic("Error: no correlation between available device and devices array");
+
+        cgroup_ptr->io_devices_inodes[i] = node;
+        cgroup_ptr->available_devices ++;
+
+        /* set the device name */
+        major = node->major;
+        minor = node->minor;
+
+        //write the device name in the format ("major:minor")
+        dev_id_to_name(major, minor, device_name);
+        /* The same entry in io_states should be empty */
+        strncpy(cgroup_ptr->io_states[i].dev_name, device_name, DEVICE_NAME);
+        cgroup_ptr->io_states[i].major = major;
+        cgroup_ptr->io_states[i].minor = minor;
+
+        cgroup_ptr->available_devices --;
+    }
+}
+
+/* remove IO device from the cgroup's available IO device array */
+void cgroup_remove_io_device(struct cgroup * cgroup_ptr, struct inode * node)
+{
+    if (cgroup_ptr != cgroup_root() && cgroup_ptr != 0 && cgroup_ptr->populated == 1)
+    {
+        if(cgroup_ptr->available_devices == 0)
+        {
+            panic("No available IO devices in cgroup to remove");
+        }
+
+        for(int i = 0; i < NDEV; i++)
+        {
+            if(cgroup_ptr->io_devices_inodes[i] == node)
+            {
+                cgroup_ptr->io_devices_inodes[i] = (void *)0;
+                // clear the io state structure - it's irrelevant now
+                memset(&(cgroup_ptr->io_states[i]), 0, sizeof(cgroup_io_device_state_t));
+                cgroup_ptr->available_devices --;
+            }
+        }
+    }
+}
+
+void set_cgroup_io_stat(struct file *f)
+{
+    if(f == (void *)0)
+        panic("Invalid file handler (NULL), can't set io stats");
+ 
+    for(int i = 0; i < NDEV; i++)
+        f->io.devices_states[i] = (cgroup_io_device_state_t *)0;
+}
+
+void get_cgroup_io_stat(struct file *f, struct cgroup * cgp)
+{
+    struct dev_state device_state = {0};
+    int dev_major = 0;
+    int dev_minor = 0;
+    int cnt = 0;
+
+    if(f == (void *)0)
+        panic("Invalid file handler (NULL), can't set io stats");
+ 
+    if(cgp == (void *)0)
+        panic("Invalid cgroup (NULL), can't set io stats");
+
+    for(int i = 0; i < NDEV; i++)
+    {
+        // This is a leftover in case we want to use inodes
+        // The problem with inodes that if the user closes
+        // the inone then, it might be used by other file.
+        // This will lead to failure (so we can't rely on inodes).
+        if(cgp->io_devices_inodes[i] == (void *)0)
+            continue;
+ 
+        dev_major = cgp->io_states->major;
+        dev_minor = cgp->io_states->minor;
+
+        /* get the state of the IO device via its inode */
+        devsw[dev_major].stat(dev_minor, &device_state);
+
+        /* copy the state to the cgroup structure of the cgroup interface (IO_STAT)
+           Note: The cgroup's io_states and io_devices_inodes have the same indexes
+        */
+        memmove((struct dev_state *) &(cgp->io_states[i].deivce_state), &device_state,
+                 sizeof(struct dev_state));
+
+        //set also the cgroup's io state pointers in the file structure
+        f->io.devices_states[cnt] = &(cgp->io_states[i]);
+
+        // clear just in case we have garbage here (we are reusing the struct)
+        memset(&device_state, 0, sizeof(struct dev_state));
+  
+        cnt ++;
+    }
+}
+

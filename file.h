@@ -3,7 +3,7 @@
 
 #include "fs.h"
 #include "sleeplock.h"
-#include "cgfs.h"
+#include "defs.h"
 #include "param.h"
 
 struct file {
@@ -66,6 +66,10 @@ struct file {
             int frozen;
           } freezer;
         } frz;
+        //IO
+        union {
+          struct cgroup_io_device_state_s * devices_states[NDEV];
+        } io;
         // memory
         union {
           struct {
@@ -112,6 +116,22 @@ struct inode {
 struct devsw {
   int (*read)(struct inode*, char*, int);
   int (*write)(struct inode*, char*, int);
+  int (*stat)(int, struct dev_state *);
+};
+
+/* device state structure which defines what info every device
+   should supply.
+*/
+struct dev_state
+{
+  /* number of read IO operation made on the device */
+  uint rios;
+  /* number of write IO operation made on the device */
+  uint wios;
+  /* Total bytes read from device */
+  uint rbytes;
+  /* Total bytes written to device */
+  uint wbytes;
 };
 
 extern struct devsw devsw[];

@@ -1,6 +1,7 @@
-#include "param.h"
 #include "proc.h"
 #include "defs.h"
+#include "file.h"
+#include "param.h"
 
 #ifndef XV6_CGROUP_H
 #define XV6_CGROUP_H
@@ -9,8 +10,21 @@
 #define MAX_DEPTH_SIZE 3      // Max length of string representation of depth number. (the value is a number of at most two digits + null terminator)
 
 #define MAX_CONTROLLER_NAME_LENGTH 16  // Max length allowed for controller names
+#define DEVICE_NAME  17 // major:minor format which takes at most 17 bytes (8 bytes for each uint value)
 
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
+
+/* cgroup's io device state structure, here we got all the relevant fields
+    from the cgroup perspective and also the dev_state structure which describes
+    what status fields every IO device should have in the system.
+*/
+typedef struct cgroup_io_device_state_s
+{
+    char dev_name[DEVICE_NAME];
+    uint major;
+    uint minor;
+    struct dev_state deivce_state;
+} cgroup_io_device_state_t;
 
 /**
  * Control group, contains up to NPROC processes.
@@ -91,7 +105,16 @@ struct cgroup
     unsigned int cpu_nr_throttled;
     unsigned int cpu_throttled_usec;
     char cpu_is_throttled_period;
+
+    /* IO devices for the current cgroup
+        Note: Those structures are not updated constantly they are only updated
+        explicetly (when read io.stat for example)
+    */
+    unsigned int available_devices;
+    struct inode * io_devices_inodes[NDEV];
+    cgroup_io_device_state_t io_states[NDEV];
 };
+
 
 /**
  * This funciton returns the root cgroup.
@@ -501,4 +524,9 @@ void cgroup_mem_stat_pgfault_incr(struct cgroup* cgroup);
  * @param cgroup pointer to a cgroup
  */
 void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup);
+
+/*TODO: add documentation*/
+void get_cgroup_io_stat(struct file *f, struct cgroup * cgp);
+void set_cgroup_io_stat(struct file *f);
+
 #endif

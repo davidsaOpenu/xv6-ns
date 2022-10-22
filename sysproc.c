@@ -10,7 +10,7 @@
 #include "ioctl_request.h"
 #include "fcntl.h"
 #include "file.h"
-#include "console.h"
+#include "stat.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -152,7 +152,13 @@ sys_ioctl(void)
 
   ip = f->ip;
 
-  if(ip->minor == CONSOLE_MINOR){
+  /*
+  Do not accept when minor == 0 because this mostly the main device
+  or a controller device which does not accept ioctls
+  Better implementation would be to test in the driver itself if it
+  allows working on "main" devices when minor == 0
+  */
+  if(ip->minor <= 0){
     return -1;
   }
 
