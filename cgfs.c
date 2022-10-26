@@ -693,7 +693,7 @@ static int read_file_io_stat(struct file *f, char * addr, int n)
     char *stattext = buf;
     char *stattextp = stattext;
     uint stattext_size = min(n + f->off, sizeof(buf) / sizeof(char));
-    cgroup_io_device_state_t * dev_state = (void *)0;
+    cgroup_io_device_statistics_t * dev_stat = (void *)0;
     char rbytes_buff[8] = {0};
     char wbytes_buff[8] = {0};
     char rios_buff[8] = {0};
@@ -713,31 +713,31 @@ static int read_file_io_stat(struct file *f, char * addr, int n)
 
     for(int i = 0; i < NDEV; i ++)
     {
-        dev_state = (cgroup_io_device_state_t *)f->io.devices_states[i];
-        if(dev_state == (void *)0)
+        dev_stat = (cgroup_io_device_statistics_t *)f->io.devices_stats[i];
+        if(dev_stat == (void *)0)
             continue;
- 
-        copy_and_move_buffer(&stattextp, dev_state->dev_name, strlen(dev_state->dev_name));
+
+        copy_and_move_buffer(&stattextp, dev_stat->dev_name, strlen(dev_stat->dev_name));
 
         copy_and_move_buffer(&stattextp, " rbytes=", strlen(" rbytes="));
-        buff_length = utoa(rbytes_buff, dev_state->deivce_state.rbytes);
+        buff_length = utoa(rbytes_buff, dev_stat->device_stats.rbytes);
         copy_and_move_buffer(&stattextp, rbytes_buff, buff_length);
 
         copy_and_move_buffer(&stattextp, " wbytes=", strlen(" wbytes="));
-        buff_length = utoa(wbytes_buff, dev_state->deivce_state.wbytes);
+        buff_length = utoa(wbytes_buff, dev_stat->device_stats.wbytes);
         copy_and_move_buffer(&stattextp, wbytes_buff, buff_length);
 
         copy_and_move_buffer(&stattextp, " rios=", strlen(" rios="));
-        buff_length = utoa(rios_buff, dev_state->deivce_state.rios);
+        buff_length = utoa(rios_buff, dev_stat->device_stats.rios);
         copy_and_move_buffer(&stattextp, rios_buff, buff_length);
- 
+
         copy_and_move_buffer(&stattextp, " wios=", strlen(" wios="));
-        buff_length = utoa(wios_buff, dev_state->deivce_state.wios);
+        buff_length = utoa(wios_buff, dev_stat->device_stats.wios);
         copy_and_move_buffer(&stattextp, wios_buff, buff_length);
- 
+
         copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
     }
-    
+
     return copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
 }
 

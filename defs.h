@@ -15,8 +15,8 @@ struct stat;
 struct superblock;
 struct cgroup;
 struct devsw;
-struct dev_state;
-struct cgroup_io_device_state_s;
+struct dev_stat;
+struct cgroup_io_device_statistics_s;
 
 // bio.c
 void            binit(void);
