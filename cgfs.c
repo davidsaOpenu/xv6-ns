@@ -730,7 +730,7 @@ static int read_file_io_stat(struct file *f, char * addr, int n)
         copy_and_move_buffer(&stattextp, " rios=", strlen(" rios="));
         buff_length = utoa(rios_buff, dev_state->deivce_state.rios);
         copy_and_move_buffer(&stattextp, rios_buff, buff_length);
- 
+
         copy_and_move_buffer(&stattextp, " wios=", strlen(" wios="));
         buff_length = utoa(wios_buff, dev_state->deivce_state.wios);
         copy_and_move_buffer(&stattextp, wios_buff, buff_length);
