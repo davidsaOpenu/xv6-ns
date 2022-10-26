@@ -116,13 +116,13 @@ struct inode {
 struct devsw {
   int (*read)(struct inode*, char*, int);
   int (*write)(struct inode*, char*, int);
-  int (*stat)(int, struct dev_state *);
+  int (*stat)(int, struct dev_stat *);
 };
 
-/* device state structure which defines what info every device
+/* device statistics structure which defines what info every device
    should supply.
 */
-struct dev_state
+struct dev_stat
 {
   /* number of read IO operation made on the device */
   uint rios;

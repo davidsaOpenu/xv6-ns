@@ -15,7 +15,7 @@ struct stat;
 struct superblock;
 struct cgroup;
 struct devsw;
-struct dev_state;
+struct dev_stat;
 struct cgroup_io_device_state_s;
 
 // bio.c
