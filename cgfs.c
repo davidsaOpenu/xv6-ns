@@ -679,6 +679,59 @@ static int read_file_mem_min(struct file * f, char * addr, int n)
     return copy_buffer_up_to_end(maxtext + f->off, min(abs(maxtextp - maxtext - f->off), n), addr);
 }
 
+static int read_file_io_stat(struct file *f, char * addr, int n)
+{
+    char *stattext = buf;
+    char *stattextp = stattext;
+    uint stattext_size = min(n + f->off, sizeof(buf) / sizeof(char));
+    cgroup_io_device_statistics_t * dev_stat = (void *)0;
+    char rbytes_buff[8] = {0};
+    char wbytes_buff[8] = {0};
+    char rios_buff[8] = {0};
+    char wios_buff[8] = {0};
+    uint buff_length = 0;
+
+    if(f == (void *)0 || f->cgp == (void *)0)
+        panic("Can't read file io stat. file structure invalid (NULL)");
+
+    /* set the io stats in the file structure (f->cgp should be already set with
+        the io inodes, if there are any)
+    */
+    get_cgroup_io_stat(f, f->cgp);
+
+    /* parse from file structure */
+    memset(stattext, 0, stattext_size);
+
+    for(int i = 0; i < NDEV; i ++)
+    {
+        dev_stat = (cgroup_io_device_statistics_t *)f->io.devices_stats[i];
+        if(dev_stat == (void *)0)
+            continue;
+
+        copy_and_move_buffer(&stattextp, dev_stat->dev_name, strlen(dev_stat->dev_name));
+
+        copy_and_move_buffer(&stattextp, " rbytes=", strlen(" rbytes="));
+        buff_length = utoa(rbytes_buff, dev_stat->device_stats.rbytes);
+        copy_and_move_buffer(&stattextp, rbytes_buff, buff_length);
+
+        copy_and_move_buffer(&stattextp, " wbytes=", strlen(" wbytes="));
+        buff_length = utoa(wbytes_buff, dev_stat->device_stats.wbytes);
+        copy_and_move_buffer(&stattextp, wbytes_buff, buff_length);
+
+        copy_and_move_buffer(&stattextp, " rios=", strlen(" rios="));
+        buff_length = utoa(rios_buff, dev_stat->device_stats.rios);
+        copy_and_move_buffer(&stattextp, rios_buff, buff_length);
+
+        copy_and_move_buffer(&stattextp, " wios=", strlen(" wios="));
+        buff_length = utoa(wios_buff, dev_stat->device_stats.wios);
+        copy_and_move_buffer(&stattextp, wios_buff, buff_length);
+
+        copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
+    }
+
+    return copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
+}
+
 static int read_file_mem_stat(struct file * f, char * addr, int n)
 {
     char file_dirty_buf[10] = {0};

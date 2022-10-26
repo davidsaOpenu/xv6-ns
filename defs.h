@@ -14,6 +14,9 @@ struct sleeplock;
 struct stat;
 struct superblock;
 struct cgroup;
+struct devsw;
+struct dev_stat;
+struct cgroup_io_device_statistics_s;
 
 // bio.c
 void            binit(void);
