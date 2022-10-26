@@ -716,7 +716,7 @@ static int read_file_io_stat(struct file *f, char * addr, int n)
         dev_state = (cgroup_io_device_state_t *)f->io.devices_states[i];
         if(dev_state == (void *)0)
             continue;
- 
+
         copy_and_move_buffer(&stattextp, dev_state->dev_name, strlen(dev_state->dev_name));
 
         copy_and_move_buffer(&stattextp, " rbytes=", strlen(" rbytes="));
@@ -730,14 +730,14 @@ static int read_file_io_stat(struct file *f, char * addr, int n)
         copy_and_move_buffer(&stattextp, " rios=", strlen(" rios="));
         buff_length = utoa(rios_buff, dev_state->deivce_state.rios);
         copy_and_move_buffer(&stattextp, rios_buff, buff_length);
- 
+
         copy_and_move_buffer(&stattextp, " wios=", strlen(" wios="));
         buff_length = utoa(wios_buff, dev_state->deivce_state.wios);
         copy_and_move_buffer(&stattextp, wios_buff, buff_length);
- 
+
         copy_and_move_buffer(&stattextp, "\n", strlen("\n"));
     }
-    
+
     return copy_buffer_up_to_end(stattext + f->off, min(abs(stattextp - stattext - f->off), n), addr);
 }
 
