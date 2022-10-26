@@ -10,20 +10,24 @@
 #define MAX_DEPTH_SIZE 3      // Max length of string representation of depth number. (the value is a number of at most two digits + null terminator)
 
 #define MAX_CONTROLLER_NAME_LENGTH 16  // Max length allowed for controller names
+#define DEVICE_NAME  17 // major:minor format which takes at most 17 bytes (8 bytes for each uint value)
 
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
 
 /* cgroup's io device state structure, here we got all the relevant fields
-    from the cgroup perspective and also the dev_state structure which describes
+    from the cgroup perspective and also the dev_stat structure which describes
     what status fields every IO device should have in the system.
+
+    Note: this is a wrapper to the dev_stat so we can add more cgroup specific
+    parameters and info which is not really relevant to the driver itself (like dev_name)
 */
-typedef struct cgroup_io_device_state_s
+typedef struct cgroup_io_device_statistics_s
 {
     char dev_name[DEVICE_NAME];
     uint major;
     uint minor;
-    struct dev_state deivce_state;
-} cgroup_io_device_state_t;
+    struct dev_stat device_stats;
+} cgroup_io_device_statistics_t;
 
 /**
  * Control group, contains up to NPROC processes.
@@ -109,9 +113,10 @@ struct cgroup
         Note: Those structures are not updated constantly they are only updated
         explicetly (when read io.stat for example)
     */
-    unsigned int available_devices;
-    struct inode * io_devices_inodes[NDEV];
-    cgroup_io_device_state_t io_states[NDEV];
+    // Used IO devices in current cgroup (For example, attached tty)
+    unsigned int used_devices;
+    // IO state for each available IO in cgroup
+    cgroup_io_device_statistics_t io_stats[NDEV];
 };
 
 

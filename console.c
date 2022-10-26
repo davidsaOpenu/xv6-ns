@@ -242,7 +242,7 @@ consoleintr(int (*getc)(void))
 }
 
 int
-ttystat(int minor, struct dev_state * device_state)
+ttystat(int minor, struct dev_stat * device_state)
 {
   if((void *)0 == device_state)
     panic("Invalid device state structre (NULL)");
