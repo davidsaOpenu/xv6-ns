@@ -242,15 +242,15 @@ consoleintr(int (*getc)(void))
 }
 
 int
-ttystat(int minor, struct dev_state * device_state)
+ttystat(int minor, struct dev_stat * device_stat)
 {
-  if((void *)0 == device_state)
-    panic("Invalid device state structre (NULL)");
+  if((void *)0 == device_stat)
+    panic("Invalid device statistics structre (NULL)");
 
-  device_state->rbytes = tty_table[minor].tty_bytes_read;
-  device_state->wbytes = tty_table[minor].tty_bytes_written;
-  device_state->rios = tty_table[minor].ttyread_operations_counter;
-  device_state->wios = tty_table[minor].ttywrite_operations_counter;
+  device_stat->rbytes = tty_table[minor].tty_bytes_read;
+  device_stat->wbytes = tty_table[minor].tty_bytes_written;
+  device_stat->rios = tty_table[minor].ttyread_operations_counter;
+  device_stat->wios = tty_table[minor].ttywrite_operations_counter;
 
   return 0;
 }
