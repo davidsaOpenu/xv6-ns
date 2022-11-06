@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4922a77d_933d6d6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2022-11-06T04:33:10Z",
+      "side": 1,
+      "message": "Please, take a look at the comment made in sysproc.c on patchset 4",
+      "revId": "6f7dbdbc2497261800190b52e7a59019f459b2d9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
