@@ -14,6 +14,14 @@
 
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
 
+// Error codes for the cgroup module
+typedef enum result_e
+{
+    CGROUP__RESULT_FAILURE = -1,
+    CGROUP__RESULT_SUCCESS,
+} result_t;
+
+
 /* cgroup's io device statistics structure, here we got all the relevant fields
     from the cgroup perspective and also the dev_stat structure which describes
     what status fields every IO device should have in the system.
