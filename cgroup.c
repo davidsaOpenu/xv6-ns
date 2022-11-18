@@ -348,8 +348,14 @@ void cgroup_initialize(struct cgroup * cgroup,
     cgroup->mem_stat_pgfault = 0;
     cgroup->mem_stat_pgmajfault = 0;
 
-    // By default a group has limit of KERNBASE memory.
-    set_max_mem(cgroup, KERNBASE);
+    // By default a group has limit of KERNBASE memory, if parent set
+    // its max value to something else, we pass it accordingly
+    if(parent_cgroup == 0)
+        set_max_mem(cgroup, KERNBASE);
+    else
+    {
+        set_max_mem(cgroup, parent_cgroup->max_mem);
+    }
 
     // By default a group has minimum 0 memory.
     set_min_mem(cgroup, 0);
@@ -916,7 +922,7 @@ int set_max_mem(struct cgroup* cgroup, unsigned int limit) {
   // If no cgroup found, return error.
   if (cgroup == 0)
     return -1;
-
+    
   // Set the limit if it is within allowed parameters.
   // 0 is used for testing.
   if (limit >= 0 && limit <= KERNBASE && limit >= cgroup->min_mem) {
@@ -930,37 +936,47 @@ int set_max_mem(struct cgroup* cgroup, unsigned int limit) {
 int set_min_mem(struct cgroup* cgroup, unsigned int limit) {
     // If no cgroup found, return error.
     if (cgroup == 0)
-        return -1;
+        return CGROUP__RESULT_FAILURE;
+
+    // don't allow a child cgroup to set minimum value more than
+    // the max set in its parent
+    if(cgroup != cgroup_root())
+    {
+        if(cgroup->parent->max_mem < limit)
+        {
+            return CGROUP__RESULT_FAILURE;
+        }
+    }
 
     // Set the limit if it is within allowed parameters.
     // 0 is used for testing.
     if (limit >= 0 && limit <= KERNBASE && limit <= cgroup->max_mem) {
         if (set_protect_mem(cgroup, PGROUNDUP(limit) / PGSIZE) == 0) {
             cgroup->min_mem = limit;
-            return 1;
+            return CGROUP__RESULT_SUCCESS;
         }
     }
 
-    return 0;
+    return CGROUP__RESULT_FAILURE;
 }
 
 int set_protect_mem(struct cgroup* cgroup, unsigned int pages) {
 
     int protect = pages - cgroup->current_page;
     if (protect <= 0){//actualy we dont need to protect memory, cgroup use memory more then min
-        if (cgroup->protected_mem > 0) {// we need to releas all protectd memory
+        if (cgroup->protected_mem > 0) {// we need to release all protectd memory
             decrese_protect_counter(cgroup->protected_mem);
             cgroup->protected_mem = 0;
         }
     }
     else {// we do need to protect memory
-            if (increse_protect_counter(protect - cgroup->protected_mem) == 0) //there is enugh memory to protect or we decreas
+            if (increse_protect_counter(protect - cgroup->protected_mem) == 0) //there is enough memory to protect or we decreas
                 cgroup->protected_mem = protect;
             else
-                return -1;// fail
+                return CGROUP__RESULT_FAILURE;
     }
 
-    return 0;// success
+    return CGROUP__RESULT_SUCCESS;
 }
 
 int unsafe_enable_mem_controller(struct cgroup* cgroup) {
@@ -1000,7 +1016,7 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
 
   // If controller is disabled do nothing.
   if (cgroup->mem_controller_enabled == 0) {
-    return 0;
+    return CGROUP__RESULT_FAILURE;
   }
 
   // Check that all child cgroups have memory controller disabled. (cannot
@@ -1010,7 +1026,7 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
     i++)
     if (cgtable.cgroups[i].parent == cgroup &&
       cgtable.cgroups[i].mem_controller_enabled) {
-      return -1;
+      return CGROUP__RESULT_SUCCESS;
     }
 
   // Set memory controller to disabled.
@@ -1026,7 +1042,7 @@ int unsafe_disable_mem_controller(struct cgroup* cgroup) {
     if (cgtable.cgroups[i].parent == cgroup)
       cgtable.cgroups[i].mem_controller_avalible = 0;
 
-  return 0;
+  return CGROUP__RESULT_SUCCESS;
 }
 
 int enable_mem_controller(struct cgroup* cgroup)
@@ -1161,10 +1177,10 @@ void get_cgroup_io_stat(struct file *f, struct cgroup * cgp)
     int cnt = 0;
 
     if(f == (void *)0)
-        panic("Invalid file handler (NULL), can't set io stats");
+        panic("Invalid file handler (NULL), can't get io stats");
  
     if(cgp == (void *)0)
-        panic("Invalid cgroup (NULL), can't set io stats");
+        panic("Invalid cgroup (NULL), can't get io stats");
 
     for(int i = 0; i < NDEV; i++)
     {

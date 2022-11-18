@@ -423,6 +423,9 @@ void tty_attach(struct inode *ip) {
 
 void tty_detach(struct inode *ip) {
   tty_table[ip->minor].flags &= ~(DEV_ATTACH);
+  /* Note: We don't clear the tty's stats because the tty exist it is just detached
+  from the cgroup. Any reuse of the tty (new cgroup created) will use this tty
+  */
 
   /* remove the tty device from the current cgroup devices list */
   cgroup_remove_io_device(proc_get_cgroup(), ip);
