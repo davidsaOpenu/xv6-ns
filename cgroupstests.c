@@ -228,6 +228,33 @@ int move_proc(const char* file, int pid) {
   return write_file(file, pid_buf);
 }
 
+/* Returns buffer of pids (integers) the last entry will be null */
+int * get_cgroup_pids(const char * cgroup_proc_file)
+{
+  int * pids = 0;
+  char * pids_buffer;
+  int i = 0;
+
+  pids_buffer = read_file(cgroup_proc_file, 0);
+  if(!pids_buffer)
+    return (int *)0;
+
+  pids = malloc(strlen(pids_buffer) + 4);
+  if(pids == 0)
+    return pids;
+
+  while(*pids_buffer != 0)
+  {
+    pids[i] = atoi(pids_buffer);
+    pids_buffer += 3;
+    i ++;
+  }
+  pids[i] = 0;
+
+  return pids;
+}
+
+
 // Test a given pid in string format belongs to a given cgroup.
 int is_pid_in_group(const char* file, int pid) {
   char* contents = read_file(file, 0);
@@ -242,7 +269,7 @@ int is_pid_in_group(const char* file, int pid) {
   int i;
   for (i = 0; contents[i + 1] != 0; i++) {
     if (pid_buf[0] == contents[i] && pid_buf[1] == contents[i + 1]) {
-      return 1;
+      return RESULT_SUCCESS;
     }
   }
 
@@ -250,7 +277,7 @@ int is_pid_in_group(const char* file, int pid) {
     printf(1, "Failed to find pid %d in group %s\n", atoi(pid_buf), file);
   }
 
-  return 0;
+  return RESULT_FAILURE;
 }
 
 // Write an integer into a temporary file. Notice only one such file currently supported.
@@ -1492,7 +1519,6 @@ TEST (test_nested_cgroups)
   uint kernel_total_mem = 0;
   uint depth_cnt = 1;
   char min_val[12] = {0};
-  //char max_val[12] = {0};
   char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
   char current_nesting_index = '0';
   uint current_nested_cgroup_length = 0;
@@ -1527,7 +1553,6 @@ TEST (test_nested_cgroups)
     memset(temp_path_g, 0, MAX_PATH_LENGTH);
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_MEM_MIN);
-    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
     ASSERT_TRUE(write_file(temp_path_g, min_val));
     read_file(temp_path_g, 1);
 
@@ -1581,6 +1606,382 @@ TEST (test_nested_cgroups)
   }
 }
 
+int create_and_move_proc(char * cgroup_path, int mem_allocation)
+{
+  int new_proc_pid = fork();
+
+  if(new_proc_pid < 0)
+  {
+    return RESULT_FAILURE;
+  }
+
+  if(new_proc_pid == 0)
+  {
+    //allocate memory to the process
+    if(mem_allocation > 0)
+      malloc(mem_allocation);
+
+    while(1==1);
+  }
+  // move process to the current neset cgroup
+  memset(temp_path_g, 0 , MAX_PATH_LENGTH);
+  strcpy(temp_path_g, cgroup_path);
+  strcat(temp_path_g, TEST_NESTED_PROCS);
+
+  if(move_proc(temp_path_g, new_proc_pid) <= 0)
+    return RESULT_FAILURE;
+
+  if(is_pid_in_group(temp_path_g, new_proc_pid) == 0)
+    return RESULT_FAILURE;
+
+  return new_proc_pid;
+}
+
+int reset_nested_memory_controllers(char * top_nested_cgroup_path , int nesting_level)
+{
+  uint top_nested_cgroup_path_length = 0;
+  int depth_cnt = 0;
+  char min_value[2] = {'0', 0};
+  int * nested_cgroup_procs_pids;
+  int i = 0;
+
+  top_nested_cgroup_path_length = strlen(top_nested_cgroup_path);
+
+  /* disable memory controllers, set min back to 0 and delete cgroups
+    Here we do it backwards - reversed tro the last loop */
+  for(depth_cnt = 0; depth_cnt < nesting_level; depth_cnt++)
+  {
+    // set min value to 0 (just in case)
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, top_nested_cgroup_path);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    write_file(temp_path_g, min_value);
+
+    // disable mem controller
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, top_nested_cgroup_path);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    write_file(temp_path_g, "-mem");
+
+    // kill the processes within the cgroup
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, top_nested_cgroup_path);
+    strcat(temp_path_g, TEST_NESTED_PROCS);
+
+    nested_cgroup_procs_pids = get_cgroup_pids(temp_path_g);
+    if(nested_cgroup_procs_pids != 0)
+    {
+      while(nested_cgroup_procs_pids[i] != 0)
+      {
+        kill(nested_cgroup_procs_pids[i]);
+        i++;
+      }
+      free(nested_cgroup_procs_pids);
+      i = 0;
+    }
+
+    //delete nested cgroup
+    if(unlink(top_nested_cgroup_path) < 0)
+      return RESULT_FAILURE;
+
+    top_nested_cgroup_path_length -= sizeof(TESTED_NESTED_CGROUP_CHILD);
+    top_nested_cgroup_path[top_nested_cgroup_path_length] = 0;
+  }
+
+  return RESULT_SUCCESS;
+}
+
+
+/* ##################################################################
+Scenario 1 - allocate 10 nested cgroups, set min value to 10% of total 
+kernel's memory and create process in each. Make sure that we can't
+allocate more memory than available on each nesting level.
+####################################################################*/
+void nested_cgroup_mem_recalc_scenario1(int kernel_total_mem, char * min_value)
+{
+  int depth_cnt = 0;
+  int current_nesting_index = '0';
+  char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  // maximum available memory to allocate
+  char exceeding_mem_value[12] = {0};
+  char * name = "nested_cgroup_mem_recalc_scenario1";
+
+  //initialize the nested cgroup path
+  strcpy(current_nested_cgroup, ROOT_CGROUP);
+
+  for(depth_cnt = 0; depth_cnt < 10; depth_cnt++)
+  {
+    /* Create the root nested cgroup and enable the memory controller*/
+    strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+    current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+    ASSERT_FALSE(mkdir(current_nested_cgroup));
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+    //Protect portion of memory for the current nested cgroup
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, current_nested_cgroup);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
+
+    /* first, try to allocate the free memory in the kernel + 1 PAGE. This should fail */
+    itoa(exceeding_mem_value, atoi(min_value) * (NESTED_CGROUPS_LEVEL + 1 - depth_cnt) +  PGSIZE);
+    ASSERT_FALSE(write_file(temp_path_g, exceeding_mem_value));
+
+    /* set the min value to the cgroup */
+    ASSERT_TRUE(write_file(temp_path_g, min_value));
+    read_file(temp_path_g, 1);
+
+    //create process to the the cgroup
+    ASSERT_TRUE(create_and_move_proc(current_nested_cgroup, 0));
+
+    current_nesting_index++;
+  }
+
+  //current_nested_cgroup should be the path to the top (last) created nested cgroup
+  ASSERT_TRUE(reset_nested_memory_controllers(current_nested_cgroup, NESTED_CGROUPS_LEVEL));
+}
+
+
+/* ##################################################################
+Scenario 2 - allocate 10 nested cgroups, set min value from the top
+nested cgroup through the bottom (root cgroup) and create process in
+each layer.
+On each layer, make sure that we can't allocate more than available
+memory (after the cgroup in the layer above set min value).
+####################################################################*/
+void nested_cgroup_mem_recalc_scenario2(int kernel_total_mem, char * min_value)
+{
+  int depth_cnt = 0;
+  int current_nesting_index = '0';
+  char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char descending_nested_cgroup_path[MAX_PATH_LENGTH] = {0};
+  char exceeding_memory_value[12] = {0};
+  char * name = "nested_cgroup_mem_recalc_scenario2";
+  int current_path_length = 0;
+
+  //initialize the nested cgroup path
+  strcpy(current_nested_cgroup, ROOT_CGROUP);
+
+  for(depth_cnt = 0; depth_cnt < 10; depth_cnt++)
+  {
+    /* Create the nested cgroup and enable the memory controller*/
+    strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+    current_nested_cgroup[strlen(current_nested_cgroup)] = current_nesting_index;
+    ASSERT_FALSE(mkdir(current_nested_cgroup));
+    strcpy(temp_path_g, current_nested_cgroup);
+
+    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
+
+    strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+    ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+    current_nesting_index++;
+  }
+
+  strcpy(descending_nested_cgroup_path, current_nested_cgroup);
+  current_path_length = strlen(descending_nested_cgroup_path);
+
+  for(depth_cnt = 10; depth_cnt > 0; depth_cnt--)
+  {
+    memset(temp_path_g, 0, MAX_PATH_LENGTH);
+    strcpy(temp_path_g, descending_nested_cgroup_path);
+    strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+    printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
+
+    /* first, try to allocate the free memory in the kernel + 1 PAGE. This should fail */
+    itoa(exceeding_memory_value, atoi(min_value) * (depth_cnt + 1) + PGSIZE);
+    ASSERT_FALSE(write_file(temp_path_g, exceeding_memory_value))
+
+    /* allocate only 10% of memory now */
+    ASSERT_TRUE(write_file(temp_path_g, min_value));
+
+    current_path_length -= sizeof(TESTED_NESTED_CGROUP_CHILD);
+    descending_nested_cgroup_path[current_path_length] = 0;
+  }
+
+  //current_nested_cgroup should be the path to the top (last) created nested cgroup
+  ASSERT_TRUE(reset_nested_memory_controllers(current_nested_cgroup, NESTED_CGROUPS_LEVEL));
+}
+
+
+/* ##################################################################
+Scenario 3 - set maximum memory threshold on the root cgroup.
+Then, we create a nested cgroup and try to allocate above the threshold.
+####################################################################*/
+void nested_cgroup_mem_recalc_scenario3(int kernel_total_memory)
+{
+  char current_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char max_mem_threshold[12] = {0};
+  char * name = "nested_cgroup_mem_recalc_scenario3";
+
+  //initialize the nested cgroup path and enable memory controller
+  strcpy(current_nested_cgroup, ROOT_CGROUP);
+
+  // create nested cgroup and set the maximum threshold
+  strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  current_nested_cgroup[strlen(current_nested_cgroup)] = '0';
+  ASSERT_FALSE(mkdir(current_nested_cgroup));
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+  // set the maximum threshold  (which is half the total kernel's memory)
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MAX);
+
+  itoa(max_mem_threshold, kernel_total_memory / 2);
+  ASSERT_TRUE(write_file(temp_path_g, max_mem_threshold));
+  read_file(temp_path_g, 1);
+
+  // create another nested cgroup and try to allocate more than the threshold
+  strcat(current_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  current_nested_cgroup[strlen(current_nested_cgroup)] = '1';
+  ASSERT_FALSE(mkdir(current_nested_cgroup));
+  strcpy(temp_path_g, current_nested_cgroup);
+
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, current_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MIN);
+  memset(max_mem_threshold, 0 , sizeof(max_mem_threshold));
+  itoa(max_mem_threshold, (kernel_total_memory / 2) + PGSIZE);
+
+  ASSERT_FALSE(write_file(temp_path_g, max_mem_threshold));
+
+  // make sure we still can allocate below the threshold
+  memset(max_mem_threshold, 0 , sizeof(max_mem_threshold));
+  itoa(max_mem_threshold, (kernel_total_memory / 2) - PGSIZE);
+  ASSERT_TRUE(write_file(temp_path_g, max_mem_threshold));
+
+  ASSERT_TRUE(reset_nested_memory_controllers(current_nested_cgroup, 2));
+}
+
+
+/* ##################################################################
+Scenario 4 - Move process from nested cgroup to its parent and 
+back. The parent and the child cgroup should set their maximum
+memory to PGSIZE (4096 bytes).
+####################################################################*/
+void nested_cgroup_mem_recalc_scenario4(int kernel_total_memory)
+{
+  char parent_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char child_nested_cgroup[MAX_PATH_LENGTH] = {0};
+  char max_mem_threshold[12] = {0};
+  char * name = "nested_cgroup_mem_recalc_scenario4";
+  int pid = 0;
+
+  //initialize the nested cgroup path and enable memory controller
+  strcpy(parent_nested_cgroup, ROOT_CGROUP);
+
+  // create nested cgroup and set the maximum threshold
+  strcat(parent_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  parent_nested_cgroup[strlen(parent_nested_cgroup)] = '0';
+  ASSERT_FALSE(mkdir(parent_nested_cgroup));
+  strcpy(temp_path_g, parent_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+  // set the maximum threshold  (which is half the total kernel's memory)
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, parent_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MAX);
+
+  itoa(max_mem_threshold, PGSIZE * 100);
+  ASSERT_TRUE(write_file(temp_path_g, max_mem_threshold));
+  read_file(temp_path_g, 1);
+
+  //create the process with PGSIZE bytes allocation
+  // This should fail the process memory is much bigger
+  ASSERT_TRUE(pid = create_and_move_proc(parent_nested_cgroup, PGSIZE));
+
+  //create the nested cgroup (its max value should be as its parent max value)
+  strcpy(child_nested_cgroup, parent_nested_cgroup);
+  strcat(child_nested_cgroup, TESTED_NESTED_CGROUP_CHILD);
+  child_nested_cgroup[strlen(child_nested_cgroup)] = '1';
+  ASSERT_FALSE(mkdir(child_nested_cgroup));
+  strcpy(temp_path_g, child_nested_cgroup);
+
+  strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
+  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+
+  // move the process to the child cgroup
+  memset(temp_path_g, 0 , MAX_PATH_LENGTH);
+  strcpy(temp_path_g, child_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_PROCS);
+  ASSERT_TRUE(move_proc(temp_path_g, pid));
+  // make sure process not in parent
+  ASSERT_TRUE(is_pid_in_group(temp_path_g, pid));
+
+  memset(temp_path_g, 0 , MAX_PATH_LENGTH);
+  strcpy(temp_path_g, parent_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_PROCS);
+  ASSERT_FALSE(is_pid_in_group(temp_path_g, pid));
+
+  // move proces back to parent
+  ASSERT_TRUE(move_proc(temp_path_g, pid));
+  ASSERT_TRUE(is_pid_in_group(temp_path_g, pid));
+  memset(temp_path_g, 0 , MAX_PATH_LENGTH);
+  strcpy(temp_path_g, child_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_PROCS);
+  ASSERT_FALSE(is_pid_in_group(child_nested_cgroup, pid));
+
+  //set max memory of child to only 10*PGSIZE bytes
+  memset(temp_path_g, 0, MAX_PATH_LENGTH);
+  strcpy(temp_path_g, child_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_MEM_MAX);
+
+  itoa(max_mem_threshold, PGSIZE * 10);
+  ASSERT_TRUE(write_file(temp_path_g, max_mem_threshold));
+  read_file(temp_path_g, 1);
+
+  //move process to child again (this should fail)
+  memset(temp_path_g, 0 , MAX_PATH_LENGTH);
+  strcpy(temp_path_g, child_nested_cgroup);
+  strcat(temp_path_g, TEST_NESTED_PROCS);
+  ASSERT_FALSE(move_proc(temp_path_g, pid));
+
+  ASSERT_TRUE(reset_nested_memory_controllers(child_nested_cgroup, 2));
+}
+
+
+TEST (test_nested_cgroup_memory_recalculation)
+{
+  int kernel_total_mem = 0;
+  char * mem_stat_buf = 0;
+  char min_value[12] = {0};
+
+  mem_stat_buf = read_file(TEST_1_MEM_STAT, 0);
+  kernel_total_mem = get_kernel_total_memory(mem_stat_buf);
+  printf(1, "\nkernel mem: %x\n", kernel_total_mem);
+
+  /* define the min-max values for the current cgroup . We divide in 11
+    because we want to make sure that all of the 10 nested levels
+    will fit in the total kernel's memory
+  */
+  itoa(min_value, kernel_total_mem / (NESTED_CGROUPS_LEVEL + 1));
+  printf(1, "\nmin_value %s\n", min_value);
+
+  nested_cgroup_mem_recalc_scenario1(kernel_total_mem, min_value);
+  sleep(1);
+
+  nested_cgroup_mem_recalc_scenario2(kernel_total_mem, min_value);
+  sleep(1);
+
+  nested_cgroup_mem_recalc_scenario3(kernel_total_mem);
+  sleep(1);
+
+  nested_cgroup_mem_recalc_scenario4(kernel_total_mem);
+}
+
+
+
+
+
 
 int main(int argc, char * argv[])
 {
@@ -1601,7 +2002,7 @@ int main(int argc, char * argv[])
     run_test(test_cpu_stat);
     run_test(test_pid_current);
     run_test(test_setting_cpu_id);
-    run_test(test_correct_cpu_running);
+//    run_test(test_correct_cpu_running);
     run_test(test_no_run);
     run_test(test_mem_stat);
     run_test(test_setting_freeze);
@@ -1614,6 +2015,7 @@ int main(int argc, char * argv[])
     run_test(test_release_protected_memory_after_delete_cgroup);
     run_test(test_cant_move_under_mem_limit);
     run_test(test_nested_cgroups);
+    run_test(test_nested_cgroup_memory_recalculation);
     run_test(test_mem_limit_negative_and_over_kernelbase);
     run_test(test_cant_move_over_mem_limit);
     run_test(test_cant_fork_over_mem_limit);
