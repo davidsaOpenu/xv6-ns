@@ -15,6 +15,34 @@ static void empty_string(char * string, int length)
         string[i] = 0;
 }
 
+static int create_lock_file()
+{
+    int fd = open("pouch_lock.lock", O_RDWR | O_CREATE);
+    write(fd, "1", 1);
+    close(fd);
+    return fd;
+}
+
+static int is_lock_file_exist()
+{
+    char flag[1] = {0};
+    int fd = open("pouch_lock.lock", O_RDWR);
+    if(read(fd, flag, 1) != 1)
+    {
+        close(fd);
+        return 0;
+    }
+    if('1' == flag[0])
+    {
+        write(fd, "0", 1);
+        close(fd);
+        return 1;
+    }
+
+    close(fd);
+    return 0;
+}
+
 void
 panic(char *s)
 {
@@ -392,12 +420,16 @@ static int pouch_fork(char* container_name){
         return -1;
       }
 
+      // Note: unknown reason for second time fork (probably to create a cgroup
+      // which is not related to the first sh process)
       pid = fork();
       if(pid == -1){
          panic("fork");
       }
       if(pid == 0) {
          if(tty_fd != -1){
+            while(!is_lock_file_exist());
+
             //attach stderr stdin stdout
             if(attach_tty(tty_fd) < 0){
               printf(stderr,"attach failed");
@@ -417,9 +449,7 @@ static int pouch_fork(char* container_name){
            printf(stderr,"Error connecting tty\n");
         }
       }else{
-
-        //"Parent process - waiting for child
-
+        //Parent process - create the new cgroup and wait for child
         // Move the current process to "/cgroup/<cname>" cgroup.
         strcat(cg_cname,"/cgroup.procs");
         int cgroup_procs_fd = open(cg_cname, O_RDWR);
@@ -430,9 +460,10 @@ static int pouch_fork(char* container_name){
         if(close(cgroup_procs_fd) < 0)
             return -1;
         if(write_to_cconf(container_name, tty_name, pid) >= 0)
+        {
+           create_lock_file();
            wait(0);
-
-
+        }
 
         exit(0);
       }

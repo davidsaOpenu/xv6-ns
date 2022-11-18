@@ -1263,7 +1263,7 @@ static int write_file_mem_min(struct file * f, char * addr, int n)
 
     // Update min memory field if the paramter is within allowed values.
     int test = set_min_mem(f->cgp, min);
-    if (test == 0 || test == -1)
+    if (test != CGROUP__RESULT_SUCCESS)
         return -1;
     f->mem.min.min = min;
     return  n;
