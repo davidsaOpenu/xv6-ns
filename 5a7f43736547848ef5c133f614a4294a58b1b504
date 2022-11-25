@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95474e39_76ac737c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-11-25T09:30:51Z",
+      "side": 1,
+      "message": "Marking manually +2. Merging this change will cause instability increase from 20% failure rate to 40% failure rate due to https://trello.com/c/0WZJm08d/122-maman11-refactor-testmemstat-in-cgroupstestsc. We will fix it as a part of maman12 at 2023b",
+      "revId": "5a7f43736547848ef5c133f614a4294a58b1b504",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
