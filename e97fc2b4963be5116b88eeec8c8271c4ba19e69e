@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef506570_340e3a0b",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:54:16Z",
+      "side": 1,
+      "message": "lets use success and failure values",
+      "range": {
+        "startLine": 939,
+        "startChar": 15,
+        "endLine": 939,
+        "endChar": 17
+      },
+      "revId": "e97fc2b4963be5116b88eeec8c8271c4ba19e69e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7937ca93_5b329684",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:54:16Z",
+      "side": 1,
+      "message": "lets use success and failure values",
+      "range": {
+        "startLine": 947,
+        "startChar": 19,
+        "endLine": 947,
+        "endChar": 20
+      },
+      "revId": "e97fc2b4963be5116b88eeec8c8271c4ba19e69e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1b2dc35_f620030f",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:54:16Z",
+      "side": 1,
+      "message": "lets use success and failure values",
+      "range": {
+        "startLine": 956,
+        "startChar": 19,
+        "endLine": 956,
+        "endChar": 21
+      },
+      "revId": "e97fc2b4963be5116b88eeec8c8271c4ba19e69e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfbc5399_f9f3e08f",
+        "filename": "cgroup.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:54:16Z",
+      "side": 1,
+      "message": "lets use success and failure values",
+      "range": {
+        "startLine": 960,
+        "startChar": 11,
+        "endLine": 960,
+        "endChar": 13
+      },
+      "revId": "e97fc2b4963be5116b88eeec8c8271c4ba19e69e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
