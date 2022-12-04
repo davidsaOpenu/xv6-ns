@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8792991_59c5f3a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:53:25Z",
+      "side": 1,
+      "message": "merging meanwhile",
+      "revId": "88ae484a841ee1be1a5b81d7746d0ed43803acfb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98679154_c94292fb",
+        "filename": "runtests.exp",
+        "patchSetId": 17
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2022-12-04T01:53:25Z",
+      "side": 1,
+      "message": "a. seems like we need to add a nested cgroups case to the basic one\nb. lets chat how use less cryptic values",
+      "range": {
+        "startLine": 377,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 0
+      },
+      "revId": "88ae484a841ee1be1a5b81d7746d0ed43803acfb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
