@@ -259,3 +259,54 @@ int
 sys_kmemtest(void) {
   return kmemtest();
 }
+
+int
+sys_initmutex()
+{
+  struct mutex * mtx;
+  char * mutex_name;
+  //we actually get an ID for mutex
+  if(argptr(0, (void *)&mtx, sizeof(struct mutex *)) < 0 ||
+     argstr(1, &mutex_name) < 0)
+  {
+      return -1;
+  }
+
+  return initmutex(mtx, mutex_name);
+}
+
+int
+sys_delmutex()
+{
+  struct mutex * mtx;
+
+  //we actually get an ID for mutex
+  if(argptr(0, (void *)&mtx, sizeof(struct mutex *)) < 0)
+  {
+      return -1;
+  }
+
+  return delmutex(mtx);
+}
+
+int
+sys_mutex_lock()
+{
+  struct mutex ** mtx;
+  if(argptr(0, (void *)&mtx, sizeof(struct mutex *)) < 0)
+  {
+      return -1;
+  }
+  return mutex_lock(*mtx);
+}
+
+int
+sys_mutex_unlock()
+{
+  struct mutex ** mtx;
+  if(argptr(0, (void *)&mtx, sizeof(struct mutex *)) < 0)
+  {
+      return -1;
+  }
+  return mutex_unlock(*mtx);
+}
