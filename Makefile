@@ -24,6 +24,7 @@ OBJS = \
 	proc.o\
 	sleeplock.o\
 	spinlock.o\
+	mutex.o\
 	string.o\
 	swtch.o\
 	syscall.o\
@@ -169,7 +170,7 @@ tags: $(OBJS) entryother.S _init
 vectors.S: vectors.pl
 	perl vectors.pl > vectors.S
 
-ULIB = ulib.o usys.o printf.o umalloc.o tty.o
+ULIB = ulib.o usys.o printf.o umalloc.o tty.o ipc.o
 
 _%: %.o $(ULIB)
 	$(LD) $(LDFLAGS) -T userspace.ld -N -e main -Ttext 0 -o $@ $^

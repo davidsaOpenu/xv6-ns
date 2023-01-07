@@ -356,6 +356,9 @@ static int pouch_fork(char* container_name){
    char tty_name[10];
    char cg_cname[256];
    int daemonize = 1;
+   mutex mtx = 0;
+   char mutex_name[5] = {0};
+
 
    //Find tty name
    if(find_tty(tty_name) < 0){
@@ -392,12 +395,30 @@ static int pouch_fork(char* container_name){
         return -1;
       }
 
+      //lock the mutex so the child won't run until parent enters wait()
+      //we want the child to wait until the cgroup is created
+      itoa(mutex_name, pid2);
+      if(initmutex(&mtx, mutex_name) != 0)
+      {
+        printf(stderr, "Failed to init mutex\n");
+        return -1;
+      }
+
+      mutex_lock(&mtx);
+
+      // Note: unknown reason for second time fork (probably to create a cgroup
+      // which is not related to the first sh process)
       pid = fork();
       if(pid == -1){
          panic("fork");
       }
       if(pid == 0) {
          if(tty_fd != -1){
+            // we wait for the mutex to be unlocked by the parent when it finishes creating cgroup
+            mutex_lock(&mtx);
+            // unlock right after  because we don't need it anymore(good practice)
+            mutex_unlock(&mtx);
+
             //attach stderr stdin stdout
             if(attach_tty(tty_fd) < 0){
               printf(stderr,"attach failed");
@@ -417,23 +438,43 @@ static int pouch_fork(char* container_name){
            printf(stderr,"Error connecting tty\n");
         }
       }else{
-
-        //"Parent process - waiting for child
-
-        // Move the current process to "/cgroup/<cname>" cgroup.
+        //Parent process - create the new cgroup and wait() for child
+        //Move the current process to "/cgroup/<cname>" cgroup.
         strcat(cg_cname,"/cgroup.procs");
         int cgroup_procs_fd = open(cg_cname, O_RDWR);
         char cur_pid_buf[10];
         itoa(cur_pid_buf, pid);
         if(write(cgroup_procs_fd, cur_pid_buf, sizeof(cur_pid_buf)) < 0)
+        {
+            //kill the child process because we can't failed to create a container
+            kill(pid);
+            delmutex(&mtx);
             return -1;
+        }
+
         if(close(cgroup_procs_fd) < 0)
+        {
+            //kill the child process because we failed to create a container
+            kill(pid);
+            delmutex(&mtx);
             return -1;
+        }
+
         if(write_to_cconf(container_name, tty_name, pid) >= 0)
+        {
+           mutex_unlock(&mtx);
            wait(0);
+        }
+        else
+        {
+            //kill the child process because we failed to create a container
+            kill(pid);
+            delmutex(&mtx);
+            return -1;
+        }
 
-
-
+        // Free the mutex before exit
+        delmutex(&mtx);
         exit(0);
       }
     }

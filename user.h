@@ -3,11 +3,14 @@
 
 #include "types.h"
 #include "ioctl_request.h"
+#include "ipc.h"
 
 struct stat;
 struct rtcdate;
+typedef int mutex;
 
 #define stderr 2
+
 
 // system calls
 int fork(void);
@@ -43,6 +46,7 @@ int umount(const char*);
 int printmounts(void);
 int printdevices(void);
 int unshare(int);
+int umutex(mutex* mtx, mutex_operation_t mutex_op, char * mutex_name);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -69,5 +73,8 @@ int is_attached_tty(int tty_fd);
 int disconnect_tty(int tty_fd);
 int is_connected_tty(int tty_fd);
 
-
+int initmutex(mutex* mtx, char * mutex_name);
+int delmutex(mutex* mtx);
+int mutex_lock(mutex* mtx);
+int mutex_unlock(mutex* mtx);
 #endif
