@@ -31,3 +31,7 @@
 #define SYS_getcpu 30
 #define SYS_getmem 31
 #define SYS_kmemtest 32
+#define SYS_initmutex 33
+#define SYS_delmutex  34
+#define SYS_mutex_lock 35
+#define SYS_mutex_unlock 36

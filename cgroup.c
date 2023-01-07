@@ -1088,6 +1088,9 @@ void cgroup_add_io_device(struct cgroup * cgroup_ptr, struct inode * node)
     int i = 0;
     char device_name[DEVICE_NAME] = {0};
 
+    if(cgroup_ptr == cgroup_root())
+        cprintf("cgroup_add_io_device: cgroup is root!\n");
+
     if (cgroup_ptr != cgroup_root() && cgroup_ptr != 0 && cgroup_ptr->populated == 1)
     {
         /* TODO: not sure if this necessary (we can't just exit this function because

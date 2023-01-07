@@ -386,24 +386,27 @@ proc cgroup_io_states_test {} {
     expect {
         "1:1 rbytes=0 wbytes=0 rios=0 wios=0"
     }
-
+    sleep 1
     send "pouch connect temp\n"
     expect {
         "tty0 connected"
     }
 
-    sleep 1
+    sleep 2
     send "cat /cgroup/temp/io.stat\n"
     expect {
         "1:1 rbytes=25 wbytes=0 rios=25 wios=0"
     }
 
+    sleep 1
     send "echo 12345678901234567890\n"
+    sleep 1
     send "cat /cgroup/temp/io.stat\n"
     expect {
         "1:1 rbytes=76 wbytes=64 rios=76 wios=7"
     }
 
+    sleep 1
     send "pouch disconnect\n"
     expect {
        "Console connected"
@@ -413,13 +416,16 @@ proc cgroup_io_states_test {} {
     send "pouch destroy temp\n"
     assert_on_exit_status
 
-    send "pouch start test\n"
-    send "cat /cgroup/test/io.stat\n"
     sleep 1
+    send "pouch start test\n"
+    assert_on_exit_status
+    sleep 1
+    send "cat /cgroup/test/io.stat\n"
     expect {
         "1:1 rbytes=93 wbytes=106 rios=93 wios=11"
     }
 
+    sleep 1
     send "pouch destroy test\n"
     assert_on_exit_status
 }
@@ -474,7 +480,7 @@ set qemu_command $expect_out(buffer)
 
 # TODO: use the resut of dry run as an agument fot spawn ($expect_out(buffer) is not working for some reason)
 # actual run
-spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512
+spawn qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -gdb tcp::26001 -smp 2 -m 512
 expect "$ "
 
 #uncomment for expect debugging
