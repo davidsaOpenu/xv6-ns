@@ -414,8 +414,8 @@ proc cgroup_io_states_test {} {
     assert_on_exit_status
 
     send "pouch start test\n"
-    send "cat /cgroup/test/io.stat\n"
     sleep 1
+    send "cat /cgroup/test/io.stat\n"
     expect {
         "1:1 rbytes=93 wbytes=106 rios=93 wios=11"
     }
