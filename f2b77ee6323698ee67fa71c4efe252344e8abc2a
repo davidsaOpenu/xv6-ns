@@ -135,6 +135,41 @@
       "message": "recheck",
       "revId": "f2b77ee6323698ee67fa71c4efe252344e8abc2a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83a9d2ba_139dae79",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-01-07T19:26:42Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "f2b77ee6323698ee67fa71c4efe252344e8abc2a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb8f4e1b_ca0f4265",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-01-07T19:26:42Z",
+      "side": 1,
+      "message": "the above test failed in test_cpu_stat (also relied on sleep synchronization)",
+      "parentUuid": "3d392874_1587f88c",
+      "revId": "f2b77ee6323698ee67fa71c4efe252344e8abc2a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
