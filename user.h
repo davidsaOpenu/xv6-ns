@@ -6,6 +6,7 @@
 
 struct stat;
 struct rtcdate;
+typedef int mutex;
 
 #define stderr 2
 
@@ -69,5 +70,8 @@ int is_attached_tty(int tty_fd);
 int disconnect_tty(int tty_fd);
 int is_connected_tty(int tty_fd);
 
-
+int initmutex(mutex * mtx, char * mutex_name);
+int delmutex(mutex * mtx);
+int mutex_lock(mutex * mtx);
+int mutex_unlock(mutex * mtx);
 #endif
