@@ -114,6 +114,7 @@ extern int sys_getppid(void);
 extern int sys_getcpu(void);
 extern int sys_getmem(void);
 extern int sys_kmemtest(void);
+extern int sys_umutex(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -148,6 +149,7 @@ static int (*syscalls[])(void) = {
 [SYS_getcpu] sys_getcpu,
 [SYS_getmem] sys_getmem,
 [SYS_kmemtest] sys_kmemtest,
+[SYS_umutex] sys_umutex,
 };
 
 void

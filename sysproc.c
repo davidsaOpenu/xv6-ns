@@ -11,6 +11,7 @@
 #include "fcntl.h"
 #include "file.h"
 #include "stat.h"
+#include "ipc.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -258,4 +259,21 @@ sys_getmem(void) {
 int
 sys_kmemtest(void) {
   return kmemtest();
+}
+
+int
+sys_umutex()
+{
+  struct mutex * mtx;
+  char * mutex_name;
+  int mutex_operation_type = 0;
+
+  //we actually get an ID for mutex
+  if(argptr(0, (void *)&mtx, sizeof(struct mutex *)) < 0 ||
+     argint(1, &mutex_operation_type) || argstr(2, &mutex_name) < 0)
+  {
+      return -1;
+  }
+
+  return umutex(mtx, (mutex_operation_t)mutex_operation_type, mutex_name);
 }

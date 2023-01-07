@@ -10,6 +10,7 @@ struct pipe;
 struct proc;
 struct rtcdate;
 struct spinlock;
+struct mutex;
 struct sleeplock;
 struct stat;
 struct superblock;
@@ -17,6 +18,7 @@ struct cgroup;
 struct devsw;
 struct dev_stat;
 struct cgroup_io_device_statistics_s;
+typedef enum mutex_operation_e mutex_operation_t;
 
 // bio.c
 void            binit(void);
@@ -196,6 +198,13 @@ void            initlock(struct spinlock*, char*);
 void            release(struct spinlock*);
 void            pushcli(void);
 void            popcli(void);
+
+// mutex.c
+int             umutex(struct mutex *mtx, mutex_operation_t mutex_op, char * mutex_name);
+int             initmutex(struct mutex * mtx, char * mutex_name);
+int             delmutex(struct mutex * mtx);
+int             mutex_lock(struct mutex * mtx);
+int             mutex_unlock(struct mutex * mtx);
 
 // sleeplock.c
 void            acquiresleep(struct sleeplock*);
