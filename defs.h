@@ -10,6 +10,7 @@ struct pipe;
 struct proc;
 struct rtcdate;
 struct spinlock;
+struct mutex;
 struct sleeplock;
 struct stat;
 struct superblock;
@@ -196,6 +197,12 @@ void            initlock(struct spinlock*, char*);
 void            release(struct spinlock*);
 void            pushcli(void);
 void            popcli(void);
+
+// mutex.c
+int             initmutex(struct mutex * mtx, char * mutex_name);
+int             delmutex(struct mutex * mtx);
+int             mutex_lock(struct mutex * mtx);
+int             mutex_unlock(struct mutex * mtx);
 
 // sleeplock.c
 void            acquiresleep(struct sleeplock*);
