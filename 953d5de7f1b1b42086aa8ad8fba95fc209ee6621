@@ -71,6 +71,374 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b6df8d3a_29283a1b",
+        "filename": "cgroup.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "debugging message?",
+      "range": {
+        "startLine": 1092,
+        "startChar": 8,
+        "endLine": 1092,
+        "endChar": 59
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dec60f45_a451afbe",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "what tcs stands for? it will be also better to give meaningful names for mtx*",
+      "range": {
+        "startLine": 1328,
+        "startChar": 22,
+        "endLine": 1328,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9ccf7f6_88c41488",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1355,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "using IPC should turn sleeps obsolete, i.e no reason to have both mutex and sleep?",
+      "range": {
+        "startLine": 1355,
+        "startChar": 8,
+        "endLine": 1355,
+        "endChar": 18
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63311a41_45eb56f9",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "I\u0027m lost :-)",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1372,
+        "endChar": 28
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40ce8f5e_a2119650",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1395,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "same here :-)",
+      "range": {
+        "startLine": 1392,
+        "startChar": 0,
+        "endLine": 1395,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72f1c2db_d01ed9ea",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "same comments as for TEST(test_cpu_stat)",
+      "range": {
+        "startLine": 1436,
+        "startChar": 0,
+        "endLine": 1436,
+        "endChar": 21
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b189d6b2_306ca210",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 1673,
+        "startChar": 1,
+        "endLine": 1673,
+        "endChar": 41
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "826fffb3_d6acda77",
+        "filename": "init.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "how this change is related to mutex?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9b23c79_7cc7f91c",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "how about specifying here what values lock/unlock the mutex?",
+      "range": {
+        "startLine": 8,
+        "startChar": 18,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe3e9cdc_f900ebcf",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "is it a unique name? let\u0027s specify how name field is used",
+      "range": {
+        "startLine": 9,
+        "startChar": 22,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a04d38c_18b2063d",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "do you think it worth to add a clarification note to explain that in this case mutex_lock is used to wait for the parent to move the child process to the right cgroup?",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 31
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afb8ecab_de15f632",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "mutex will not be unlocked and child process will wait forever",
+      "range": {
+        "startLine": 446,
+        "startChar": 10,
+        "endLine": 446,
+        "endChar": 22
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b05b4bf3_aa4aa093",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "mutex will not be unlocked and child process will wait forever",
+      "range": {
+        "startLine": 448,
+        "startChar": 12,
+        "endLine": 448,
+        "endChar": 22
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef7c685b_f20e6aef",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "what if \u003c 0? mutex will not be unlocked and child process will wait forever",
+      "range": {
+        "startLine": 449,
+        "startChar": 7,
+        "endLine": 449,
+        "endChar": 62
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3647183_0c5e9472",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "XD \nthat\u0027s why I suggested to work with files (something like  https://man7.org/linux/man-pages/man2/flock.2.html)",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 456,
+        "endChar": 23
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56f93ff9_c9d82845",
+        "filename": "sysproc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:06:32Z",
+      "side": 1,
+      "message": "commented on https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/548185/6/usys.S",
+      "range": {
+        "startLine": 262,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 1
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f67c5bed_81160ffd",
         "filename": "user.h",
         "patchSetId": 6
