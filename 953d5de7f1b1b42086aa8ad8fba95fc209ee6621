@@ -255,6 +255,92 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "44350127_4f47c073",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:35:37Z",
+      "side": 1,
+      "message": "how about to add to the comment why are you doing this? Something like that \"you need this to hold a kenel address in mutex (even though it is not accessabe from the userspace) to make it possibe to find it in the table when delmutex is called\"",
+      "range": {
+        "startLine": 57,
+        "startChar": 12,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dc09da1_cdb9f543",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:35:37Z",
+      "side": 1,
+      "message": "lets define and use locked/unlocked values",
+      "range": {
+        "startLine": 103,
+        "startChar": 29,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "841b5b00_838089b6",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:35:37Z",
+      "side": 1,
+      "message": "why memory fence is needed here?",
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e516c46d_019c796b",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-09T08:35:37Z",
+      "side": 1,
+      "message": "lets define and use locked/unlocked values",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 58
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9b23c79_7cc7f91c",
         "filename": "mutex.h",
         "patchSetId": 6
