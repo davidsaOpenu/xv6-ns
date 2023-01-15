@@ -50,6 +50,92 @@
       "message": "recheck",
       "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "273ec38f_4e5decff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Thanks for working on this, Yakov. Half of the comments were marked as \"Done\". Could you please take a look at the unresolved comments? Thanks",
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88dee785_72bbce51",
+        "filename": "mutex.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "let\u0027s use same type /* or //",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 81,
+        "endChar": 110
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58dae0b4_fbffe73f",
+        "filename": "mutex.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "\"after we have the lock\"? what does it mean? \nIn general, why memory fence is required when the process is rescheduled? isn\u0027t it simply sufficient to proceed to \"return 0\" ?",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 85
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb201e67_e3f1501f",
+        "filename": "pouch.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "those lines repeated 3 times. Do you think it worth to define a macro or inline function?",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 22
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }

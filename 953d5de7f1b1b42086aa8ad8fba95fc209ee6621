@@ -276,6 +276,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21e710ac_0bef896f",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44350127_4f47c073",
+      "range": {
+        "startLine": 57,
+        "startChar": 12,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dc09da1_cdb9f543",
@@ -289,6 +313,30 @@
       "writtenOn": "2023-01-09T08:35:37Z",
       "side": 1,
       "message": "lets define and use locked/unlocked values",
+      "range": {
+        "startLine": 103,
+        "startChar": 29,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dd6261d_ba85440f",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dc09da1_cdb9f543",
       "range": {
         "startLine": 103,
         "startChar": 29,
@@ -362,6 +410,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a59ae8c9_5a57e13a",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9b23c79_7cc7f91c",
+      "range": {
+        "startLine": 8,
+        "startChar": 18,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe3e9cdc_f900ebcf",
@@ -375,6 +447,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "is it a unique name? let\u0027s specify how name field is used",
+      "range": {
+        "startLine": 9,
+        "startChar": 22,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a740dd51_1d0dc459",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe3e9cdc_f900ebcf",
       "range": {
         "startLine": 9,
         "startChar": 22,
@@ -408,6 +504,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4015fe4e_11fd2d32",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a04d38c_18b2063d",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 31
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "afb8ecab_de15f632",
@@ -421,6 +541,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "mutex will not be unlocked and child process will wait forever",
+      "range": {
+        "startLine": 446,
+        "startChar": 10,
+        "endLine": 446,
+        "endChar": 22
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e258f2cc_4e697933",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afb8ecab_de15f632",
       "range": {
         "startLine": 446,
         "startChar": 10,
@@ -454,6 +598,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49b3ab30_cab87a31",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b05b4bf3_aa4aa093",
+      "range": {
+        "startLine": 448,
+        "startChar": 12,
+        "endLine": 448,
+        "endChar": 22
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef7c685b_f20e6aef",
@@ -467,6 +635,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "what if \u003c 0? mutex will not be unlocked and child process will wait forever",
+      "range": {
+        "startLine": 449,
+        "startChar": 7,
+        "endLine": 449,
+        "endChar": 62
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf59179d_0ff1c7c6",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef7c685b_f20e6aef",
       "range": {
         "startLine": 449,
         "startChar": 7,
@@ -523,6 +715,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6985405b_1cc8820f",
+        "filename": "sysproc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56f93ff9_c9d82845",
+      "range": {
+        "startLine": 262,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 1
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f67c5bed_81160ffd",
@@ -547,6 +763,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdf5a532_1a07ac00",
+        "filename": "user.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f67c5bed_81160ffd",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "821809c5_7662e371",
@@ -567,6 +807,30 @@
         "endChar": 21
       },
       "tag": "autogenerated:jenkins-gerrit-trigger",
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43420917_e9ab5fd4",
+        "filename": "usys.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "821809c5_7662e371",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 21
+      },
       "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
