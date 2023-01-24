@@ -94,6 +94,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4c2c7096_866bc984",
+        "filename": "cgroup.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "could you please refer?",
+      "parentUuid": "b6df8d3a_29283a1b",
+      "range": {
+        "startLine": 1092,
+        "startChar": 8,
+        "endLine": 1092,
+        "endChar": 59
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dec60f45_a451afbe",
         "filename": "cgroupstests.c",
         "patchSetId": 6
@@ -105,6 +129,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "what tcs stands for? it will be also better to give meaningful names for mtx*",
+      "range": {
+        "startLine": 1328,
+        "startChar": 22,
+        "endLine": 1328,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0d8efdf_6f775711",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "could you please refer?",
+      "parentUuid": "dec60f45_a451afbe",
       "range": {
         "startLine": 1328,
         "startChar": 22,
@@ -140,6 +188,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eb800ddb_4411962b",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1355,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "popping up the qestion",
+      "parentUuid": "f9ccf7f6_88c41488",
+      "range": {
+        "startLine": 1355,
+        "startChar": 8,
+        "endLine": 1355,
+        "endChar": 18
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "63311a41_45eb56f9",
         "filename": "cgroupstests.c",
         "patchSetId": 6
@@ -163,6 +235,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d3f89a27_03b5518b",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "could you please give meaningful names to mutexes. I can\u0027t provide any useful comments without understanding the code :-)",
+      "parentUuid": "63311a41_45eb56f9",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1372,
+        "endChar": 28
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "40ce8f5e_a2119650",
         "filename": "cgroupstests.c",
         "patchSetId": 6
@@ -174,6 +270,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "same here :-)",
+      "range": {
+        "startLine": 1392,
+        "startChar": 0,
+        "endLine": 1395,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4a34409_62b6f183",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1395,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "could you please give meaningful names to mutexes. I can\u0027t provide any useful comments without understanding the code :-)",
+      "parentUuid": "40ce8f5e_a2119650",
       "range": {
         "startLine": 1392,
         "startChar": 0,
@@ -220,6 +340,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 1673,
+        "startChar": 1,
+        "endLine": 1673,
+        "endChar": 41
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9895ebfb_4461bbae",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "popping up: why this line is commented?",
+      "parentUuid": "b189d6b2_306ca210",
       "range": {
         "startLine": 1673,
         "startChar": 1,
@@ -360,6 +504,24 @@
       "writtenOn": "2023-01-09T08:35:37Z",
       "side": 1,
       "message": "why memory fence is needed here?",
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60749d80_7e07dff3",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-01-24T13:54:55Z",
+      "side": 1,
+      "message": "which memory operation can happen that can interfere at this point?",
+      "parentUuid": "841b5b00_838089b6",
       "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
