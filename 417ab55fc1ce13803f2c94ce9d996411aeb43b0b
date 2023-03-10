@@ -19,6 +19,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f357b714_0c0ba32c",
+        "filename": "main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-10T07:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "464d2bd5_c823ffcf",
+      "revId": "417ab55fc1ce13803f2c94ce9d996411aeb43b0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50ac284c_2c1e44d3",
@@ -32,6 +50,30 @@
       "writtenOn": "2023-03-10T07:54:09Z",
       "side": 1,
       "message": "comment on the highlighted area",
+      "range": {
+        "startLine": 10,
+        "startChar": 24,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "417ab55fc1ce13803f2c94ce9d996411aeb43b0b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1eff6bb8_051e42ed",
+        "filename": "main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-10T07:56:55Z",
+      "side": 1,
+      "message": "I\u0027m working on this change. ETA 2 days.",
+      "parentUuid": "50ac284c_2c1e44d3",
       "range": {
         "startLine": 10,
         "startChar": 24,
