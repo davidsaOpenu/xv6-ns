@@ -116,6 +116,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be91ecad_744da424",
+        "filename": "mutex.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88dee785_72bbce51",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 81,
+        "endChar": 110
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "58dae0b4_fbffe73f",
@@ -129,6 +153,30 @@
       "writtenOn": "2023-01-15T09:54:14Z",
       "side": 1,
       "message": "\"after we have the lock\"? what does it mean? \nIn general, why memory fence is required when the process is rescheduled? isn\u0027t it simply sufficient to proceed to \"return 0\" ?",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 85
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9e19733_471b9de2",
+        "filename": "mutex.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58dae0b4_fbffe73f",
       "range": {
         "startLine": 134,
         "startChar": 0,
@@ -175,6 +223,30 @@
       "writtenOn": "2023-01-24T13:54:55Z",
       "side": 1,
       "message": "could you please refer?",
+      "parentUuid": "cb201e67_e3f1501f",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 22
+      },
+      "revId": "9cf5a7389f9228af152b01ea388c86d5726d199b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69e7e9b1_c3398733",
+        "filename": "pouch.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "I would rather do it with l_cleanup label at the end. all the conditions that leads to fail will be handled in one place via goto.",
       "parentUuid": "cb201e67_e3f1501f",
       "range": {
         "startLine": 450,

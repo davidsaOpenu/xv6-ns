@@ -116,6 +116,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bad5239_491c2258",
+        "filename": "cgroup.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Yes, I think it might be good to keep it for some time just to make sure\nthe problematic behavior of adding IO to root cgroup is behind us.",
+      "parentUuid": "b6df8d3a_29283a1b",
+      "range": {
+        "startLine": 1092,
+        "startChar": 8,
+        "endLine": 1092,
+        "endChar": 59
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dec60f45_a451afbe",
@@ -152,6 +176,30 @@
       "writtenOn": "2023-01-24T13:54:55Z",
       "side": 1,
       "message": "could you please refer?",
+      "parentUuid": "dec60f45_a451afbe",
+      "range": {
+        "startLine": 1328,
+        "startChar": 22,
+        "endLine": 1328,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "937bb3c2_d6739f19",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "I added a clarification for this.\nAnyway, I made a limit to the description name of the mutex to 4 characters.\nI made this to not waste memory on one side but, on the other side to give the user the option to put a relevant name. \n254 entries * 4 bytes its 1k of memory. For miniature OS like XV6 it is a considerable amount.\nI might just change it to ID (integer) or something.",
       "parentUuid": "dec60f45_a451afbe",
       "range": {
         "startLine": 1328,
@@ -210,6 +258,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf8f3350_542a4e22",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1355,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "You are 100% correct but, in this case the test is bound to timing.\nIn other words, in this test we want to make sure that enough time passed so the scheduler may run the child (this is the wanted behavior and we want to make sure it happens. Also, we check that the cpu running time have changed).\n\nBasically, I can change this value to 2,3 ,5 or 100 doesn\u0027t matter. I just didn\u0027t want to influence the inner logic of the test. I only wanted to make sure we don\u0027t fail in this test because of synchronization problems.",
+      "parentUuid": "f9ccf7f6_88c41488",
+      "range": {
+        "startLine": 1355,
+        "startChar": 8,
+        "endLine": 1355,
+        "endChar": 18
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63311a41_45eb56f9",
@@ -246,6 +318,30 @@
       "writtenOn": "2023-01-24T13:54:55Z",
       "side": 1,
       "message": "could you please give meaningful names to mutexes. I can\u0027t provide any useful comments without understanding the code :-)",
+      "parentUuid": "63311a41_45eb56f9",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1372,
+        "endChar": 28
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d9156e9_eb268a49",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "I felt the same when writing this. It becomes clear when you write it on paper (The steps of lock/unlock).\nAnyways, this works and the idea here is to use mutexes instead of message queue for ipc. \nWriting it with sleeps makes no difference with understanding the flow but, with sleeps we may get a synchronization failure and the test will fail.",
       "parentUuid": "63311a41_45eb56f9",
       "range": {
         "startLine": 1368,
@@ -304,6 +400,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49395701_3e296507",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1395,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40ce8f5e_a2119650",
+      "range": {
+        "startLine": 1392,
+        "startChar": 0,
+        "endLine": 1395,
+        "endChar": 26
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72f1c2db_d01ed9ea",
@@ -317,6 +437,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "same comments as for TEST(test_cpu_stat)",
+      "range": {
+        "startLine": 1436,
+        "startChar": 0,
+        "endLine": 1436,
+        "endChar": 21
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08f36464_d83e201e",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72f1c2db_d01ed9ea",
       "range": {
         "startLine": 1436,
         "startChar": 0,
@@ -374,6 +518,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce2871df_b6c74965",
+        "filename": "cgroupstests.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Sometimes I comment this line because this test doesn\u0027t work on my machine and I wasn\u0027t able to figure out why.\nOn jira in works prefectly.\n\nI forgot to uncomment.",
+      "parentUuid": "b189d6b2_306ca210",
+      "range": {
+        "startLine": 1673,
+        "startChar": 1,
+        "endLine": 1673,
+        "endChar": 41
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "826fffb3_d6acda77",
@@ -387,6 +555,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "how this change is related to mutex?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0124ca7_0bf53e4a",
+        "filename": "init.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Not related at all.\nThis message is annoying and we should get rid of it as soon as possible\nThis message makes expect script to fail when it reads  crumbled and divided \"zombie!\" message.",
+      "parentUuid": "826fffb3_d6acda77",
       "range": {
         "startLine": 39,
         "startChar": 0,
@@ -431,6 +623,30 @@
         "id": 1007990
       },
       "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44350127_4f47c073",
+      "range": {
+        "startLine": 57,
+        "startChar": 12,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9444a7c6_56ad49db",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "44350127_4f47c073",
@@ -491,6 +707,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e59419a1_570a5151",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dc09da1_cdb9f543",
+      "range": {
+        "startLine": 103,
+        "startChar": 29,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "841b5b00_838089b6",
@@ -526,6 +766,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab95b299_599fa39c",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "copy paste from spinlock with adaptations.\nThis is important to make sure for 100% that we have taken the lock and no memory operation (which is not related) occurred before.",
+      "parentUuid": "841b5b00_838089b6",
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e516c46d_019c796b",
@@ -539,6 +797,30 @@
       "writtenOn": "2023-01-09T08:35:37Z",
       "side": 1,
       "message": "lets define and use locked/unlocked values",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 58
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9182ddc2_687a68ce",
+        "filename": "mutex.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e516c46d_019c796b",
       "range": {
         "startLine": 124,
         "startChar": 5,
@@ -583,6 +865,30 @@
         "id": 1007990
       },
       "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9b23c79_7cc7f91c",
+      "range": {
+        "startLine": 8,
+        "startChar": 18,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "453d8ea0_c4ad354d",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "b9b23c79_7cc7f91c",
@@ -643,6 +949,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67fde5e6_bd8d4ce2",
+        "filename": "mutex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe3e9cdc_f900ebcf",
+      "range": {
+        "startLine": 9,
+        "startChar": 22,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a04d38c_18b2063d",
@@ -677,6 +1007,30 @@
         "id": 1007990
       },
       "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a04d38c_18b2063d",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 31
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69f5557c_cbd273aa",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "2a04d38c_18b2063d",
@@ -784,6 +1138,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "063e0ffb_881c67c0",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b05b4bf3_aa4aa093",
+      "range": {
+        "startLine": 448,
+        "startChar": 12,
+        "endLine": 448,
+        "endChar": 22
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef7c685b_f20e6aef",
@@ -831,6 +1209,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dec8c29d_2af20405",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "You correct.\nIt wasn\u0027t handled correctly in the first place.",
+      "parentUuid": "ef7c685b_f20e6aef",
+      "range": {
+        "startLine": 449,
+        "startChar": 7,
+        "endLine": 449,
+        "endChar": 62
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3647183_0c5e9472",
@@ -844,6 +1246,30 @@
       "writtenOn": "2023-01-09T08:06:32Z",
       "side": 1,
       "message": "XD \nthat\u0027s why I suggested to work with files (something like  https://man7.org/linux/man-pages/man2/flock.2.html)",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 456,
+        "endChar": 23
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c585b66_443bab9d",
+        "filename": "pouch.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "I think it is the same thing.\nWe can also add a member to mutex struct which connects mutex to process.\nWhen the process exits we will unlock and free the mutex automatically.",
+      "parentUuid": "e3647183_0c5e9472",
       "range": {
         "startLine": 456,
         "startChar": 0,
@@ -888,6 +1314,30 @@
         "id": 1007990
       },
       "writtenOn": "2023-01-15T09:54:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56f93ff9_c9d82845",
+      "range": {
+        "startLine": 262,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 1
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "041cdc5d_a1d9b375",
+        "filename": "sysproc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "56f93ff9_c9d82845",
@@ -949,6 +1399,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e43c394_a6985921",
+        "filename": "user.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "I write like this for clarity but, I will change it to mutex* mtx for consistency",
+      "parentUuid": "f67c5bed_81160ffd",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "821809c5_7662e371",
@@ -986,6 +1460,30 @@
       "writtenOn": "2023-01-15T09:54:14Z",
       "side": 1,
       "message": "Done",
+      "parentUuid": "821809c5_7662e371",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 21
+      },
+      "revId": "953d5de7f1b1b42086aa8ad8fba95fc209ee6621",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a40195f2_b23dbfb3",
+        "filename": "usys.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-03-12T10:00:43Z",
+      "side": 1,
+      "message": "What do you mean?\nOne syscall which replace the other 4 ?",
       "parentUuid": "821809c5_7662e371",
       "range": {
         "startLine": 43,
