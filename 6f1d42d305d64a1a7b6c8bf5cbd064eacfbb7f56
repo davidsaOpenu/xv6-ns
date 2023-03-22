@@ -16,6 +16,443 @@
       "message": "recheck",
       "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fec351b2_5b6a7584",
+        "filename": "Makefile",
+        "patchSetId": 9
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "where ipc.o comes from?",
+      "range": {
+        "startLine": 173,
+        "startChar": 46,
+        "endLine": 173,
+        "endChar": 51
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c88543a_7703801b",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1325,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "TNH, I tried to understand why we need so many mutexes and I guess it will be very hard to maintain this code. Could you please replace mtx1/2/3/4 with meaningful names?",
+      "range": {
+        "startLine": 1322,
+        "startChar": 0,
+        "endLine": 1325,
+        "endChar": 19
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "778e3c3e_228ab5f9",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1335,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth using umutex, if defined",
+      "range": {
+        "startLine": 1328,
+        "startChar": 1,
+        "endLine": 1335,
+        "endChar": 22
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7488e197_4a006b80",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth using umutex, if defined",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1372,
+        "endChar": 28
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fbc4ad7_745f8718",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1433,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth using umutex, if defined",
+      "range": {
+        "startLine": 1430,
+        "startChar": 0,
+        "endLine": 1433,
+        "endChar": 20
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36c4f9ae_b445dbc7",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 1441,
+        "startChar": 0,
+        "endLine": 1445,
+        "endChar": 19
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11503148_f5755927",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth using umutex, if defined",
+      "range": {
+        "startLine": 1450,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 22
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95bc1fcd_3b367cff",
+        "filename": "cgroupstests.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "why this line is commented?",
+      "range": {
+        "startLine": 1674,
+        "startChar": 3,
+        "endLine": 1674,
+        "endChar": 6
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd9324bb_c51c956f",
+        "filename": "defs.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth removing those 4 and leave just umutex",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 49
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "005bd1dc_87b402d7",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "let\u0027s give this mutex a meaningful name as well",
+      "range": {
+        "startLine": 359,
+        "startChar": 9,
+        "endLine": 359,
+        "endChar": 12
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e8e384e_de8040fb",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "worth defining a constant and use it here since the length of mutex name is 3",
+      "range": {
+        "startLine": 360,
+        "startChar": 18,
+        "endLine": 360,
+        "endChar": 21
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27eed35c_2a3ff31d",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "pid may contain more than 3 chars",
+      "range": {
+        "startLine": 400,
+        "startChar": 23,
+        "endLine": 400,
+        "endChar": 27
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf782af8_65a8a4e9",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "umutex maybe?",
+      "range": {
+        "startLine": 401,
+        "startChar": 9,
+        "endLine": 401,
+        "endChar": 18
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bee5510a_f68ca486",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "umutex maybe?",
+      "range": {
+        "startLine": 407,
+        "startChar": 6,
+        "endLine": 407,
+        "endChar": 16
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d54a7404_33511601",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "this one is problematic. If the parent is delayed mutex will be unlocked before creating cgroup. Let\u0027s remove it",
+      "range": {
+        "startLine": 419,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 31
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8607f73_8feaca66",
+        "filename": "pouch.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "let\u0027s get rid of code duplication in ll: 450, 458, 471",
+      "range": {
+        "startLine": 458,
+        "startChar": 0,
+        "endLine": 460,
+        "endChar": 22
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e40ecd6b_3b254a39",
+        "filename": "runtests.exp",
+        "patchSetId": 9
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "why all those sleeps  were added?",
+      "range": {
+        "startLine": 389,
+        "startChar": 3,
+        "endLine": 389,
+        "endChar": 11
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e1f4618_efc108ec",
+        "filename": "runtests.exp",
+        "patchSetId": 9
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "this change is not related to mutexes. Let\u0027s put it in a different CR that will specify why is was introduced",
+      "range": {
+        "startLine": 483,
+        "startChar": 133,
+        "endLine": 483,
+        "endChar": 148
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8b55587_f103a18b",
+        "filename": "user.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-03-22T16:15:22Z",
+      "side": 1,
+      "message": "not umutex?",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 29
+      },
+      "revId": "6f1d42d305d64a1a7b6c8bf5cbd064eacfbb7f56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
