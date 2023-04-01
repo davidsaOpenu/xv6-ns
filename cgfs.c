@@ -1028,28 +1028,28 @@ static int write_file_cg_subtree(struct file * f, char * addr, int n)
             return -1;
     }
 
-    if (cpucontroller == 1 && unsafe_enable_cpu_controller(f->cgp) < 0)
+    if (cpucontroller == 1 && unsafe_enable_cpu_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
     if (cpucontroller == 2 &&
             unsafe_disable_cpu_controller(f->cgp) < 0)
         return -1;
 
-    if (pidcontroller == 1 && unsafe_enable_pid_controller(f->cgp) < 0)
+    if (pidcontroller == 1 && unsafe_enable_pid_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
     if (pidcontroller == 2 &&
-            unsafe_disable_pid_controller(f->cgp) < 0)
+            unsafe_disable_pid_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
 
-    if (setcontroller == 1 && unsafe_enable_set_controller(f->cgp) < 0)
+    if (setcontroller == 1 && unsafe_enable_set_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
     if (setcontroller == 2 &&
         unsafe_disable_set_controller(f->cgp) < 0)
         return -1;
 
-    if (memcontroller == 1 && unsafe_enable_mem_controller(f->cgp) < 0)
+    if (memcontroller == 1 && unsafe_enable_mem_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
     if (memcontroller == 2 &&
-        unsafe_disable_mem_controller(f->cgp) < 0)
+        unsafe_disable_mem_controller(f->cgp) == CGROUP_RESULT_FAILURE)
         return -1;
 
     return n - total_len;
@@ -1144,8 +1144,8 @@ static int write_file_pid_max(struct file * f, char * addr, int n)
         }
 
         // Update max pids field if the paramter is within allowed values.
-        int test = set_max_procs(f->cgp, max);
-        if (test == 0 || test == -1)
+        result_t test = set_max_procs(f->cgp, max);
+        if (test != CGROUP_RESULT_SUCCESS_OPERATION)
             return -1;
         f->pid.max.max = max;
 
@@ -1174,8 +1174,8 @@ static int write_file_set_cpu(struct file * f, char * addr, int n)
     }
 
     // Update cpu id field if the paramter is within allowed values.
-    int test = set_cpu_id(f->cgp, set);
-    if (test == 0 || test == -1)
+    result_t test = set_cpu_id(f->cgp, set);
+    if (test != CGROUP_RESULT_SUCCESS_OPERATION)
         return -1;
     f->cpu_s.set.cpu_id = set;
 
@@ -1204,8 +1204,8 @@ static int write_file_set_frz(struct file * f, char * addr, int n)
     }
 
     // Update is_frozen field if the paramter is within allowed values.
-    int test = frz_grp(f->cgp, set_freeze);
-    if (test == 0 || test == -1)
+    result_t test = frz_grp(f->cgp, set_freeze);
+    if (test != CGROUP_RESULT_SUCCESS_OPERATION)
         return -1;
     f->frz.freezer.frozen = set_freeze;
 
@@ -1233,8 +1233,8 @@ static int write_file_mem_max(struct file * f, char * addr, int n)
     }
 
     // Update max memory field if the paramter is within allowed values.
-    int test = set_max_mem(f->cgp, max);
-    if (test == 0 || test == -1)
+    result_t test = set_max_mem(f->cgp, max);
+    if (test != CGROUP_RESULT_SUCCESS_OPERATION)
         return -1;
     f->mem.max.max = max;
 
@@ -1262,8 +1262,8 @@ static int write_file_mem_min(struct file * f, char * addr, int n)
     }
 
     // Update min memory field if the paramter is within allowed values.
-    int test = set_min_mem(f->cgp, min);
-    if (test == 0 || test == -1)
+    result_t test = set_min_mem(f->cgp, min);
+    if (test != CGROUP_RESULT_SUCCESS_OPERATION)
         return -1;
     f->mem.min.min = min;
     return  n;

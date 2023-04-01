@@ -822,7 +822,7 @@ cgroup_move_proc(struct cgroup * cgroup, int pid)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(proc_pid(p) == pid)
             if(p->state == SLEEPING || p->state == RUNNABLE || p->state == RUNNING)
-                if(unsafe_cgroup_insert(cgroup, p) == 0){
+                if(unsafe_cgroup_insert(cgroup, p) == CGROUP_RESULT_SUCCESS){
                     release(&ptable.lock);
                     return 0;
                 }

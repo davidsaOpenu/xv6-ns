@@ -14,6 +14,14 @@
 
 typedef enum { CG_FILE, CG_DIR } cg_file_type;
 
+// Error codes for the cgroup module
+typedef enum result_e
+{
+	CGROUP_RESULT_FAILURE = -1,
+	CGROUP_RESULT_SUCCESS,
+	CGROUP_RESULT_SUCCESS_OPERATION
+} result_t;
+
 /* cgroup's io device statistics structure, here we got all the relevant fields
     from the cgroup perspective and also the dev_stat structure which describes
     what status fields every IO device should have in the system.
@@ -182,11 +190,11 @@ void cgroup_initialize(struct cgroup * cgroup,
  * "cgroup" is pointer to the cgroup into which we insert the process. Must be valid cgroup.
  * "proc" is a pointer to the process to be inserted into the cgroup. Must be valid process.
  * Return values:
- * - 0 on success.
- * - -1 if no space.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE if no space.
  */
-int unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc);
-int cgroup_insert(struct cgroup * cgroup, struct proc * proc);
+result_t unsafe_cgroup_insert(struct cgroup * cgroup, struct proc * proc);
+result_t cgroup_insert(struct cgroup * cgroup, struct proc * proc);
 
 /**
  * This function removes a process from a cgroup.
@@ -200,9 +208,11 @@ void cgroup_erase(struct cgroup * cgroup, struct proc * proc);
 
 /**
  * These functions update protect memory counter after moveing process from src cgroup to dst cgroup.
- * Return 0 for sucsses, 1 if there is no memory to protect for the "src" cgroup.
+ * Return:
+ * CGROUP_RESULT_SUCCESS for success.
+ * CGROUP_RESULT_FAILURE if there is no memory to protect for the "src" cgroup.
  */
-int protect_memory(struct cgroup* src, struct cgroup* dst, int proc_size);
+result_t protect_memory(struct cgroup* src, struct cgroup* dst, int proc_size);
 int calc_dec_dst_protect_pg(struct cgroup* cgroup, int pg);
 int calc_inc_src_protect_pg(struct cgroup* cgroup, int pg);
 
@@ -212,11 +222,11 @@ int calc_inc_src_protect_pg(struct cgroup* cgroup, int pg);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_enable_cpu_controller(struct cgroup * cgroup);
-int enable_cpu_controller(struct cgroup * cgroup);
+result_t unsafe_enable_cpu_controller(struct cgroup * cgroup);
+result_t enable_cpu_controller(struct cgroup * cgroup);
 
 /**
  * These functions disable the cpu controller of a cgroup.
@@ -224,11 +234,11 @@ int enable_cpu_controller(struct cgroup * cgroup);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_disable_cpu_controller(struct cgroup * cgroup);
-int disable_cpu_controller(struct cgroup * cgroup);
+result_t unsafe_disable_cpu_controller(struct cgroup * cgroup);
+result_t disable_cpu_controller(struct cgroup * cgroup);
 
 /**
  * This function sets the cgroup_dir_path field of a cgroup.
@@ -374,9 +384,12 @@ int cg_sys_open(char * path, int omode);
  * This function sets the maximum number of processes.
  * Receives cgroup pointer parameter "cgroup" and integer "limit".
  * Sets the number of maximum allowed processes in the cgroup to be "limit".
- * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ * Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_SUCCESS if no action taken.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int set_max_procs(struct cgroup * cgp, int limit);
+result_t set_max_procs(struct cgroup * cgp, int limit);
 
 /**
  * These functions enables the pid controller of a cgroup.
@@ -384,11 +397,11 @@ int set_max_procs(struct cgroup * cgp, int limit);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_enable_pid_controller(struct cgroup *cgroup);
-int enable_pid_controller(struct cgroup * cgroup);
+result_t unsafe_enable_pid_controller(struct cgroup *cgroup);
+result_t enable_pid_controller(struct cgroup * cgroup);
 
 /**
  * These functions disable the pid controller of a cgroup.
@@ -396,19 +409,22 @@ int enable_pid_controller(struct cgroup * cgroup);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_disable_pid_controller(struct cgroup *cgroup);
-int disable_pid_controller(struct cgroup * cgroup);
+result_t unsafe_disable_pid_controller(struct cgroup *cgroup);
+result_t disable_pid_controller(struct cgroup * cgroup);
 
 /**
  * This function sets the cpu id to use.
  * Receives cgroup pointer parameter "cgroup" and integer "cpuid".
  * Sets the cpu id to "cpuid" on which the cgroup has to run.
- * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ * Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_SUCCESS if no action taken.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int set_cpu_id(struct cgroup * cgroup, int cpuid);
+result_t set_cpu_id(struct cgroup * cgroup, int cpuid);
 
 /**
  * These functions enables the cpu id controller of a cgroup.
@@ -416,11 +432,11 @@ int set_cpu_id(struct cgroup * cgroup, int cpuid);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_enable_set_controller(struct cgroup *cgroup);
-int enable_set_controller(struct cgroup * cgroup);
+result_t unsafe_enable_set_controller(struct cgroup *cgroup);
+result_t enable_set_controller(struct cgroup * cgroup);
 
 /**
  * These functions disable the cpu id controller of a cgroup.
@@ -428,44 +444,55 @@ int enable_set_controller(struct cgroup * cgroup);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_disable_set_controller(struct cgroup *cgroup);
-int disable_set_controller(struct cgroup * cgroup);
+result_t unsafe_disable_set_controller(struct cgroup *cgroup);
+result_t disable_set_controller(struct cgroup * cgroup);
 
 /**
  * This function freezes/unfreezes a cgroup.
  * Receives cgroup pointer parameter "cgroup" and integer "frz".
  * If frz=1 then freezes the group, otherwise, if 0 then unfreezes. All other values result in no action.
- * Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ * Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_SUCCESS if no action taken.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int frz_grp(struct cgroup * cgroup, int frz);
+result_t frz_grp(struct cgroup * cgroup, int frz);
 
 /**
  *This function sets the maximum amount of memory.
  *Receives cgroup pointer parameter "cgroup" and integer "limit".
  *Sets the maximum allowed amount of memory in the cgroup to be "limit".
- *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ *Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_SUCCESS if no action taken.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int set_max_mem(struct cgroup* cgp, unsigned int limit);
+result_t set_max_mem(struct cgroup* cgp, unsigned int limit);
 
 /**
  *This function sets the minimum amount of memory.
  *Receives cgroup pointer parameter "cgroup" and integer "limit".
  *Sets the minimum amount of memory in the cgroup to be "limit".
  *calls set_protect_mem that ask mmu to protecet pages for cgroup.
- *Returns 1 upon successes, 0 if no action taken, -1 upon failure.
+ *Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_SUCCESS if no action taken.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int set_min_mem(struct cgroup* cgp, unsigned int limit);
+result_t set_min_mem(struct cgroup* cgp, unsigned int limit);
 
 /**
  *This function sets the amount of memory pages that protected for cgroup.
  *Receives cgroup pointer parameter "cgroup" and integer "pages".
  *Increas/decreas the number of protected memory by "pages".
- *Returns 0 upon successes, -1 upon failure.
+ *Returns:
+ * - CGROUP_RESULT_SUCCESS_OPERATION upon successes.
+ * - CGROUP_RESULT_FAILURE upon failure.
  */
-int set_protect_mem(struct cgroup* cgroup, unsigned int pages);
+result_t set_protect_mem(struct cgroup* cgroup, unsigned int pages);
 
 /**
  * These functions enables the memory controller of a cgroup.
@@ -473,11 +500,11 @@ int set_protect_mem(struct cgroup* cgroup, unsigned int pages);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we enable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_enable_mem_controller(struct cgroup* cgroup);
-int enable_mem_controller(struct cgroup* cgroup);
+result_t unsafe_enable_mem_controller(struct cgroup* cgroup);
+result_t enable_mem_controller(struct cgroup* cgroup);
 
 /**
  * These functions disable the memory controller of a cgroup.
@@ -485,11 +512,11 @@ int enable_mem_controller(struct cgroup* cgroup);
  * Receives cgroup pointer parameter "cgroup".
  * "cgroup" is pointer to the cgroup in which we disable the controller. Must be valid cgroup.
  * Return values:
- * - 0 on success.
- * - -1 on failure.
+ * - CGROUP_RESULT_SUCCESS on success.
+ * - CGROUP_RESULT_FAILURE on failure.
  */
-int unsafe_disable_mem_controller(struct cgroup* cgroup);
-int disable_mem_controller(struct cgroup* cgroup);
+result_t unsafe_disable_mem_controller(struct cgroup* cgroup);
+result_t disable_mem_controller(struct cgroup* cgroup);
 
 /**
  * @brief Increments the cgroup Memory Controller stat of file_dirty
