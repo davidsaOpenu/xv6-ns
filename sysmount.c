@@ -127,7 +127,7 @@ sys_umount(void)
 
     int delete_cgroup_res = cgroup_delete(mount_path, "umount");
 
-    if(delete_cgroup_res == -1){
+    if(delete_cgroup_res == ERROR_CGROUP_ARGUMENT){
         struct inode *mount_dir;
         struct mount *mnt;
 
@@ -154,7 +154,7 @@ sys_umount(void)
         return res;
     }
 
-    if(delete_cgroup_res == -2){
+    if(delete_cgroup_res == ERROR_CGROUP_OPERATION){
         end_op();
         cprintf("cannot unmount cgroup\n");
         return -1;
