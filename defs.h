@@ -1,3 +1,6 @@
+#ifndef HEADER_GUARD_DEFS_H
+#define HEADER_GUARD_DEFS_H
+
 struct buf;
 struct context;
 struct file;
@@ -268,3 +271,31 @@ int             intlen(int n);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+
+/** Return codes:
+ * - RESULT_ERROR_OPERATION upon error related to the executed operation.
+ * - RESULT_ERROR_ARGUMENT upon error related to argument of the operation.
+ * - RESULT_FAILURE upon general failure (error).
+ * - RESULT_SUCCESS upon general success - no errors.
+ * - RESULT_SUCCESS_OPERATION upon successful (effective) operation.
+ *
+ * E.g.
+ * Delete a file operation:
+ * 		RESULT_ERROR_OPERATION - can not delete file name, missing permissions
+ * 		RESULT_ERROR_ARGUMENT - file name is not a valid name.
+ * 		RESULT_FAILURE - general error occurred, deletion service not initialized
+ * 		RESULT_SUCCESS - file not exists, no action taken - no error.
+ * 		RESULT_SUCCESS_OPERATION - file exists and deleted without error.
+*/
+typedef enum
+{
+	RESULT_ERROR_OPERATION = -3,
+	RESULT_ERROR_ARGUMENT,
+	RESULT_FAILURE,
+	RESULT_SUCCESS,
+	RESULT_SUCCESS_OPERATION
+} result_code;
+
+
+#endif
