@@ -343,7 +343,8 @@ fork(void)
   // Associate the new process with the current process cgroup.
   // can discard return value because this fails only if there is no room
   // which is checked earlier by allocproc.
-  cgroup_insert(curproc->cgroup, np);
+  if(cgroup_insert(curproc->cgroup, np) <= RESULT_ERROR)
+	  panic("cant fail because checked earlier by allocproc");
 
   // Set new process to runnable.
   np->state = RUNNABLE;
@@ -822,7 +823,7 @@ cgroup_move_proc(struct cgroup * cgroup, int pid)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(proc_pid(p) == pid)
             if(p->state == SLEEPING || p->state == RUNNABLE || p->state == RUNNING)
-                if(unsafe_cgroup_insert(cgroup, p) == 0){
+                if(unsafe_cgroup_insert(cgroup, p) == RESULT_SUCCESS){
                     release(&ptable.lock);
                     return 0;
                 }
