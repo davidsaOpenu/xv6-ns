@@ -122,18 +122,49 @@ opentest(void)
   int fd;
 
   printf(stdout, "open test\n");
+
   fd = open("echo", 0);
   if(fd < 0){
     printf(stdout, "open echo failed!\n");
     exit(1);
   }
   close(fd);
+
   fd = open("doesnotexist", 0);
   if(fd >= 0){
     printf(stdout, "open doesnotexist succeeded!\n");
     exit(1);
   }
+
+  for (int i=0; i<2; i++) {
+      fd = open("createthis", O_CREATE);
+      if(fd < 0){
+        printf(stdout, "open create failed!\n");
+        exit(1);
+      }
+      close(fd);
+  }
+
   printf(stdout, "open test ok\n");
+}
+
+void
+openexclusivetest(void)
+{
+  int fd;
+
+  printf(stdout, "open exclusive test\n");
+
+  for (int i = 0; i < EXCLUSIVE_OPEN_TRIES; i++) {
+      fd = open("createthisexcl", O_CREATE | O_EXCL);
+      if ((i == 0 && fd < 0) || (i > 0 && fd >= 0)) {
+        printf(stdout, "open O_CREATE | O_EXCL iteration #%d error\n", i);
+        exit(1);
+      }
+      close(fd);
+  }
+
+  printf(stdout, "open exclusive test ok\n");
 }
 
 void
@@ -1891,6 +1922,7 @@ main(int argc, char *argv[])
   validatetest();
 
   opentest();
+  openexclusivetest();
   writetest();
   writetest1();
   createtest();
