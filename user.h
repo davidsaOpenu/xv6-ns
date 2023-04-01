@@ -69,6 +69,4 @@ int is_attached_tty(int tty_fd);
 int disconnect_tty(int tty_fd);
 int is_connected_tty(int tty_fd);
 
-
 #endif /* XV6_USER_H */
-
