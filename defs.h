@@ -1,3 +1,6 @@
+#ifndef HEADER_GUARD_DEFS_H
+#define HEADER_GUARD_DEFS_H
+
 struct buf;
 struct context;
 struct file;
@@ -268,3 +271,21 @@ int             intlen(int n);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+
+/** Return codes:
+ * - RESULT_FAILURE upon failure (error).
+ * - RESULT_SUCCESS upon general success - no errors.
+ * - RESULT_SUCCESS_OPERATION upon successful (effective) operation.
+*/
+typedef enum
+{
+	RESULT_ERROR_OPERATION = -3,
+	RESULT_ERROR_ARGUMENT,
+	RESULT_FAILURE,
+	RESULT_SUCCESS,
+	RESULT_SUCCESS_OPERATION
+} result_code;
+
+
+#endif

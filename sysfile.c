@@ -216,7 +216,7 @@ sys_unlink(void)
   begin_op();
 
   int delete_cgroup_res = cgroup_delete(path, "unlink");
-  if(delete_cgroup_res == -1)
+  if(delete_cgroup_res == RESULT_ERROR_ARGUMENT)
   {
       if((dp = nameiparent(path, name)) == 0){
         end_op();
@@ -259,7 +259,7 @@ sys_unlink(void)
       iupdate(ip);
       iunlockput(ip);
   }
-  if(delete_cgroup_res == -2){
+  if(delete_cgroup_res == RESULT_ERROR_OPERATION){
       end_op();
       return -1;
   }
