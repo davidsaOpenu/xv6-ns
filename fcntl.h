@@ -1,10 +1,15 @@
 #ifndef XV6_FCNTL_H
 #define XV6_FCNTL_H
+
+//file open flags
 #define O_RDONLY  0x000
 #define O_WRONLY  0x001
 #define O_RDWR    0x002
-#define O_CREATE  0x200
+#define O_CREATE  0x100
+#define O_EXCL    0x200
 
+//file errors
+#define EEXIST   -2
 
 //ioctl tty command types
 #define DEV_CONNECT     0x1000
