@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a6e0305_5c5361d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021013
+      },
+      "writtenOn": "2023-04-04T20:21:18Z",
+      "side": 1,
+      "message": "Started review",
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0f2d5b6_41df4c7e",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1021013
+      },
+      "writtenOn": "2023-04-04T20:21:18Z",
+      "side": 1,
+      "message": "Good practice (and stated in the Trello issue description) is to check if the return value is not success. Sometimes there are more then one failure values and to make the code more standardized and scalable we do that.\nCheck issue attached image.\nFix everywhere.",
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
