@@ -33,6 +33,24 @@
       "message": "Good practice (and stated in the Trello issue description) is to check if the return value is not success. Sometimes there are more then one failure values and to make the code more standardized and scalable we do that.\nCheck issue attached image.\nFix everywhere.",
       "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a08928f0_51dbb9fe",
+        "filename": "cgfs.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-07T15:40:16Z",
+      "side": 1,
+      "message": "There is only 1 general error code - CGROUP_RESULT_FAILURE.\nPlease check result_t ENUM in cgroup.h file.\nAs well, to preserve backward compatability I used equality check instead of comparison. (the condition checks for error)\nMore, there isn\u0027t a use case that uses a different error code than the general one. Follwoing that, KISS principle applied.",
+      "parentUuid": "f0f2d5b6_41df4c7e",
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
