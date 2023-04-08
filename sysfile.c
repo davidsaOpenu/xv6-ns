@@ -274,7 +274,12 @@ bad:
 }
 
 static struct inode*
-createmount(char *path, short type, short major, short minor, struct mount **mnt)
+createmount(char *path,
+            short type,
+            short major,
+            short minor,
+            struct mount **mnt,
+            int exclusive)
 {
   uint off;
   struct inode *ip, *dp;
@@ -286,6 +291,9 @@ createmount(char *path, short type, short major, short minor, struct mount **mnt
 
   if((ip = dirlookup(dp, name, &off)) != 0){
     iunlockput(dp);
+    // The path has already been created
+    if (exclusive)
+      return 0;
     ilock(ip);
     if(type == T_FILE && ip->type == T_FILE)
       return ip;
@@ -323,7 +331,7 @@ static struct inode*
 create(char *path, short type, short major, short minor)
 {
   struct mount *mnt;
-  struct inode *res = createmount(path, type, major, minor, &mnt);
+  struct inode *res = createmount(path, type, major, minor, &mnt, 0);
   if (res != 0) {
     mntput(mnt);
   }
@@ -352,7 +360,7 @@ sys_open(void)
   }
 
   if(omode & O_CREATE){
-    ip = createmount(path, T_FILE, 0, 0, &mnt);
+    ip = createmount(path, T_FILE, 0, 0, &mnt, omode & O_EXCL);
     if(ip == 0){
       end_op();
       return -1;

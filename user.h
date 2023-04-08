@@ -4,6 +4,11 @@
 #include "types.h"
 #include "ioctl_request.h"
 
+// Mutex that blocks if already locked -
+// (sleep every 10 miliseconds to make it less busy)
+#define LOCK(filename) while (open(filename, O_CREATE | O_EXCL) <= -1) { sleep(10); }
+#define UNLOCK(filename) unlink(filename)
+
 struct stat;
 struct rtcdate;
 

@@ -259,3 +259,13 @@ int
 sys_kmemtest(void) {
   return kmemtest();
 }
+
+int
+generic_sys_mutex(void) {
+  int ** mutex;
+
+  if (argptr(0, (void*)&mutex, sizeof(mutex)) < 0)
+    return -1;
+
+  return mutex_open(mutex);
+}
