@@ -1410,6 +1410,14 @@ TEST (test_mem_stat) {
     char befor_all[265];
     char effect_write_first_file[265];
     char effect_write_second_file[265];
+    int * child_lock = 0;
+    int * father_lock = 0;
+
+    mutex_open(&child_lock);
+    mutex_open(&father_lock);
+    
+    mutex_lock(&child_lock);
+    mutex_lock(&father_lock);
 
     strcpy(befor_all, read_file(TEST_1_MEM_STAT,0));
     // Fork a process because reading the memory values from inside the cgroup may affect the values.
@@ -1417,12 +1425,17 @@ TEST (test_mem_stat) {
     int pidToMove = 0;
     // Child
     if (pid == 0) {
+        /**** 1 ****/
         pidToMove = getpid();
         // Save the pid of child in temp file.
         ASSERT_TRUE(temp_write(pidToMove));
 
-        // Go to sleep for long period of time alowe move the prosses into cgroup.
-        sleep(10);
+        // Let father run and wait for child unlock.
+        // Allow father to move the process into cgroup.
+        mutex_unlock(&father_lock);
+        mutex_lock(&child_lock);
+
+        /**** 3 ****/
         char str [256];
         memset(str, 'a', 256);
 
@@ -1431,32 +1444,45 @@ TEST (test_mem_stat) {
         ASSERT_TRUE(fd=write_new_file("c", str));
         ASSERT_TRUE(write_new_file("c", str));
         ASSERT_TRUE(close_file(fd));
-        sleep(20);
 
+        // Let Father run and wait for child unlock.
+        mutex_unlock(&father_lock);
+        mutex_lock(&child_lock);
+
+        /**** 5 ****/
         // Write times to another file with the file closed in the middle.
         ASSERT_TRUE(fd=write_new_file("d", str));
         ASSERT_TRUE(close_file(fd));
         ASSERT_TRUE(write_new_file("d", str));
         ASSERT_TRUE(close_file(fd));
 
-        exit(0);
-
     } else { // Father
 
-        sleep(5);
+        // Waits for child to unlock.
+        mutex_lock(&father_lock);
+
+        /**** 2 ****/
         // Read the child pid from temp file.
         pidToMove = temp_read(0);
         // Move the child process to "/cgroup/test1" cgroup.
         ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, pidToMove));
         // Check that the process we moved is really in "/cgroup/test1" cgroup.
         ASSERT_TRUE(is_pid_in_group(TEST_1_CGROUP_PROCS, pidToMove));
-        // Go to sleep to ensure the child process had a chance to be scheduled.
-        // Allows the child to write a page twice for a new file
-        sleep(20);
+
+        // Let child run and wait for father unlock.
+        // Allows the child to write a page twice for a new file.
+        mutex_unlock(&child_lock);
+        mutex_lock(&father_lock);
+
+        /**** 4 ****/
         strcpy(effect_write_first_file, read_file(TEST_1_MEM_STAT,0));
 
-        //Allows the child to write to a new file close and write again
-        sleep(20);
+        // Let child run and wait for father unlock.
+        // Allows the child to write to a new file close and write again.
+        mutex_unlock(&child_lock);
+        mutex_lock(&father_lock);
+
+        /**** 6 ****/
         strcpy(effect_write_second_file, read_file(TEST_1_MEM_STAT,0));
 
         // check the effect of pgmajfault
@@ -1483,6 +1509,10 @@ TEST (test_mem_stat) {
         // Remove the temp file.
         ASSERT_TRUE(temp_delete());
     }
+
+    // Cleanup - also unlocks.
+    mutex_close(&father_lock);
+    mutex_close(&child_lock);
 }
 
 

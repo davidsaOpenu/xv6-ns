@@ -42,6 +42,7 @@ OBJS = \
 	cgfs.o\
 	cgroup.o\
 	cpu_account.o\
+	mutex.o\
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf

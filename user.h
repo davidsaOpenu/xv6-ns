@@ -44,6 +44,11 @@ int printmounts(void);
 int printdevices(void);
 int unshare(int);
 
+int mutex_open(int**);
+int mutex_lock(int**);
+int mutex_unlock(int**);
+int mutex_close(int**);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

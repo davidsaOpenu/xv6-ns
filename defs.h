@@ -265,6 +265,12 @@ int             itoa(char * buf, int n);
 int             utoa(char * buf, unsigned int n);
 int             intlen(int n);
 
+// mutex.c
+int             mutex_open(int ** mutex);
+int             mutex_lock(int ** mutex);
+int             mutex_unlock(int ** mutex);
+int             mutex_close(int ** mutex);
+
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
