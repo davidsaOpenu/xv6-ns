@@ -17,6 +17,11 @@
 #include "cgroup.h"
 #include "cgfs.h"
 
+enum create_file_e {
+    CREATE = 0,
+    CREATE_EXCLUSIVE = 1
+};
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -274,7 +279,12 @@ bad:
 }
 
 static struct inode*
-createmount(char *path, short type, short major, short minor, struct mount **mnt)
+createmount(char *path,
+            short type,
+            short major,
+            short minor,
+            struct mount **mnt,
+            int exclusive)
 {
   uint off;
   struct inode *ip, *dp;
@@ -286,6 +296,9 @@ createmount(char *path, short type, short major, short minor, struct mount **mnt
 
   if((ip = dirlookup(dp, name, &off)) != 0){
     iunlockput(dp);
+    // The path has already been created
+    if (exclusive)
+      return (void *)EEXIST;
     ilock(ip);
     if(type == T_FILE && ip->type == T_FILE)
       return ip;
@@ -323,7 +336,7 @@ static struct inode*
 create(char *path, short type, short major, short minor)
 {
   struct mount *mnt;
-  struct inode *res = createmount(path, type, major, minor, &mnt);
+  struct inode *res = createmount(path, type, major, minor, &mnt, CREATE);
   if (res != 0) {
     mntput(mnt);
   }
@@ -352,10 +365,17 @@ sys_open(void)
   }
 
   if(omode & O_CREATE){
-    ip = createmount(path, T_FILE, 0, 0, &mnt);
+    if(omode & O_EXCL)
+        ip = createmount(path, T_FILE, 0, 0, &mnt, CREATE_EXCLUSIVE);
+    else
+        ip = createmount(path, T_FILE, 0, 0, &mnt, CREATE);
+
     if(ip == 0){
       end_op();
       return -1;
+    } else if((int)ip == EEXIST){
+      end_op();
+      return EEXIST;
     }
   } else {
     if((ip = nameimount(path, &mnt)) == 0){
