@@ -93,6 +93,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eec8f175_7c507109",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-09T20:36:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "091f8c6a_7e73c9aa",
+      "range": {
+        "startLine": 227,
+        "startChar": 2,
+        "endLine": 227,
+        "endChar": 18
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dfb56775_cc010c79",
@@ -106,6 +130,30 @@
       "writtenOn": "2023-04-09T07:43:03Z",
       "side": 1,
       "message": "same here and in other places in the module",
+      "range": {
+        "startLine": 232,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 18
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3913967c_12bac43b",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-09T20:36:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfb56775_cc010c79",
       "range": {
         "startLine": 232,
         "startChar": 0,
@@ -139,6 +187,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "381599e4_6f05b0fe",
+        "filename": "cgroup.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-09T20:36:23Z",
+      "side": 1,
+      "message": "1. Moved the enum into defs.h.\n2. Renamed according to comment.",
+      "parentUuid": "87d37407_3b676717",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 21
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39daf01a_19429228",
@@ -152,6 +224,30 @@
       "writtenOn": "2023-04-09T07:43:03Z",
       "side": 1,
       "message": "What is the difference bw SUCCESS_OPERATION and a plain SUCESS? If there is a justification to have SUCCESS_OPERATION, lets add comments to the members of the enum containing a description that clearly states cases every value is retuned in.",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa943e63_25d80ef3",
+        "filename": "cgroup.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-09T20:36:23Z",
+      "side": 1,
+      "message": "I\u0027ve added a description.\nIn short, SUCCESS is general code that inidicate - the operation finished with no errors. While, SUCCESS_OPERATION is more granular and inidcates that the operation executed as expected.\n\n*Existing semantics.\n\nE.g.\nStop process request:\nSUCCESS - the process already stopped - no need to stop it.\nSUCCESS_OPERATION - process was running, stop executed with success.",
+      "parentUuid": "39daf01a_19429228",
       "range": {
         "startLine": 22,
         "startChar": 1,
