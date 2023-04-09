@@ -51,6 +51,98 @@
       "parentUuid": "f0f2d5b6_41df4c7e",
       "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "091f8c6a_7e73c9aa",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-09T07:43:03Z",
+      "side": 1,
+      "message": "please go over the \"return X\" statements in the cgroup module and replace magic numbers with values from result_e enum.",
+      "range": {
+        "startLine": 227,
+        "startChar": 2,
+        "endLine": 227,
+        "endChar": 18
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfb56775_cc010c79",
+        "filename": "cgroup.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-09T07:43:03Z",
+      "side": 1,
+      "message": "same here and in other places in the module",
+      "range": {
+        "startLine": 232,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 18
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87d37407_3b676717",
+        "filename": "cgroup.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-09T07:43:03Z",
+      "side": 1,
+      "message": "the name result_e suggests no attribution to cgroups. Maybe, better to put the enum in defs.h + rename CGROUP_RESULT_FAILURE/CGROUP_RESULT_SUCCESS to simply to SUCCESS/FAIULRE. According to the KISS principle as you mentioned earlier there is no benefit to have different result_e enums for different modules at this stage.",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 21
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39daf01a_19429228",
+        "filename": "cgroup.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-09T07:43:03Z",
+      "side": 1,
+      "message": "What is the difference bw SUCCESS_OPERATION and a plain SUCESS? If there is a justification to have SUCCESS_OPERATION, lets add comments to the members of the enum containing a description that clearly states cases every value is retuned in.",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "566fceb474f1da3bdcab5596722261aff74b179c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
