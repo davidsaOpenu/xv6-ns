@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3af71d4_bf80f86f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-16T09:23:19Z",
+      "side": 1,
+      "message": "please add a link to the corresponding  trello card",
+      "revId": "c14a8f864a8485bc3de46aff401233617b3e5359",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deb693aa_58326ae6",
+        "filename": "syscall.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-16T09:23:19Z",
+      "side": 1,
+      "message": "as mentioned during the lectures, let\u0027s avoid adding to xv6 system calls differing from Linux syscalls. In this case we can use open system call with O_EXCL flag to implement mutex in use space.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "c14a8f864a8485bc3de46aff401233617b3e5359",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
