@@ -18,6 +18,23 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0212ebfb_b76f07e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-16T09:27:56Z",
+      "side": 1,
+      "message": "thanks for submitting the patch. Still haven\u0027t have looked at every file. Though preliminary remarks inline.",
+      "revId": "c14a8f864a8485bc3de46aff401233617b3e5359",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "deb693aa_58326ae6",
