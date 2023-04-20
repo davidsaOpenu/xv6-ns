@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bfc0ad8_ed56eb96",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T10:18:08Z",
+      "side": 1,
+      "message": "missing link to the relevant trello card",
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ebe69f59_42d85f50",
@@ -14,6 +31,69 @@
       "writtenOn": "2023-04-09T20:36:23Z",
       "side": 1,
       "message": "Thanks for the review.\nI\u0027ve made the required changes.",
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ac63b36_a274abd0",
+        "filename": "cgroup.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T10:18:08Z",
+      "side": 1,
+      "message": "RESULT_ERROR_ARGUMENT rather then RESULT_ERROR?",
+      "range": {
+        "startLine": 227,
+        "startChar": 15,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70083dc0_f94bd70b",
+        "filename": "cgroup.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T10:18:08Z",
+      "side": 1,
+      "message": "int test \u003d set_cpu_id(f-\u003ecgp, set);\n    if (test \u003d\u003d 0 || test \u003d\u003d -1)\n        return -1;\n\n\nshould it be RESULT_SUCCESS if the value is out of the range?\n\nmaybe other  places with RESULT_SUCCESS_OPERATION should be revised again?",
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78ad3388_91c5b465",
+        "filename": "defs.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T10:18:08Z",
+      "side": 1,
+      "message": "please add when every value should be returned. \n\nin particular, please define what kind of operations  RESULT_SUCCESS_OPERATION is returned upon.",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 287,
+        "endChar": 25
+      },
       "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
