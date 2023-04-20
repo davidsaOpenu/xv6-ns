@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d85784b4_baef8529",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-20T13:19:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bfc0ad8_ed56eb96",
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ebe69f59_42d85f50",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 7
@@ -58,6 +76,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14138d27_201c306a",
+        "filename": "cgroup.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-20T13:19:58Z",
+      "side": 1,
+      "message": "I\u0027ve changed it to be more specific. \nCallers - sys_umount():int \u0026 sys_unlink():int \nhandle this error case as a problem with the cgroup path argument.\n\nAs well, I added relevant documentation in cgroup.h:\n * Return values:\n * - RESULT_SUCCESS when deleted successfully.\n * - RESULT_ERROR_ARGUMENT when path is not a cgroup directory.\n * - RESULT_ERROR_OPERATION when cannot delete cgroup.\n */\nresult_code cgroup_delete(char * path, char * type);",
+      "parentUuid": "4ac63b36_a274abd0",
+      "range": {
+        "startLine": 227,
+        "startChar": 15,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70083dc0_f94bd70b",
@@ -75,6 +117,24 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33f5c5a7_ec0691ae",
+        "filename": "cgroup.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-20T13:19:58Z",
+      "side": 1,
+      "message": "The mentioned condition intent is to test success of the operation (set_cpu_id). \nMeaning, effective success. (operation actually executed and no error happen) \nThis is true only when the return value is RESULT_SUCCESS_OPERATION. \nFollowing that, the condition simplified to be: \ntest !\u003d RESULT_SUCCESS_OPERATION\n\n*The old test check if the return value is SUCCESS (0) or FAILURE (-1)",
+      "parentUuid": "70083dc0_f94bd70b",
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78ad3388_91c5b465",
@@ -88,6 +148,30 @@
       "writtenOn": "2023-04-20T10:18:08Z",
       "side": 1,
       "message": "please add when every value should be returned. \n\nin particular, please define what kind of operations  RESULT_SUCCESS_OPERATION is returned upon.",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 287,
+        "endChar": 25
+      },
+      "revId": "764986771b599b9089a7f1459d9a8a7821b8b568",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "faae3e3c_81a85bbb",
+        "filename": "defs.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-04-20T13:19:58Z",
+      "side": 1,
+      "message": "I\u0027ve extended the documentation and added an example of usage.",
+      "parentUuid": "78ad3388_91c5b465",
       "range": {
         "startLine": 283,
         "startChar": 0,
