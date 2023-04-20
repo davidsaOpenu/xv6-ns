@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ba21c9d_491939c5",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "already done in 1432-1433",
+      "range": {
+        "startLine": 1446,
+        "startChar": 0,
+        "endLine": 1447,
+        "endChar": 26
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e1c4a47_f98ae2ce",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1452,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "what does it mean?",
+      "range": {
+        "startLine": 1452,
+        "startChar": 12,
+        "endLine": 1452,
+        "endChar": 40
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "415a22d6_7c9e8066",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1453,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "good idea to increase to 10",
+      "range": {
+        "startLine": 1453,
+        "startChar": 7,
+        "endLine": 1453,
+        "endChar": 28
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28a17de2_dd1d0386",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "who is going to unlock the child?",
+      "range": {
+        "startLine": 1459,
+        "startChar": 8,
+        "endLine": 1459,
+        "endChar": 26
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b39253f_a4d871be",
+        "filename": "cgroupstests.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "should be executed",
+      "range": {
+        "startLine": 1617,
+        "startChar": 0,
+        "endLine": 1654,
+        "endChar": 6
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e613df5_27f91818",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "magic number",
+      "range": {
+        "startLine": 334,
+        "startChar": 66,
+        "endLine": 334,
+        "endChar": 67
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "134e8916_6a27b8e7",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "not every call to open with O_CREATE is O_CREATE | O_EXCL\nopen system call should be checked against (omode \u0026 O_EXCL)\n\nalso, please add to the usertests.c tests to verify that calling\n- open(file, O_CREATE) twice and  asserting for success is ok in both cases\n- open(file, O_CREATE | O_EXCL) twice leads to for success followed by a failure.",
+      "range": {
+        "startLine": 363,
+        "startChar": 46,
+        "endLine": 363,
+        "endChar": 61
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3c18b18_8ff96256",
+        "filename": "sysproc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "where this one is used? Seems not related to the change",
+      "range": {
+        "startLine": 263,
+        "startChar": 0,
+        "endLine": 271,
+        "endChar": 1
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cc9cae3_89119d74",
+        "filename": "user.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "should be ticks. \nsee lapicinit.c line 63 to see how timer interrupts are happening",
+      "range": {
+        "startLine": 8,
+        "startChar": 19,
+        "endLine": 8,
+        "endChar": 30
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "839a25ce_541c25b2",
+        "filename": "user.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-04-20T07:09:17Z",
+      "side": 1,
+      "message": "might be a problem if in 2 different and unrelated places same filename is used\n \nsuggestion:\ncreate an user/ipc/mutex.c file with \n\n```\n#define STRINGIFY(x) #x\n\nint mutex_init(mutex_t *mutex_var){\n  struct timeval tv;\n  struct tm *timeinfo;\n\n  if res \u003d gettimeofday(\u0026tv, NULL) \u003c 0\n    return res;\n  if (timeinfo \u003d localtime(\u0026tv.tv_sec)) \u003d\u003d NULL\n    return -1;\n  strftime(mutex_var-\u003ebuffer,  size calculation, \"%Y-%m-%d %H:%M:%S\", timeinfo);\n  snprintf(mutex_var-\u003ebuffer+sizeof(\"YYYY-MM-DD HH:MM:SS\"), size calculation, \".%03ld\", tv.tv_usec / 1000);\n  \n  return 0;\n  }\n\n// res can indicate an error - use mulex_lock accordingly \nint mutex_lock(mutex_t *mutex_var){\n  while (res \u003d open( mutex_var-\u003ebuffer, O_CREATE | O_EXCL) \u003d\u003d EEXIST )  sleep (10); \n  // pathname already exists and O_CREAT and O_EXCL were used\n  retrun res;\n}\n\n// res can indicate an error - use mulex_unlock accordingly \nint mutex_unlock(mutex_t *mutex_var){\n  return unlink( mutex_var-\u003ebuffer)\n\n```\nat this point mutex_t can be simply a struct with a char array able to contain YYYY-MM-DD HH:MM:SS.sss.\n\nThis way compiler scope resolution will not allow mutex vars with the same name while in different scopes timestamps will take care no cluttering happens.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
