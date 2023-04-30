@@ -1,3 +1,5 @@
+#ifndef XV6_BUF_H
+#define XV6_BUF_H
 struct buf {
   int flags;
   uint dev;
@@ -12,3 +14,6 @@ struct buf {
 };
 #define B_VALID 0x2  // buffer has been read from disk
 #define B_DIRTY 0x4  // buffer needs to be written to disk
+
+#endif /* XV6_BUF_H */
+ 

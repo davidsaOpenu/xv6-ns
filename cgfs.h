@@ -185,4 +185,5 @@ int get_dir_name(char * path, char * dir_name);
  */
 int unsafe_cg_stat(struct file * f, struct stat * st);
 
-#endif
+#endif /* XV6_CGFS_H */
+
