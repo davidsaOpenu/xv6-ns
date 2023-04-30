@@ -1,5 +1,5 @@
-#ifndef CGROUPSTESTS_H
-#define CGROUPSTESTS_H
+#ifndef XV6_CGROUPSTESTS_H
+#define XV6_CGROUPSTESTS_H
 
 #define MAX_CONTROLLER_NAME_LENGTH      16
 #define CONTROLLER_COUNT                4
@@ -54,4 +54,6 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 #define TEST_NESTED_MEM_MIN                 ("/memory.min")
 #define TEST_NESTED_SUBTREE_CONTROL         ("/cgroup.subtree_control")
 #define TEST_NESTED_CURRENT_MEM             ("/memory.current")
-#endif
+
+#endif /* XV6_CGROUPSTESTS_H */
+

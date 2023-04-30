@@ -136,4 +136,5 @@ struct dev_stat
 
 extern struct devsw devsw[];
 
-#endif
+#endif /* XV6_FILE_H */
+

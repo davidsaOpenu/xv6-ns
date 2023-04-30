@@ -58,4 +58,5 @@ struct dirent {
   char name[DIRSIZ];
 };
 
-#endif
+#endif /* XV6_FS_H */
+

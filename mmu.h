@@ -228,6 +228,6 @@ struct gatedesc {
   (gate).off_31_16 = (uint)(off) >> 16;                  \
 }
 
-#endif
+#endif /* __ASSEMBLER__ */
 
-#endif
+#endif /* XV6_MMU_H */
