@@ -112,4 +112,5 @@ void update_protect_mem(struct cgroup* cgroup, int oldsz, int newsz);
 //   fixed-size stack
 //   expandable heap
 
-#endif
+#endif /* XV6_PROC_H */
+

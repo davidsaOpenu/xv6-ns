@@ -530,4 +530,5 @@ void cgroup_mem_stat_pgmajfault_incr(struct cgroup* cgroup);
 void get_cgroup_io_stat(struct file *f, struct cgroup * cgp);
 void set_cgroup_io_stat(struct file *f);
 
-#endif
+#endif /* XV6_CGROUP_H */
+

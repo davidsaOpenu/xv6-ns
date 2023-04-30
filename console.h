@@ -27,4 +27,5 @@ typedef struct tty {
 } tty;
 
 
-#endif
+#endif /* XV6_CONSOLE_H */
+
