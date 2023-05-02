@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f79ff99_06e91565",
+        "filename": "cgroupstests.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1417,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "if negative should fail the test. You probably want to wrap mutext_init function with ASSERT",
+      "range": {
+        "startLine": 1417,
+        "startChar": 4,
+        "endLine": 1417,
+        "endChar": 14
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51fecaf3_e8c77b72",
+        "filename": "mutex.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "a)second call to uptime should be avoided\nb)uptime ret val was not checked",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ffd969b_ba456450",
+        "filename": "mutex.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "maybe that\u0027s why the suggestion of naming files with nanosec resolution (see my comment for the PS1) is better (and it also user friendly for later debugging)",
+      "range": {
+        "startLine": 19,
+        "startChar": 62,
+        "endLine": 19,
+        "endChar": 67
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d1c4387_5941548b",
+        "filename": "mutex.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "magic number. let\u0027s call it somehow",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 15
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd90058c_140a3294",
+        "filename": "sysfile.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "can be eliminated. see the suggestion in line 371",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 2
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e0348aa_f11b0527",
+        "filename": "sysfile.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "omode \u0026 O_EXCL (as a result of the suggestion in line 371)",
+      "range": {
+        "startLine": 300,
+        "startChar": 8,
+        "endLine": 300,
+        "endChar": 17
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "183b2f2c_5911780f",
+        "filename": "sysfile.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "small suggestion to make a code more readable. Just call \n ip \u003d createmount(path, T_FILE, 0, 0, \u0026mnt, omode);",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 371,
+        "endChar": 59
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d76e5ab7_29989ddb",
+        "filename": "usertests.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-02T10:59:18Z",
+      "side": 1,
+      "message": "let\u0027s make it a separate test",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 0
+      },
+      "revId": "9a8a11c7770b3f40d7dd0932475951e1bf2088c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
