@@ -16,6 +16,138 @@
       "message": "Thanks for the comments. \nI\u0027ve handled all the comments, please review.",
       "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e81ab14b_0a97fdc2",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "result code",
+      "range": {
+        "startLine": 1034,
+        "startChar": 51,
+        "endLine": 1034,
+        "endChar": 54
+      },
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38abc6b1_9feefe95",
+        "filename": "cgfs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "better to have \u003c RESULT_FAILURE for forward compatibility",
+      "range": {
+        "startLine": 1031,
+        "startChar": 2,
+        "endLine": 1052,
+        "endChar": 64
+      },
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ccc9881_5c1735d5",
+        "filename": "cgroup.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "this function",
+      "range": {
+        "startLine": 202,
+        "startChar": 3,
+        "endLine": 202,
+        "endChar": 8
+      },
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0c3b889_bf4510cc",
+        "filename": "cgroup.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "lines 203-207 are not related to these functions. they require separate annotation.",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 59
+      },
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab35278d_6844b3d8",
+        "filename": "defs.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "how about make it more consistent?\n\ne.g. \n\nRESULT_ERROR_OPERATION \u003d -3,\nRESULT_ERROR_ARGUMENT,\nRESULT_ERROR,\n\nor \n\nRESULT_FAILURE_OPERATION \u003d -3,\nRESULT_FAILURE_ARGUMENT,\nRESULT_FAILURE,",
+      "range": {
+        "startLine": 293,
+        "startChar": 0,
+        "endLine": 295,
+        "endChar": 16
+      },
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7461928d_09048cea",
+        "filename": "proc.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-05-07T14:49:24Z",
+      "side": 1,
+      "message": "in that case worth generating panic(\"cant fail because checked earlier by allocproc)?",
+      "revId": "8173bdd7e236a95b5f806a91d5e31280b5d77e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
