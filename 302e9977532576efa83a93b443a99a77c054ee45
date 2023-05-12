@@ -50,6 +50,23 @@
       "message": "Thanks for working on this change. Go ahead and merge it once verified on Jenkins.",
       "revId": "302e9977532576efa83a93b443a99a77c054ee45",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efcee2fd_76dd9cc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-05-12T16:30:00Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "302e9977532576efa83a93b443a99a77c054ee45",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
