@@ -84,6 +84,24 @@
       "message": "recheck",
       "revId": "302e9977532576efa83a93b443a99a77c054ee45",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fee2833_4ce0a13e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020995
+      },
+      "writtenOn": "2023-05-12T21:31:31Z",
+      "side": 1,
+      "message": "Thank you, please re-aprove. \nI had to re-run CI build, now it\u0027s green.",
+      "parentUuid": "28087877_c1243829",
+      "revId": "302e9977532576efa83a93b443a99a77c054ee45",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
