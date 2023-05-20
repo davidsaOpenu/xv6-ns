@@ -254,6 +254,17 @@ static cgroup_file_name_t get_file_name_constant(char * filename)
     return -1;
 }
 
+int is_cg_file_statable(struct file * f)
+{
+	cgroup_file_name_t filename_const = get_file_name_constant(f->cgfilename);
+	if ( (filename_const == CPU_MAX || filename_const == CPU_WEIGHT) &&
+			!f->cgp->cpu_controller_enabled ) {
+		return 0;
+	}
+
+	return 1;
+}
+
 /**
  * This function opens a cgroup dir
  */
@@ -851,11 +862,15 @@ static int unsafe_cg_read_file(struct file * f, char * addr, int n)
             break;
 
         case CPU_WEIGHT:
-            r = read_file_cpu_weight(f, addr, n);
+            if(f->cgp->cpu_controller_enabled) {
+                r = read_file_cpu_weight(f, addr, n);
+            }
             break;
 
         case CPU_MAX:
-            r = read_file_cpu_max(f, addr, n);
+            if(f->cgp->cpu_controller_enabled) {
+                r = read_file_cpu_max(f, addr, n);
+            }
             break;
         
         case PID_MAX:
@@ -1434,6 +1449,10 @@ int unsafe_cg_stat(struct file * f, struct stat * st)
         st->size = MAX_CGROUP_FILE_NAME_LENGTH *
                    (7 + cgorup_num_of_immidiate_children(f->cgp));
     } else {
+        if(!is_cg_file_statable(f)) {
+            return -1;
+        }
+
         st->type = T_CGFILE;
         st->size = cg_file_size(f);
     }
