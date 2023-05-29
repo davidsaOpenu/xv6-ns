@@ -19,5 +19,6 @@
 #define NNAMESPACE   20  // maximum number of namespaces
 #define MAX_PATH_LENGTH 512 // maximum path length allowed
 #define MAX_CGROUP_FILE_NAME_LENGTH 64 // maximum allowed length of cgroup file name
+#define MAX_PROC_FILE_NAME_LENGTH 64 // maximum allowed length of proc file name
 #endif /* XV6_PARAM_H */
 

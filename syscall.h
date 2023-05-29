@@ -24,14 +24,11 @@
 #define SYS_close  21
 #define SYS_mount  22
 #define SYS_umount  23
-#define SYS_printmounts  24
-#define SYS_printdevices  25
 #define SYS_unshare 26
 #define SYS_usleep 27
 #define SYS_ioctl 28
 #define SYS_getppid 29
 #define SYS_getcpu 30
-#define SYS_getmem 31
 #define SYS_kmemtest 32
 
 #endif /* XV6_SYSCALL_H */

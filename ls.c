@@ -31,6 +31,7 @@ ls(char *path)
   struct dirent de;
   struct stat st;
   char cg_file_name[MAX_CGROUP_FILE_NAME_LENGTH];
+  char proc_file_name[MAX_PROC_FILE_NAME_LENGTH];
 
   if((fd = open(path, 0)) < 0){
     printf(2, "ls: cannot open %s\n", path);
@@ -96,6 +97,35 @@ ls(char *path)
       printf(1, "%s %d %d\n", fmtname(buf), st.type, st.size);
     }
     break;
+
+  case T_PROCFILE:
+    printf(1, "%s %d %d\n", fmtname(path), st.type, st.size);
+    break;
+
+  case T_PROCDIR:
+    if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
+      printf(1, "ls: path too long\n");
+      break;
+    }
+    strcpy(buf, path);
+    p = buf + strlen(buf);
+    *p++ = '/';
+    while(read(fd, proc_file_name, sizeof(proc_file_name)) == MAX_PROC_FILE_NAME_LENGTH && proc_file_name[0] != ' '){
+      memmove(p, proc_file_name, MAX_PROC_FILE_NAME_LENGTH);
+      p[MAX_PROC_FILE_NAME_LENGTH] = 0;
+      int i = MAX_PROC_FILE_NAME_LENGTH - 1;
+      while (p[i] == ' ')
+          i--;
+      p[i + 1] = 0;
+      if(stat(buf, &st) < 0){
+        printf(1, "ls: cannot stat %s\n", buf);
+        continue;
+      }
+      p[i + 1] = ' ';
+      printf(1, "%s %d %d\n", fmtname(buf), st.type, st.size);
+    }
+    break;
+
   }
   close(fd);
 }

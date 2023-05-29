@@ -6,21 +6,6 @@
 #include "file.h"
 #include "device.h"
 
-#define NLOOPDEVS (10)
-#define NIDEDEVS (2)
-
-struct device {
-  struct superblock sb;
-  int ref;
-  struct inode *ip;
-};
-
-struct {
-  struct spinlock lock; // protects loopdevs
-  struct device loopdevs[NLOOPDEVS];
-  struct superblock idesb[NIDEDEVS];
-} dev_holder;
-
 void
 devinit(void)
 {
@@ -98,20 +83,6 @@ getinodefordevice(uint dev)
   }
 
   return dev_holder.loopdevs[dev].ip;
-}
-
-void
-printdevices(void)
-{
-  acquire(&dev_holder.lock);
-
-  cprintf("Printing devices:\n");
-  for (int i = 0; i < NLOOPDEVS; i++) {
-    if (dev_holder.loopdevs[i].ref != 0) {
-      cprintf("Device %d backed by inode %x with ref %d\n", i, dev_holder.loopdevs[i].ip, dev_holder.loopdevs[i].ref);
-    }
-  }
-  release(&dev_holder.lock);
 }
 
 struct superblock*

@@ -25,12 +25,17 @@ sys_mount(void)
     char *device_path;
     char *mount_path;
     struct mount *parent;
+    int cgroup_res;
+    int proc_res;
 
     if (argstr(2, &fstype) < 0){
         cprintf("badargs\n");
         return -1;
     }
-    if(strcmp(fstype, "cgroup") == 0){
+
+    cgroup_res = strcmp(fstype, "cgroup");
+    proc_res = strcmp(fstype, "proc");
+    if(cgroup_res == 0 || proc_res == 0){
         struct inode *mount_dir;
         if (argstr(0, &device_path) < 0 || argstr(1, &mount_path) < 0 || device_path != 0) {
             cprintf("badargs\n");
@@ -45,13 +50,23 @@ sys_mount(void)
             return -1;
         }
 
-        if(*(cgroup_root()->cgroup_dir_path)){
-            cprintf("cgroup filesystem already mounted\n");
-            end_op();
-            return -1;
-        }
+        if(cgroup_res == 0){
+            if(*(cgroup_root()->cgroup_dir_path)){
+                cprintf("cgroup filesystem already mounted\n");
+                end_op();
+                return -1;
+            }
 
-        set_cgroup_dir_path(cgroup_root(), mount_path);
+            set_cgroup_dir_path(cgroup_root(), mount_path);
+        } else if(proc_res == 0){
+            if(*procfs_root){
+                cprintf("proc filesystem already mounted\n");
+                end_op();
+                return -1;
+            }
+
+            set_procfs_dir_path(mount_path);
+        }
 
         end_op();
 
@@ -162,18 +177,4 @@ sys_umount(void)
 
     end_op();
     return delete_cgroup_res;
-}
-
-int
-sys_printmounts(void)
-{
-    printmounts();
-    return 0;
-}
-
-int
-sys_printdevices(void)
-{
-    printdevices();
-    return 0;
 }

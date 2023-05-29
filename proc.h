@@ -1,11 +1,14 @@
 #include "types.h"
 #include "mmu.h"
 #include "param.h"
+#include "defs.h"
 
 #ifndef XV6_PROC_H
 #define XV6_PROC_H
 
 struct cgroup;
+// Procfs root directory
+char procfs_root[MAX_PATH_LENGTH];
 
 // Per-CPU state
 struct cpu {
@@ -105,6 +108,44 @@ struct cgroup *proc_get_cgroup(void);
  * Update number of memory pages to protect for cgroup after dealloc memory .
  */
 void update_protect_mem(struct cgroup* cgroup, int oldsz, int newsz);
+
+/**
+ * This function sets the procfs_dir_path field of procfs.
+ * Receives string parameter "path".
+ * "path" is string of directory names separated by '/'s. We set the procfs_root value to this path.
+ * Return value is void.
+ */
+void set_procfs_dir_path(char * path);
+
+/**
+ * Safe implementation of proc file manipulation functions defined in procfs.h. (Implementation with locks)
+ */
+
+/**
+ * This function is a lock protected version of the corresponding unsafe function unsafe_proc_open() defined in procfs.h.
+ */
+int proc_open(int filetype, char * filename, int omode);
+
+/**
+ * This function is a lock protected version of the corresponding unsafe function unsafe_proc_read() defined in procfs.h.
+ */
+int proc_read(struct file * f, char * addr, int n);
+
+/**
+ * This function is a lock protected version of the corresponding unsafe function unsafe_proc_stat() defined in procfs.h.
+ */
+int proc_stat(struct file * f, struct stat * st);
+
+/**
+ * This function opens proc file or directory. Meant to be called in sys_open().
+ * Receives string parameter "path", integer parameter "omode".
+ * "path" is string of directory names separated by '/'s, the path of the file to open.
+ * "omode" is the opening mode. Same as with regular files.
+ * Return values:
+ * -1 on failure.
+ * file descriptor of the new open file or directory on success.
+ */
+int proc_sys_open(char * path, int omode);
 
 // Process memory is laid out contiguously, low addresses first:
 //   text

@@ -21,6 +21,7 @@ OBJS = \
 	namespace.o\
 	picirq.o\
 	pipe.o\
+	procfs.o\
 	proc.o\
 	sleeplock.o\
 	spinlock.o\

@@ -44,7 +44,6 @@ int             tty_gets(struct inode *ip, int command);
 int             getorcreatedevice(struct inode*);
 void            deviceput(uint);
 void            deviceget(uint);
-void            printdevices(void);
 struct inode*   getinodefordevice(uint);
 struct superblock* getsuperblock(uint);
 void            devinit(void);
@@ -88,7 +87,6 @@ struct inode*   initprocessroot(struct mount**);
 
 // mount.c
 void            mntinit(void);
-void            printmounts(void);
 int             mount(struct inode*, struct inode*, struct mount*);
 int             umount(struct mount*);
 struct mount*   getrootmount(void);
@@ -271,6 +269,8 @@ int             intlen(int n);
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
 
+// min between two numbers
+#define min(x, y) (x) > (y) ? (y) : (x)
 
 /** Return codes:
  * - RESULT_ERROR_OPERATION upon error related to the executed operation.
