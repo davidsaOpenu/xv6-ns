@@ -7,6 +7,27 @@
 
 char *argv[] = { "sh", 0 };
 
+static int init_procfs(){
+  int procfs_fd = -1;
+  // Check if procfs already created
+  if((procfs_fd = open("/proc", O_RDWR)) < 0){
+    if(mkdir("/proc") != 0){
+      printf(1, "init: failed to create root proc fs\n");
+      return -1;
+    }
+
+    if(mount(0, "/proc", "proc") != 0){
+      printf(1, "init: failed to mount proc fs\n");
+      return -1;
+    }
+  }else{
+    if(close(procfs_fd) < 0)
+      return -1;
+  }
+
+  return 0;
+}
+
 int
 main(void)
 {
@@ -22,6 +43,11 @@ main(void)
   mknod("tty0", 1, 1);
   mknod("tty1", 1, 2);
   mknod("tty2", 1, 3);
+
+  if(init_procfs() != 0){
+    printf(1, "init: init procfs failed\n");
+    exit(1);
+  }
 
   for(;;){
     printf(1, "init: starting sh\n");

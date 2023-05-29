@@ -10,6 +10,7 @@
 #include "pid_ns.h"
 #include "namespace.h"
 #include "cpu_account.h"
+#include "procfs.h"
 
 struct {
   struct spinlock lock;
@@ -839,4 +840,84 @@ struct cgroup *proc_get_cgroup(void)
   if (proc)
      cg = proc->cgroup;
   return cg;
+}
+
+static void unsafe_set_procfs_dir_path(char * path)
+{
+    char fpath[MAX_PATH_LENGTH];
+    format_path(fpath, path);
+    char * fpathp = fpath;
+    char * procfs_dir_path = procfs_root;
+    while(*fpathp != 0){
+      *procfs_dir_path = *fpathp;
+      fpathp++;
+      procfs_dir_path++;
+    }
+}
+
+void set_procfs_dir_path(char * path)
+{
+    acquire(&ptable.lock);
+    unsafe_set_procfs_dir_path(path);
+    release(&ptable.lock);
+}
+
+int proc_open(int filetype, char * filename, int omode)
+{
+    int res = RESULT_ERROR;
+
+    acquire(&ptable.lock);
+    res = unsafe_proc_open(filetype, filename, omode);
+    release(&ptable.lock);
+
+    return res;
+}
+
+int proc_sys_open(char * path, int omode)
+{
+    char fpath[MAX_PATH_LENGTH];
+    char * procfs_dir = procfs_root;
+
+    if (*procfs_root == 0)
+      return RESULT_ERROR;
+
+    format_path(fpath, path);
+    int i = 1; // Skip first slash;
+    /* Validate if path is procfs dir. */
+    for (; i < sizeof(fpath); i++){
+      if(fpath[i] == 0 || fpath[i] == '/')
+        break;
+      if(fpath[i] != procfs_dir[i])
+        return RESULT_ERROR;
+    }
+
+    if(i < strlen(procfs_root))
+      return RESULT_ERROR;
+
+    if(fpath[i] == '/')
+      return proc_open(T_PROCFILE, fpath+i+1, omode); // After /proc/
+
+    return proc_open(T_PROCDIR, fpath, omode); // /proc
+}
+
+int proc_read(struct file * f, char * addr, int n)
+{
+    int res = RESULT_ERROR;
+
+    acquire(&ptable.lock);
+    res = unsafe_proc_read(f, addr, n);
+    release(&ptable.lock);
+
+    return res;
+}
+
+int proc_stat(struct file * f, struct stat * st)
+{
+    int res = RESULT_ERROR;
+
+    acquire(&ptable.lock);
+    res = unsafe_proc_stat(f, st);
+    release(&ptable.lock);
+
+    return res;
 }

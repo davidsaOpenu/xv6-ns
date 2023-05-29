@@ -84,6 +84,9 @@ sys_read(void)
       return cg_read(CG_FILE, f, p, n);
   }
 
+  else if(f->type == FD_PROC)
+    return proc_read(f, p, n);
+
   else
     return fileread(f, p, n);
 }
@@ -131,6 +134,8 @@ sys_fstat(void)
 
   if(f->type == FD_CG)
       return cg_stat(f, st);
+  else if(f->type == FD_PROC)
+      return proc_stat(f, st);
 
   return filestat(f, st);
 }
@@ -352,9 +357,8 @@ sys_open(void)
 
   begin_op();
 
-  fd = cg_sys_open(path, omode);
-
-  if(fd >= 0){
+  if((fd = cg_sys_open(path, omode)) >= 0
+   || (fd = proc_sys_open(path, omode)) >= 0){
     end_op();
     return fd;
   }

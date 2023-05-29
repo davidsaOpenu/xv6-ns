@@ -47,6 +47,8 @@ enum controller_types { CPU_CNT, PID_CNT, SET_CNT, MEM_CNT };
 #define TEST_TMP_CGROUP_SUBTREE_CONTROL   "/cgroup/testtmp/cgroup.subtree_control"
 #define TEST_TMP_MEM_MIN                  "/cgroup/testtmp/memory.min"
 
+#define TEST_PROC_MEM                   "/proc/mem"
+
 #define TEMP_FILE "temp_file"
 
 #define TESTED_NESTED_CGROUP_CHILD          ("/nested")

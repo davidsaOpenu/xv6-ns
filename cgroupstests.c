@@ -858,7 +858,7 @@ TEST(test_frozen_not_running)
 TEST(test_mem_current) {
   // Save current process memory size.
   char proc_mem[10];
-  itoa(proc_mem, getmem());
+  strcpy(proc_mem, read_file(TEST_PROC_MEM, 0));
   strcat(proc_mem, "\n");
   // Buffer to read contents from memory file.
   char saved_mem[10];
@@ -901,7 +901,7 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
   strcpy(saved_mem, read_file(TEST_1_MEM_CURRENT, 0));
 
   // Convert process memory to a string.
-  itoa(proc_mem, getmem());
+  strcpy(proc_mem, read_file(TEST_PROC_MEM, 0));
   strcat(proc_mem, "\n");
 
   // Read the contents of current memory file and convert it for comparison.
@@ -917,7 +917,7 @@ TEST(test_correct_mem_account_of_growth_and_shrink) {
   strcpy(saved_mem, read_file(TEST_1_MEM_CURRENT, 0));
 
   // Convert process memory to a string.
-  itoa(proc_mem, getmem());
+  strcpy(proc_mem, read_file(TEST_PROC_MEM, 0));
   strcat(proc_mem, "\n");
 
   // Read the contents of current memory file and convert it for comparison.
@@ -1118,7 +1118,7 @@ TEST(test_cant_move_under_mem_limit)
     ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
 
     // Save current process memory size.
-    int proc_mem = getmem();
+    int proc_mem = atoi(read_file(TEST_PROC_MEM, 0));
     int grow = MEM_SIZE - proc_mem;
 
     ASSERT_FALSE((int)sbrk(grow) == -1);
@@ -1214,7 +1214,7 @@ TEST(test_cant_fork_over_mem_limit)
 {
   // Save current process memory size.
   char proc_mem[10];
-  itoa(proc_mem, getmem());
+  strcpy(proc_mem, read_file(TEST_PROC_MEM, 0));
   // Buffer to read contents from memory file.
   char saved_mem[10];
 
@@ -1252,7 +1252,7 @@ TEST(test_cant_grow_over_mem_limit)
 {
   // Save current process memory size.
   char proc_mem[10];
-  itoa(proc_mem, getmem());
+  strcpy(proc_mem, read_file(TEST_PROC_MEM, 0));
   // Buffer to read contents from memory file.
   char saved_mem[10];
 
