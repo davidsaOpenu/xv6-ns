@@ -175,16 +175,21 @@ static int find_procs_offsets(int * procoff, int * pidoff, struct file * f)
     return 0;
 }
 
-static int copy_until_char(char * s, char * t, char ch, int n)
+static int copy_until_char(char * dst, char * src, char delimiter, int max_chars)
 {
+    /* 
+     * copy from src to dst until delim or the end of src is encountered or until 
+     * max_chars bytes have been copied, and put '\0' at the end dst
+     * return the length of dst including the \0 at the end
+     */
     int len = 0;
-    while (*t != ch && *t != '\0' && (n--) > 0) {
-        *s++ = *t++;
+    while (*src != delimiter && *src != '\0' && (max_chars--) > 0) {
+        *dst++ = *src++;
         len++;
     }
 
-    *s = 0;
-    if (*t == ch)
+    *dst = '\0';
+    if (*src == delimiter)
         len++;
 
     return len;
