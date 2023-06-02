@@ -211,6 +211,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f47708ce_3a79f76d",
+        "filename": "sysfile.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T08:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e613df5_27f91818",
+      "range": {
+        "startLine": 334,
+        "startChar": 66,
+        "endLine": 334,
+        "endChar": 67
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "134e8916_6a27b8e7",
@@ -257,6 +281,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f8961c3_2c080726",
+        "filename": "sysproc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T08:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3c18b18_8ff96256",
+      "range": {
+        "startLine": 263,
+        "startChar": 0,
+        "endLine": 271,
+        "endChar": 1
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cc9cae3_89119d74",
@@ -280,6 +328,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cec444cc_7cf53d6e",
+        "filename": "user.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T08:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cc9cae3_89119d74",
+      "range": {
+        "startLine": 8,
+        "startChar": 19,
+        "endLine": 8,
+        "endChar": 30
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "839a25ce_541c25b2",
@@ -293,6 +365,30 @@
       "writtenOn": "2023-04-20T07:09:17Z",
       "side": 1,
       "message": "might be a problem if in 2 different and unrelated places same filename is used\n \nsuggestion:\ncreate an user/ipc/mutex.c file with \n\n```\n#define STRINGIFY(x) #x\n\nint mutex_init(mutex_t *mutex_var){\n  struct timeval tv;\n  struct tm *timeinfo;\n\n  if res \u003d gettimeofday(\u0026tv, NULL) \u003c 0\n    return res;\n  if (timeinfo \u003d localtime(\u0026tv.tv_sec)) \u003d\u003d NULL\n    return -1;\n  strftime(mutex_var-\u003ebuffer,  size calculation, \"%Y-%m-%d %H:%M:%S\", timeinfo);\n  snprintf(mutex_var-\u003ebuffer+sizeof(\"YYYY-MM-DD HH:MM:SS\"), size calculation, \".%03ld\", tv.tv_usec / 1000);\n  \n  return 0;\n  }\n\n// res can indicate an error - use mulex_lock accordingly \nint mutex_lock(mutex_t *mutex_var){\n  while (res \u003d open( mutex_var-\u003ebuffer, O_CREATE | O_EXCL) \u003d\u003d EEXIST )  sleep (10); \n  // pathname already exists and O_CREAT and O_EXCL were used\n  retrun res;\n}\n\n// res can indicate an error - use mulex_unlock accordingly \nint mutex_unlock(mutex_t *mutex_var){\n  return unlink( mutex_var-\u003ebuffer)\n\n```\nat this point mutex_t can be simply a struct with a char array able to contain YYYY-MM-DD HH:MM:SS.sss.\n\nThis way compiler scope resolution will not allow mutex vars with the same name while in different scopes timestamps will take care no cluttering happens.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "165d30a78dfcebb435461b8e60418e2e15904e34",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50e245a9_e7198eea",
+        "filename": "user.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T08:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "839a25ce_541c25b2",
       "range": {
         "startLine": 9,
         "startChar": 0,

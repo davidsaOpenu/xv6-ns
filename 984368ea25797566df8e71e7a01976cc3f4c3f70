@@ -33,6 +33,29 @@
       "message": "nit: lets remove",
       "revId": "984368ea25797566df8e71e7a01976cc3f4c3f70",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50681ec7_1ce15aa8",
+        "filename": "usertests.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T08:26:08Z",
+      "side": 1,
+      "message": "nit: lets call in a loop\ne.g. printf(stdout, \"open O_CREATE | O_EXCL iteration #%d error\\n\", i);",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 12
+      },
+      "revId": "984368ea25797566df8e71e7a01976cc3f4c3f70",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
