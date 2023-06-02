@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08c2b533_84936a02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T07:20:26Z",
+      "side": 1,
+      "message": "could you please relate to the mutex related comments: https://review.gerrithub.io/c/davidsaOpenu/xv6-ns/+/552370/2..5/cgroupstests.c",
+      "revId": "984368ea25797566df8e71e7a01976cc3f4c3f70",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa35ab89_b156b38a",
+        "filename": "cgroupstests.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-02T07:20:26Z",
+      "side": 1,
+      "message": "nit: lets remove",
+      "revId": "984368ea25797566df8e71e7a01976cc3f4c3f70",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
