@@ -7,6 +7,10 @@
 
 #include "cgroupstests.h"
 
+#define TEST_OPEN_CLOSE_READ(x) \
+        ASSERT_TRUE(open_close_file(x)); \
+        ASSERT_TRUE(read_file(x, 1))
+
 char controller_names[CONTROLLER_COUNT][MAX_CONTROLLER_NAME_LENGTH] =
   { "cpu", "pid", "set", "mem" };
 
@@ -385,48 +389,26 @@ TEST(test_deleting_cgroups)
     ASSERT_FALSE(unlink(TEST_1));
 }
 
-TEST(test_opening_and_closing_cgroup_files)
+TEST(test_opening_closing_and_reading_cgroup_files)
 {
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_PROCS));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_CONTROLLERS));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_SUBTREE_CONTROL));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_EVENTS));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_DESCENDANTS));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_MAX_DEPTH));
-    ASSERT_TRUE(open_close_file(TEST_1_CGROUP_STAT));
-    ASSERT_TRUE(open_close_file(TEST_1_CPU_MAX));
-    ASSERT_TRUE(open_close_file(TEST_1_CPU_WEIGHT));
-    ASSERT_TRUE(open_close_file(TEST_1_CPU_STAT));
-    ASSERT_TRUE(open_close_file(TEST_1_PID_MAX));
-    ASSERT_TRUE(open_close_file(TEST_1_PID_CURRENT));
-    ASSERT_TRUE(open_close_file(TEST_1_SET_CPU));
-    ASSERT_TRUE(open_close_file(TEST_1_SET_FRZ));
-    ASSERT_TRUE(open_close_file(TEST_1_MEM_CURRENT));
-    ASSERT_TRUE(open_close_file(TEST_1_MEM_MAX));
-    ASSERT_TRUE(open_close_file(TEST_1_MEM_MIN));
-    ASSERT_TRUE(open_close_file(TEST_1_MEM_STAT));
-}
-
-TEST(test_reading_cgroup_files)
-{
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_PROCS, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_CONTROLLERS, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_SUBTREE_CONTROL, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_EVENTS, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_DESCENDANTS, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_MAX_DEPTH, 1));
-    ASSERT_TRUE(read_file(TEST_1_CGROUP_STAT, 1));
-    ASSERT_TRUE(read_file(TEST_1_CPU_MAX, 1));
-    ASSERT_TRUE(read_file(TEST_1_CPU_WEIGHT, 1));
-    ASSERT_TRUE(read_file(TEST_1_CPU_STAT, 1));
-    ASSERT_TRUE(read_file(TEST_1_PID_MAX, 1));
-    ASSERT_TRUE(read_file(TEST_1_PID_CURRENT, 1));
-    ASSERT_TRUE(read_file(TEST_1_SET_CPU, 1));
-    ASSERT_TRUE(read_file(TEST_1_SET_FRZ, 1));
-    ASSERT_TRUE(read_file(TEST_1_MEM_CURRENT, 1));
-    ASSERT_TRUE(read_file(TEST_1_MEM_MAX, 1));
-    ASSERT_TRUE(read_file(TEST_1_MEM_MIN, 1));
-    ASSERT_TRUE(read_file(TEST_1_MEM_STAT, 1));
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_PROCS);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_CONTROLLERS);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_SUBTREE_CONTROL);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_EVENTS);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_DESCENDANTS);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_MAX_DEPTH);
+    TEST_OPEN_CLOSE_READ(TEST_1_CGROUP_STAT);
+    TEST_OPEN_CLOSE_READ(TEST_1_CPU_MAX);
+    TEST_OPEN_CLOSE_READ(TEST_1_CPU_WEIGHT);
+    TEST_OPEN_CLOSE_READ(TEST_1_CPU_STAT);
+    TEST_OPEN_CLOSE_READ(TEST_1_PID_MAX);
+    TEST_OPEN_CLOSE_READ(TEST_1_PID_CURRENT);
+    TEST_OPEN_CLOSE_READ(TEST_1_SET_CPU);
+    TEST_OPEN_CLOSE_READ(TEST_1_SET_FRZ);
+    TEST_OPEN_CLOSE_READ(TEST_1_MEM_CURRENT);
+    TEST_OPEN_CLOSE_READ(TEST_1_MEM_MAX);
+    TEST_OPEN_CLOSE_READ(TEST_1_MEM_MIN);
+    TEST_OPEN_CLOSE_READ(TEST_1_MEM_STAT);
 }
 
 int test_enable_and_disable_controller(int controller_type)
@@ -1589,8 +1571,7 @@ int main(int argc, char * argv[])
 
     run_test(test_mount_cgroup_fs);
     run_test(test_creating_cgroups);
-    run_test(test_opening_and_closing_cgroup_files);
-    run_test_break_msg(test_reading_cgroup_files);
+    run_test(test_opening_closing_and_reading_cgroup_files);
     run_test(test_memory_stat_content_valid);
     run_test(test_cpu_stat_content_valid);
     run_test(test_moving_process);
