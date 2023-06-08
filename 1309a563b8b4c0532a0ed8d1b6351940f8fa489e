@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "1309a563b8b4c0532a0ed8d1b6351940f8fa489e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "688e9b7c_d6dbdaa6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-08T09:10:24Z",
+      "side": 1,
+      "message": "adding a test for this case will not really increase the robustness: cpu.max and cpu.weight are not visible anyways. So LGTM.",
+      "revId": "1309a563b8b4c0532a0ed8d1b6351940f8fa489e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
