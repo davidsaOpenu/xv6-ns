@@ -122,8 +122,8 @@ char* read_file(const char* file, int print)
   return buf;
 }
 
-// Write into a file. If succesful returns 1, otherwise 0.
-int write_file(const char* file, char* text) {
+// Open a file, write into it and close it. If succesful returns 1, otherwise 0.
+int test_open_write_and_close_file(const char* file, char* text) {
   char buf[256];
   int fd = open_file(file);
 
@@ -141,15 +141,24 @@ int write_file(const char* file, char* text) {
   return close_file(fd);
 }
 
-int write_new_file(const char* file, char* text) {
+//opens a new file and return its fd on success and 0 on failure
+int create_file(const char* file){
    int fd;
    if ((fd = open(file, O_CREATE | O_RDWR)) < 1) {
      if (suppress == 0)
         printf(1, "\nFailed to open a new file \n");
      return 0;
    }
+   return fd;
+}
 
-   if (!write_file(file, text)) {
+// creates a file and writes into it. returns the fd of the file on success and 0 on failure.
+int create_and_write_file(const char* file, char* text) {
+   int fd;
+   if(!(fd = create_file(file))){
+     return 0;
+   }
+   if (!test_open_write_and_close_file(file, text)) {
      close_file(fd);
      return 0;
    }
@@ -166,7 +175,7 @@ int enable_controller(int type) {
 
   strcpy(buf + 1, controller_names[type]);
 
-  return write_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
+  return test_open_write_and_close_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
 }
 
 // Test disabling controller according to given type.
@@ -178,7 +187,7 @@ int disable_controller(int type) {
 
   strcpy(buf + 1, controller_names[type]);
 
-  return write_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
+  return test_open_write_and_close_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
 }
 
 // Test verrifying a controller is active according to given type.
@@ -229,7 +238,7 @@ int move_proc(const char* file, int pid) {
   char pid_buf[3];
   empty_string(pid_buf, 3);
   itoa(pid_buf, pid);
-  return write_file(file, pid_buf);
+  return test_open_write_and_close_file(file, pid_buf);
 }
 
 // Test a given pid in string format belongs to a given cgroup.
@@ -269,7 +278,7 @@ int temp_write(int num) {
   char buf[256];
   itoa(buf, num);
 
-  if (!write_file(TEMP_FILE, buf)) {
+  if (!test_open_write_and_close_file(TEMP_FILE, buf)) {
     close_file(fd);
     return 0;
   }
@@ -421,7 +430,7 @@ int test_enable_and_disable_controller(int controller_type)
     if (!buf) {
         return 0;
     }
-    result &= write_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
+    result &= test_open_write_and_close_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
     free(buf);
 
 
@@ -433,7 +442,7 @@ int test_enable_and_disable_controller(int controller_type)
     if (!buf) {
         return 0;
     }
-    result &= write_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
+    result &= test_open_write_and_close_file(TEST_1_CGROUP_SUBTREE_CONTROL, buf);
     free(buf);
 
     // Check that the given controller is really disabled.
@@ -455,13 +464,13 @@ TEST(test_limiting_cpu_max_and_period)
     ASSERT_TRUE(enable_controller(CPU_CNT));
 
     // Update only max
-    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "5000"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_CPU_MAX, "5000"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 5000\nperiod - 100000\n"));
 
     // Update max & period
-    ASSERT_TRUE(write_file(TEST_1_CPU_MAX, "1000,20000"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_CPU_MAX, "1000,20000"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_CPU_MAX, 0), "max - 1000\nperiod - 20000\n"));
@@ -476,13 +485,13 @@ TEST(test_limiting_pids)
     ASSERT_TRUE(enable_controller(PID_CNT));
 
     // Update pid limit
-    ASSERT_TRUE(write_file(TEST_1_PID_MAX, "10"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_PID_MAX, "10"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_PID_MAX, 0), "max - 10\n"));
 
     // Restore to 64
-    ASSERT_TRUE(write_file(TEST_1_PID_MAX, "64"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_PID_MAX, "64"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_PID_MAX, 0), "max - 64\n"));
@@ -494,7 +503,7 @@ TEST(test_move_failure)
     ASSERT_TRUE(enable_controller(PID_CNT));
 
     // Update pid limit
-    ASSERT_TRUE(write_file(TEST_1_PID_MAX, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_PID_MAX, "0"));
 
     // Attempt to move the current process to "/cgroup/test1" cgroup.
     // Notice write here should fail, and so we suppress error outputs from this point.
@@ -517,7 +526,7 @@ TEST(test_fork_failure)
     ASSERT_TRUE(enable_controller(PID_CNT));
 
     // Update pid limit
-    ASSERT_TRUE(write_file(TEST_1_PID_MAX, "1"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_PID_MAX, "1"));
 
     // Move the current process to "/cgroup/test1" cgroup.
     ASSERT_TRUE(move_proc(TEST_1_CGROUP_PROCS, getpid()));
@@ -577,8 +586,8 @@ TEST(test_moving_process)
 TEST(test_setting_max_descendants_and_max_depth)
 {
     // Set new values for max descendants allowed and max depth allowed
-    ASSERT_TRUE(write_file(TEST_1_CGROUP_DESCENDANTS, "30"));
-    ASSERT_TRUE(write_file(TEST_1_CGROUP_MAX_DEPTH, "20"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_CGROUP_DESCENDANTS, "30"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_CGROUP_MAX_DEPTH, "20"));
 
     // Check that the values have really been set
     ASSERT_FALSE(strcmp(read_file(TEST_1_CGROUP_DESCENDANTS, 0), "30\n"));
@@ -607,13 +616,13 @@ TEST(test_setting_cpu_id)
     ASSERT_TRUE(enable_controller(SET_CNT));
 
     // Update cpu id.
-    ASSERT_TRUE(write_file(TEST_1_SET_CPU, "1"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_CPU, "1"));
 
     // Check changes.
     ASSERT_FALSE(strcmp(read_file(TEST_1_SET_CPU, 0), "use_cpu - 1\n"));
 
     // Restore default cpu id.
-    ASSERT_TRUE(write_file(TEST_1_SET_CPU, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_CPU, "0"));
 
     // Check changes.
     ASSERT_FALSE(strcmp(read_file(TEST_1_SET_CPU, 0), "use_cpu - 0\n"));
@@ -628,7 +637,7 @@ TEST(test_correct_cpu_running)
     ASSERT_TRUE(enable_controller(SET_CNT));
 
     // Update cpu id.
-    ASSERT_TRUE(write_file(TEST_1_SET_CPU, "1"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_CPU, "1"));
 
     // Check changes.
     ASSERT_FALSE(strcmp(read_file(TEST_1_SET_CPU, 0), "use_cpu - 1\n"));
@@ -652,7 +661,7 @@ TEST(test_correct_cpu_running)
     ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
 
     // Restore default cpu id.
-    ASSERT_TRUE(write_file(TEST_1_SET_CPU, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_CPU, "0"));
 
     // Check changes.
     ASSERT_FALSE(strcmp(read_file(TEST_1_SET_CPU, 0), "use_cpu - 0\n"));
@@ -667,7 +676,7 @@ TEST(test_no_run)
     ASSERT_TRUE(enable_controller(SET_CNT));
 
     // Update cpu id.
-    ASSERT_TRUE(write_file(TEST_1_SET_CPU, "2"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_CPU, "2"));
 
     // Fork here since the process should not be running after we move it inside the cgroup.
     int pid = fork();
@@ -744,7 +753,7 @@ TEST(test_setting_freeze)
     ASSERT_FALSE(strcmp(read_file(TEST_1_CGROUP_EVENTS, 0), "populated - 0\nfrozen - 0\n"));
 
     // Update frozen.
-    ASSERT_TRUE(write_file(TEST_1_SET_FRZ, "1"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_FRZ, "1"));
 
     // Check changes.
     ASSERT_FALSE(strcmp(read_file(TEST_1_SET_FRZ, 0), "1\n"));
@@ -753,7 +762,7 @@ TEST(test_setting_freeze)
     ASSERT_FALSE(strcmp(read_file(TEST_1_CGROUP_EVENTS, 0), "populated - 0\nfrozen - 1\n"));
 
     // Restore frozen.
-    ASSERT_TRUE(write_file(TEST_1_SET_FRZ, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_FRZ, "0"));
 
     // Verify frozen is 0 again.
     ASSERT_FALSE(strcmp(read_file(TEST_1_CGROUP_EVENTS, 0), "populated - 0\nfrozen - 0\n"));
@@ -765,7 +774,7 @@ TEST(test_setting_freeze)
 TEST(test_frozen_not_running)
 {
     // Update frozen.
-    ASSERT_TRUE(write_file(TEST_1_SET_FRZ, "1"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_FRZ, "1"));
 
     // Fork here since the process should not be running after we move it inside the cgroup.
     int pid = fork();
@@ -828,7 +837,7 @@ TEST(test_frozen_not_running)
         ASSERT_TRUE(temp_delete());
 
         // Update frozen.
-        ASSERT_TRUE(write_file(TEST_1_SET_FRZ, "0"));
+        ASSERT_TRUE(test_open_write_and_close_file(TEST_1_SET_FRZ, "0"));
     }
 }
 
@@ -931,8 +940,8 @@ TEST(test_limiting_mem)
   ASSERT_FALSE(strncmp(default_min, "0", strlen("0")));
 
   // Update memory limit
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
-  ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "90"));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, "100"));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, "90"));
 
   // Check changes
   ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
@@ -959,22 +968,22 @@ TEST(test_ensure_mem_min_is_less_then_mem_max)
     ASSERT_TRUE(enable_controller(MEM_CNT));
 
     // Update memory max
-    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, "100"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
 
     // Try to update memory min over max this have to fail
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "101"));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MIN, "101"));
 
     // Update memory min
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, "100"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "100\n"));
 
     // Try to update memory max smaller then min this have to fail
-    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "99"));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MAX, "99"));
 
     // Disable memory controller
     ASSERT_TRUE(disable_controller(MEM_CNT));
@@ -987,35 +996,35 @@ TEST(test_cant_use_protected_memory)
 
     // Enable memory controllers
     ASSERT_TRUE(enable_controller(MEM_CNT));
-    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "+mem"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_2_CGROUP_SUBTREE_CONTROL, "+mem"));
 
     char buf [12];
     itoa(buf, MEM_SIZE);
 
     // Protect all memory for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, buf));
 
     // Check changes
     ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), buf, strlen(buf)));
 
     // Try to protect memory for cgroup2 this need to fail
-    ASSERT_FALSE(write_file(TEST_2_MEM_MIN, buf));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_2_MEM_MIN, buf));
 
     // Attempt to grow process memory, notice this operation should fail and return -1.
     ASSERT_UINT_EQ((int)sbrk(MEM_SIZE), -1);
 
     // Decreas memory min for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "100"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, "100"));
 
     // Update memory min for cgroup2
-    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "100"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_2_MEM_MIN, "100"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_2_MEM_MIN, 0), "100\n"));
 
     // Restore memory limit to original
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "0"));
-    ASSERT_TRUE(write_file(TEST_2_MEM_MIN, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, "0"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_2_MEM_MIN, "0"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "0\n"));
@@ -1023,7 +1032,7 @@ TEST(test_cant_use_protected_memory)
 
     // Disable memory controllers
     ASSERT_TRUE(disable_controller(MEM_CNT));
-    ASSERT_TRUE(write_file(TEST_2_CGROUP_SUBTREE_CONTROL, "-mem"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_2_CGROUP_SUBTREE_CONTROL, "-mem"));
 }
 
 TEST(test_release_protected_memory_after_delete_cgroup)
@@ -1040,7 +1049,7 @@ TEST(test_release_protected_memory_after_delete_cgroup)
     {
       ASSERT_FALSE(mkdir(TEST_TMP));
       ASSERT_TRUE(enable_controller(MEM_CNT));
-      ASSERT_TRUE(write_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
+      ASSERT_TRUE(test_open_write_and_close_file(TEST_TMP_CGROUP_SUBTREE_CONTROL, "+mem"));
 
       // get total amount of memory from memory controller core file (memory.stat) 
       mem_str_buf = read_file(TEST_1_MEM_STAT, 0);
@@ -1050,7 +1059,7 @@ TEST(test_release_protected_memory_after_delete_cgroup)
       itoa(buf,  kernel_total_mem * memory_reservations[i]);
 
       // Protect portion of memory for tmpcgroup
-      ASSERT_TRUE(write_file(TEST_TMP_MEM_MIN, buf));
+      ASSERT_TRUE(test_open_write_and_close_file(TEST_TMP_MEM_MIN, buf));
       
       // Check changes
       ASSERT_FALSE(strncmp(read_file(TEST_TMP_MEM_MIN, 0), buf, strlen(buf)));
@@ -1065,11 +1074,11 @@ TEST(test_release_protected_memory_after_delete_cgroup)
               (kernel_total_mem * memory_reservations[i]) + PGSIZE + 1);
       
       // Try to protect memory for cgroup1 this need to fail
-      ASSERT_FALSE(write_file(TEST_1_MEM_MIN, buf));
+      ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MIN, buf));
 
       ASSERT_FALSE(unlink(TEST_TMP));
       // Try to protect memory for cgroup1
-      ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+      ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, buf));
 
       // Disable memory controllers
       ASSERT_TRUE(disable_controller(MEM_CNT));
@@ -1088,7 +1097,7 @@ TEST(test_cant_move_under_mem_limit)
     ASSERT_TRUE(enable_controller(MEM_CNT));
 
     // Protect all memory for cgroup1
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, buf));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, buf));
 
     // Check changes
     ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MIN, 0), buf, strlen(buf)));
@@ -1124,16 +1133,16 @@ TEST(test_mem_limit_negative_and_over_kernelbase)
     saved_mem[strlen(saved_mem) - 1] = '\0';
 
     // Update memory limit
-    ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "100"));
-    ASSERT_TRUE(write_file(TEST_1_MEM_MIN, "50"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, "100"));
+    ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MIN, "50"));
 
     // Check changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MIN, 0), "50\n"));
 
     // Limit memory by minus
-    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, "-100"));
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, "-100"));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MAX, "-100"));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MIN, "-100"));
 
     // Check for no changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
@@ -1141,8 +1150,8 @@ TEST(test_mem_limit_negative_and_over_kernelbase)
 
 
     // Limit memory by over kernel base
-    ASSERT_FALSE(write_file(TEST_1_MEM_MAX, MORE_THEN_KERNBASE));
-    ASSERT_FALSE(write_file(TEST_1_MEM_MIN, MORE_THEN_KERNBASE));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MAX, MORE_THEN_KERNBASE));
+    ASSERT_FALSE(test_open_write_and_close_file(TEST_1_MEM_MIN, MORE_THEN_KERNBASE));
 
     // Check for no changes
     ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "100\n"));
@@ -1164,7 +1173,7 @@ TEST(test_cant_move_over_mem_limit)
   saved_mem[strlen(saved_mem) - 1] = '\0';
 
   // Update memory limit
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, "0"));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, "0"));
 
   // Check changes
   ASSERT_FALSE(strcmp(read_file(TEST_1_MEM_MAX, 0), "0\n"));
@@ -1179,7 +1188,7 @@ TEST(test_cant_move_over_mem_limit)
   ASSERT_TRUE(is_pid_in_group(ROOT_CGROUP_PROCS, getpid()));
 
   // Restore memory limit to original
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, saved_mem));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, saved_mem));
 
   // Check changes
   ASSERT_FALSE(strncmp(read_file(TEST_1_MEM_MAX, 0), saved_mem, strlen(saved_mem)));
@@ -1200,7 +1209,7 @@ TEST(test_cant_fork_over_mem_limit)
   ASSERT_TRUE(enable_controller(MEM_CNT));
 
   // Update memory limit
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, proc_mem));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, proc_mem));
 
   // Read the contents of limit file and convert it for comparison.
   strcpy(saved_mem, read_file(TEST_1_MEM_MAX, 0));
@@ -1238,7 +1247,7 @@ TEST(test_cant_grow_over_mem_limit)
   ASSERT_TRUE(enable_controller(MEM_CNT));
 
   // Update memory limit
-  ASSERT_TRUE(write_file(TEST_1_MEM_MAX, proc_mem));
+  ASSERT_TRUE(test_open_write_and_close_file(TEST_1_MEM_MAX, proc_mem));
 
   strcat(proc_mem, "\n");
 
@@ -1410,15 +1419,15 @@ TEST (test_mem_stat) {
 
         // Write to a new file 2 times.
         int fd;
-        ASSERT_TRUE(fd=write_new_file("c", str));
-        ASSERT_TRUE(write_new_file("c", str));
+        ASSERT_TRUE(fd=create_and_write_file("c", str));
+        ASSERT_TRUE(create_and_write_file("c", str));
         ASSERT_TRUE(close_file(fd));
         sleep(20);
 
         // Write times to another file with the file closed in the middle.
-        ASSERT_TRUE(fd=write_new_file("d", str));
+        ASSERT_TRUE(fd=create_and_write_file("d", str));
         ASSERT_TRUE(close_file(fd));
-        ASSERT_TRUE(write_new_file("d", str));
+        ASSERT_TRUE(create_and_write_file("d", str));
         ASSERT_TRUE(close_file(fd));
 
         exit(0);
@@ -1495,7 +1504,7 @@ TEST (test_nested_cgroups)
 
   strcpy(temp_path_g, current_nested_cgroup);
   strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
-  ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+  ASSERT_TRUE(test_open_write_and_close_file(temp_path_g, "+mem"));
 
   /* create the 9 other nested groups. Enable memory controller in each of them because
      it's not propagated from the parent cgroup */
@@ -1510,7 +1519,7 @@ TEST (test_nested_cgroups)
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_MEM_MIN);
     printf(1, "temp_path_g nested cgroup min path: %s\n", temp_path_g);
-    ASSERT_TRUE(write_file(temp_path_g, min_val));
+    ASSERT_TRUE(test_open_write_and_close_file(temp_path_g, min_val));
     read_file(temp_path_g, 1);
 
     //create another nested cgroup (mem controller should be enabled)
@@ -1522,7 +1531,7 @@ TEST (test_nested_cgroups)
     memset(temp_path_g, 0, MAX_PATH_LENGTH);
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
-    ASSERT_TRUE(write_file(temp_path_g, "+mem"));
+    ASSERT_TRUE(test_open_write_and_close_file(temp_path_g, "+mem"));
   }
 
   //check if we can allocate now more memory in the last cgroup
@@ -1533,7 +1542,7 @@ TEST (test_nested_cgroups)
   //allocate 25% of kernel space - should fail (this should also fail for lesser values)
   memset(min_val, 12, 0);
   itoa(min_val, kernel_total_mem / 4);
-  ASSERT_FALSE(write_file(temp_path_g, min_val));
+  ASSERT_FALSE(test_open_write_and_close_file(temp_path_g, min_val));
 
   memset(min_val, 12, 0);
   itoa(min_val, 0);
@@ -1547,13 +1556,13 @@ TEST (test_nested_cgroups)
     memset(temp_path_g, 0, MAX_PATH_LENGTH);
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_MEM_MIN);
-    ASSERT_TRUE(write_file(temp_path_g, min_val));
+    ASSERT_TRUE(test_open_write_and_close_file(temp_path_g, min_val));
 
     // disable mem controller
     memset(temp_path_g, 0, MAX_PATH_LENGTH);
     strcpy(temp_path_g, current_nested_cgroup);
     strcat(temp_path_g, TEST_NESTED_SUBTREE_CONTROL);
-    write_file(temp_path_g, "-mem");
+    test_open_write_and_close_file(temp_path_g, "-mem");
 
     //delete nested cgroup
     ASSERT_FALSE(unlink(current_nested_cgroup));
