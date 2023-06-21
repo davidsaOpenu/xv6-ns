@@ -93,6 +93,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c4709c5_c5561406",
+        "filename": "mounttest.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1021013
+      },
+      "writtenOn": "2023-06-21T08:40:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f503ac7_d7c12d2b",
+      "range": {
+        "startLine": 565,
+        "startChar": 0,
+        "endLine": 568,
+        "endChar": 1
+      },
+      "revId": "6d404cb098dc57724f255161c023ea580c739507",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88564162_50dc34a7",
@@ -106,6 +130,30 @@
       "writtenOn": "2023-06-21T07:54:35Z",
       "side": 1,
       "message": "this check is great to see of initial status is reflected. \nlet\u0027s add mountpoint/device and verify if was reflected in /proc.\nThen let\u0027s remove one and re-verify.\nI would also check for the format and not only the line count to make it more robust.",
+      "range": {
+        "startLine": 559,
+        "startChar": 0,
+        "endLine": 569,
+        "endChar": 0
+      },
+      "revId": "6d404cb098dc57724f255161c023ea580c739507",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3284f251_d515fdc2",
+        "filename": "mounttest.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1021013
+      },
+      "writtenOn": "2023-06-21T08:40:41Z",
+      "side": 1,
+      "message": "We agreed it\u0027s enough has this is the only tests in the system that uses those files.",
+      "parentUuid": "88564162_50dc34a7",
       "range": {
         "startLine": 559,
         "startChar": 0,
