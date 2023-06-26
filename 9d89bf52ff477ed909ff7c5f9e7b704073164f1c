@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56e1b3ca_3c19a614",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-26T05:16:20Z",
+      "side": 1,
+      "message": "Thanks for working on this change. Please see comments inline. In addition, we moved to https://review.gerrithub.io/davidsaOpenu/xv6 and this repo will be archived. Could you please send your next patch set to the new repo?",
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe001130_29b5d3dc",
+        "filename": "cgroup.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-26T05:16:20Z",
+      "side": 1,
+      "message": "we have typedef enum\n{\n        RESULT_ERROR_OPERATION \u003d -3,\n        RESULT_ERROR_ARGUMENT,\n        RESULT_ERROR,\n        RESULT_SUCCESS,\n        RESULT_SUCCESS_OPERATION\n} result_code;\ndefined in defs.h",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 0
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dca386e9_42530316",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-26T05:16:20Z",
+      "side": 1,
+      "message": "obsolete. please see cleaner solution below",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 1
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff2f756_c775032f",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-26T05:16:20Z",
+      "side": 1,
+      "message": "I\u0027m affraid the comment is misleading or, maybe, it should be asled why the first fork is good for. As for the second fork the \"PID namespaces in xv6\" section in https://docs.google.com/document/d/1iLGOXVAlkl9Ee2VLVfnYWHt4efNy5_NapldoVtK4Nzo/edit?usp\u003dsharing explains why fork syscall follows unshare(PID).",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 54
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eab77210_97908e6b",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1007990
+      },
+      "writtenOn": "2023-06-26T05:16:20Z",
+      "side": 1,
+      "message": "10 secs is an eternity. xv6 has pipes. So something like \n\n    if (pipe(pipefd) \u003d\u003d -1) {\n        perror(\"pipe\");\n        exit(EXIT_FAILURE);\n    }\n\n    child_pid \u003d fork();\n\n    if (child_pid \u003d\u003d 0) {\n        // Child process\n        close(pipefd[1]); // Close write end of the pipe\n\n        // Read from the pipe to wait for the condition\n        int condition;\n        read(pipefd[0], \u0026condition, sizeof(int));\n\n        // Continue execution\n        printf(\"Child: Condition fulfilled\\n\");\n\n        close(pipefd[0]); // Close read end of the pipe\n    } else {\n        // Parent process\n        close(pipefd[0]); // Close read end of the pipe\n\n        // Execute necessary code\n\n        // Request to wait for the condition\n        int condition \u003d 1;\n        write(pipefd[1], \u0026condition, sizeof(int));\n\n        close(pipefd[1]); // Close write end of the pipe\n    }",
+      "range": {
+        "startLine": 435,
+        "startChar": 16,
+        "endLine": 435,
+        "endChar": 26
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
