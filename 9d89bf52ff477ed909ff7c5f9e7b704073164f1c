@@ -41,6 +41,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3837d4f1_8059d8ff",
+        "filename": "cgroup.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-06-29T08:21:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe001130_29b5d3dc",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 0
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dca386e9_42530316",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-06-26T05:16:20Z",
       "side": 1,
       "message": "obsolete. please see cleaner solution below",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 1
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e819f386_2199e2b6",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-06-29T08:21:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dca386e9_42530316",
       "range": {
         "startLine": 18,
         "startChar": 0,
@@ -87,6 +135,30 @@
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "092ad4bd_91915f53",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-06-29T08:21:02Z",
+      "side": 1,
+      "message": "The first fork is done for daemonizing the container (make sense because we don\u0027t want it to be dependent on the sh process). I didn\u0027t refactor it just edited the comments so it will be easier to understand.",
+      "parentUuid": "6ff2f756_c775032f",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 54
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eab77210_97908e6b",
@@ -100,6 +172,30 @@
       "writtenOn": "2023-06-26T05:16:20Z",
       "side": 1,
       "message": "10 secs is an eternity. xv6 has pipes. So something like \n\n    if (pipe(pipefd) \u003d\u003d -1) {\n        perror(\"pipe\");\n        exit(EXIT_FAILURE);\n    }\n\n    child_pid \u003d fork();\n\n    if (child_pid \u003d\u003d 0) {\n        // Child process\n        close(pipefd[1]); // Close write end of the pipe\n\n        // Read from the pipe to wait for the condition\n        int condition;\n        read(pipefd[0], \u0026condition, sizeof(int));\n\n        // Continue execution\n        printf(\"Child: Condition fulfilled\\n\");\n\n        close(pipefd[0]); // Close read end of the pipe\n    } else {\n        // Parent process\n        close(pipefd[0]); // Close read end of the pipe\n\n        // Execute necessary code\n\n        // Request to wait for the condition\n        int condition \u003d 1;\n        write(pipefd[1], \u0026condition, sizeof(int));\n\n        close(pipefd[1]); // Close write end of the pipe\n    }",
+      "range": {
+        "startLine": 435,
+        "startChar": 16,
+        "endLine": 435,
+        "endChar": 26
+      },
+      "revId": "9d89bf52ff477ed909ff7c5f9e7b704073164f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3efef5d_7ee6d87a",
+        "filename": "pouch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1020120
+      },
+      "writtenOn": "2023-06-29T08:21:02Z",
+      "side": 1,
+      "message": "used mutexes for user space, instead. Much easier.",
+      "parentUuid": "eab77210_97908e6b",
       "range": {
         "startLine": 435,
         "startChar": 16,
