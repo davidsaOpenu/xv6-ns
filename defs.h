@@ -27,6 +27,12 @@ void            brelse(struct buf*);
 void            bwrite(struct buf*);
 void            invalidateblocks(uint);
 
+//cgfs.c
+#define min(x, y) (x) > (y) ? (y) : (x)
+// return the input if it is greater than 0, return 0 otherwisey
+#define at_least_zero(x) (x) > 0 ? (x) : (0)
+
+
 // console.c
 void            consoleclear(void);
 void            consoleinit(void);
